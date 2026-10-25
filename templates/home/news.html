@@ -1,0 +1,30 @@
+{% load site_tags %}
+{% if press_items %}
+<section aria-labelledby="news-title" class="press-section" id="news">
+  <div class="press-section__inner">
+    <div class="press-section__header">
+      <div>
+        <p class="section-label press-section__label">
+          <span class="section-label__rule"></span>
+          {{ page.news_label }}
+        </p>
+        <h2 id="news-title">
+          {{ page.news_title_line_1 }}
+          <br>
+          <em>{{ page.news_title_line_2 }}</em>
+        </h2>
+      </div>
+      {% include "partials/section_intro.html" with facts=news_facts text=page.news_intro %}
+    </div>
+
+    {% include "partials/press_grid.html" %}
+
+    <div class="section-more">
+      <a class="ip-button ip-button--outline" href="{% url 'core:media' %}#press">
+        <span>All press coverage</span>
+        {% include "icons/arrow.html" %}
+      </a>
+    </div>
+  </div>
+</section>
+{% endif %}

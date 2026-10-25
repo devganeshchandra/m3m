@@ -1,0 +1,52 @@
+{% load site_tags %}
+{# Expects: project, number (card index shown as 01, 02…), optional show_status #}
+<article class="project-card" data-interests="{{ project.interests|join:' ' }}">
+  <a class="pcard__media" href="{{ project.get_absolute_url }}" aria-label="Discover {{ project.name }}">
+    {% picture project.image sizes="(max-width: 700px) 92vw, (max-width: 1100px) 46vw, 30vw" alt=project.name css_class="pcard__image" %}
+    <span class="pcard__shade" aria-hidden="true"></span>
+    <span class="pcard__index" aria-hidden="true">{{ number|pad2 }}</span>
+    {% if show_status %}
+      <span class="status-chip status-chip--{{ project.status }} pcard__status">{{ project.collection_name }}</span>
+    {% endif %}
+    <span class="pcard__location">
+      <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M8 15s5-4.6 5-8.5A5 5 0 0 0 3 6.5C3 10.4 8 15 8 15Z" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="6.5" r="1.8" fill="currentColor"/></svg>
+      {{ project.location }}
+    </span>
+    <span class="pcard__discover" aria-hidden="true">
+      View address
+      {% include "icons/arrow.html" %}
+    </span>
+  </a>
+
+  <div class="pcard__body">
+    <p class="pcard__category">{{ project.category }}</p>
+    <h3 class="pcard__title">
+      <a href="{{ project.get_absolute_url }}">{{ project.name }}</a>
+    </h3>
+    <p class="pcard__offering">{{ project.offering }}</p>
+
+    <dl class="pcard__facts">
+      <div>
+        <dt>RERA No.</dt>
+        <dd>{{ project.rera }}</dd>
+      </div>
+      {% if project.timeline_note %}
+        <div>
+          <dt>Timeline</dt>
+          <dd>{{ project.timeline_note }}</dd>
+        </div>
+      {% endif %}
+    </dl>
+
+    <div class="pcard__actions">
+      <button aria-haspopup="dialog" class="pcard__button pcard__button--primary" data-enquiry-open data-project="{{ project.slug }}" data-project-name="{{ project.name }}" type="button">
+        <span>{% if project.status == "upcoming" %}Register interest{% else %}Enquire now{% endif %}</span>
+        {% include "icons/arrow.html" %}
+      </button>
+      <a class="pcard__button pcard__button--ghost" href="{{ project.get_absolute_url }}">
+        <span>View details</span>
+        {% include "icons/arrow.html" %}
+      </a>
+    </div>
+  </div>
+</article>

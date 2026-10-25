@@ -1,0 +1,64 @@
+{% extends "inner_base.html" %}
+{% load site_tags %}
+
+{% block hero_stats %}
+<dl class="inner-hero__stats">
+  <div><dt>Articles</dt><dd>{{ insights|length|add:1|stringformat:"02d" }}</dd></div>
+  <div><dt>Topics</dt><dd>{{ categories|length|stringformat:"02d" }}</dd></div>
+</dl>
+{% endblock %}
+
+{% block page %}
+{% if featured %}
+<section class="ip-section" aria-labelledby="featured-title">
+  <div class="ip-section__inner">
+    <p class="ip-label"><span aria-hidden="true"></span>Featured</p>
+    <article class="feature-article">
+      <a class="feature-article__image" href="{{ featured.get_absolute_url }}" tabindex="-1" aria-hidden="true">
+        {% picture featured.image sizes="(max-width: 900px) 100vw, 58vw" priority=True %}
+      </a>
+      <div class="feature-article__copy">
+        <p class="feature-article__category">{{ featured.category }}</p>
+        <h2 id="featured-title"><a href="{{ featured.get_absolute_url }}">{{ featured.title }}</a></h2>
+        <p>{{ featured.description }}</p>
+        <p class="feature-article__meta">{{ featured.author }} · {{ featured.published_on|date:"j F Y" }} · {{ featured.reading_minutes }} min read</p>
+        <a class="ip-button ip-button--navy" href="{{ featured.get_absolute_url }}">
+          <span>Read the article</span>
+          {% include "icons/arrow.html" %}
+        </a>
+      </div>
+    </article>
+  </div>
+</section>
+{% endif %}
+
+{% if insights %}
+<section class="ip-section ip-section--mist" aria-labelledby="all-insights-title">
+  <div class="ip-section__inner">
+    <div class="ip-section__header">
+      <div>
+        <p class="ip-label"><span aria-hidden="true"></span>{{ inner.intro_label|default:"The journal" }}</p>
+        <h2 class="ip-heading" id="all-insights-title">{{ inner.intro_heading|default:"All insights" }}</h2>
+      </div>
+      {% if inner.intro_text %}<p>{{ inner.intro_text }}</p>{% endif %}
+    </div>
+    {% if categories|length > 1 %}
+      <div class="ip-filters ip-filters--spaced" role="group" aria-label="Filter by topic" data-insight-filter>
+        <button class="ip-filters__button is-active" type="button" aria-pressed="true" data-filter="all">All topics</button>
+        {% for category in categories %}
+          <button class="ip-filters__button" type="button" aria-pressed="false" data-filter="{{ category }}">{{ category }}</button>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <div class="insights-grid" data-insight-grid>
+      {% for insight in insights %}
+        {% include "partials/insight_card.html" %}
+      {% endfor %}
+    </div>
+    <p class="collection__empty" data-filter-empty hidden>
+      The featured article above is the latest in this topic. <button class="text-button" type="button" data-filter-reset>Show all topics</button>
+    </p>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,37 @@
+<section aria-labelledby="projects-title" class="projects-section" id="projects">
+  <div class="projects-section__inner">
+    <div class="projects-section__header">
+      <div>
+        <p class="section-label projects-section__label">
+          <span class="section-label__rule"></span>
+          {{ page.projects_label }}
+        </p>
+        <h2 class="projects-section__title" id="projects-title">
+          {{ page.projects_title_line_1 }}
+          <br>
+          <em>{{ page.projects_title_line_2 }}</em>
+        </h2>
+      </div>
+      {% include "partials/section_intro.html" with facts=projects_facts text=page.projects_intro %}
+    </div>
+
+    <div class="projects-section__divider" aria-hidden="true">
+      <span></span>
+      <span>Explore the collection</span>
+      <span></span>
+    </div>
+
+    <div class="projects-grid">
+      {% for project in projects %}
+        {% include "partials/project_card.html" with number=forloop.counter %}
+      {% endfor %}
+    </div>
+
+    <div class="section-more">
+      <a class="ip-button ip-button--navy" href="{% url 'projects:list' %}">
+        <span>Explore all {{ project_total }} projects</span>
+        {% include "icons/arrow.html" %}
+      </a>
+    </div>
+  </div>
+</section>

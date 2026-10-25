@@ -1,0 +1,24 @@
+# Python / Django
+.venv/
+__pycache__/
+*.py[cod]
+db.sqlite3
+db.sqlite3-journal
+/staticfiles/
+/media/
+/backups/
+
+# Environment
+.env*
+!.env.example
+
+# Old Next.js build output (until the Next.js files are removed)
+.next/
+node_modules/
+out/
+build/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+.DS_Store

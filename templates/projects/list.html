@@ -1,0 +1,83 @@
+{% extends "inner_base.html" %}
+
+{% block hero_stats %}
+<dl class="inner-hero__stats">
+  <div><dt>Addresses</dt><dd>{{ total|stringformat:"02d" }}</dd></div>
+  <div><dt>Residential</dt><dd>{{ residential_count|stringformat:"02d" }}</dd></div>
+  <div><dt>Commercial</dt><dd>{{ commercial_count|stringformat:"02d" }}</dd></div>
+  <div><dt>Collections</dt><dd>03</dd></div>
+</dl>
+{% endblock %}
+
+{% block page %}
+<section class="ip-intro" aria-labelledby="projects-intro-title">
+  <div class="ip-intro__inner">
+    <div>
+      <p class="ip-label"><span aria-hidden="true"></span>{{ inner.intro_label }}</p>
+      <h2 class="ip-heading" id="projects-intro-title">{{ inner.intro_heading }}</h2>
+    </div>
+    <div class="ip-intro__text">
+      {{ inner.intro_text|linebreaks }}
+      {% if locations %}
+        <ul class="location-chips" aria-label="Locations">
+          {% for location in locations %}<li>{{ location }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<div class="ip-toolbar" data-sticky-toolbar>
+  <div class="ip-toolbar__inner">
+    <nav class="ip-tabs" aria-label="Collections">
+      {% for collection in collections %}
+        <a class="ip-tabs__link" href="#{{ collection.key }}" data-scrollspy-link="{{ collection.key }}">
+          {{ collection.name }} <span data-collection-count="{{ collection.key }}">{{ collection.projects|length }}</span>
+        </a>
+      {% endfor %}
+    </nav>
+    <div class="ip-filters" role="group" aria-label="Filter by type" data-project-filter>
+      <button class="ip-filters__button is-active" type="button" aria-pressed="true" data-filter="all">All</button>
+      <button class="ip-filters__button" type="button" aria-pressed="false" data-filter="residential">Residential</button>
+      <button class="ip-filters__button" type="button" aria-pressed="false" data-filter="commercial">Commercial</button>
+    </div>
+  </div>
+</div>
+
+{% for collection in collections %}
+  <section class="collection collection--{{ collection.key }}" id="{{ collection.key }}" aria-labelledby="{{ collection.key }}-title" data-collection data-scrollspy-section="{{ collection.key }}">
+    <div class="collection__inner">
+      <header class="collection__header">
+        <span class="collection__index" aria-hidden="true">{{ collection.index|stringformat:"02d" }}</span>
+        <div>
+          <p class="ip-label"><span aria-hidden="true"></span>{{ collection.subtitle }}</p>
+          <h2 class="ip-heading" id="{{ collection.key }}-title">{{ collection.name }}</h2>
+        </div>
+        <div class="collection__meta">
+          {% if collection.text %}<p>{{ collection.text }}</p>{% endif %}
+          <p class="collection__count"><strong data-collection-count="{{ collection.key }}">{{ collection.projects|length }}</strong> {{ collection.projects|length|pluralize:"address,addresses" }}</p>
+        </div>
+      </header>
+
+      {% if collection.projects %}
+        <div class="projects-grid">
+          {% for project in collection.projects %}
+            {% include "partials/project_card.html" with number=forloop.counter show_status=True %}
+          {% endfor %}
+        </div>
+        <p class="collection__empty" data-filter-empty hidden>
+          No addresses of this type in this collection yet. <button class="text-button" type="button" data-filter-reset>Show all</button>
+        </p>
+      {% else %}
+        <div class="collection__placeholder">
+          <p>New addresses for this collection will be announced soon.</p>
+          <button aria-haspopup="dialog" class="ip-button ip-button--outline" data-enquiry-open type="button">
+            <span>Register your interest</span>
+            {% include "icons/arrow.html" %}
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load site_tags %}
+
+{% block title %}{{ insight.title }} | Insights | {{ site.site_name }}{% endblock %}
+{% block description %}{{ insight.description }}{% endblock %}
+{% block og_title %}{{ insight.title }}{% endblock %}
+{% block og_description %}{{ insight.description }}{% endblock %}
+{% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ insight.image.url }}">{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "{{ insight.title|escapejs }}",
+    "description": "{{ insight.description|escapejs }}",
+    "datePublished": "{{ insight.published_on|date:'Y-m-d' }}",
+    "image": "{{ request.scheme }}://{{ request.get_host }}{{ insight.image.url|escapejs }}",
+    "author": {"@type": "Organization", "name": "{{ insight.author|escapejs }}"},
+    "publisher": {"@type": "Organization", "name": "{{ site.site_name|escapejs }}"}
+  }
+</script>
+{% endblock %}
+
+{% block content %}
+<main id="main-content" class="article-page">
+  <header class="article-header">
+    <div class="article-header__inner">
+      <nav class="article-crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span>
+        <a href="{% url 'insights' %}">Insights</a><span aria-hidden="true">/</span>
+        <span aria-current="page">{{ insight.category }}</span>
+      </nav>
+      <p class="ip-label"><span aria-hidden="true"></span>{{ insight.category }}</p>
+      <h1>{{ insight.title }}</h1>
+      <p class="article-header__lede">{{ insight.description }}</p>
+      <p class="article-header__meta">
+        <span>{{ insight.author }}</span>
+        <span>{{ insight.published_on|date:"j F Y" }}</span>
+        <span>{{ insight.reading_minutes }} min read</span>
+      </p>
+    </div>
+    <div class="article-header__image">
+      {% picture insight.image sizes="(max-width: 1400px) 100vw, 1320px" alt=insight.title priority=True %}
+    </div>
+  </header>
+
+  <div class="article-layout">
+    <aside class="article-share" aria-label="Share this article">
+      <span>Share</span>
+      <a href="https://wa.me/?text={{ insight.title|urlencode }}%20{{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noreferrer" aria-label="Share on WhatsApp">{% include "icons/whatsapp.html" %}</a>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noreferrer" aria-label="Share on LinkedIn">in</a>
+      <button type="button" data-copy-link aria-label="Copy link to this article">Link</button>
+    </aside>
+
+    <article class="prose">
+      {% for kind, text in insight.blocks %}
+        {% if kind == "h" %}<h2>{{ text }}</h2>{% else %}<p>{{ text }}</p>{% endif %}
+      {% endfor %}
+
+      <div class="article-cta">
+        <div>
+          <strong>Exploring an M3M address?</strong>
+          <span>Our team can answer your questions and arrange a visit.</span>
+        </div>
+        <button aria-haspopup="dialog" class="ip-button ip-button--navy" data-enquiry-open type="button">
+          <span>Speak with our team</span>
+          {% include "icons/arrow.html" %}
+        </button>
+      </div>
+    </article>
+  </div>
+
+  {% if related %}
+  <section class="ip-section ip-section--mist" aria-labelledby="related-title">
+    <div class="ip-section__inner">
+      <div class="ip-section__header">
+        <div>
+          <p class="ip-label"><span aria-hidden="true"></span>Keep reading</p>
+          <h2 class="ip-heading" id="related-title">More <em>insights.</em></h2>
+        </div>
+        <a class="ip-button ip-button--outline" href="{% url 'insights' %}">
+          <span>All insights</span>
+          {% include "icons/arrow.html" %}
+        </a>
+      </div>
+      <div class="insights-grid">
+        {% for insight in related %}
+          {% include "partials/insight_card.html" %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% include "partials/cta_band.html" %}
+</main>
+{% endblock %}

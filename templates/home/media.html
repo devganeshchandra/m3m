@@ -1,0 +1,40 @@
+{% load site_tags %}
+{% if media_images %}
+<section aria-labelledby="media-title" class="media-section" id="media">
+  <div class="media-section__inner">
+    <div class="media-section__header">
+      <div>
+        <p class="section-label media-section__label">
+          <span class="section-label__rule"></span>{{ page.media_label }}
+        </p>
+        <h2 id="media-title">
+          {{ page.media_title_line_1 }}
+          <br>
+          <em>{{ page.media_title_line_2 }}</em>
+        </h2>
+      </div>
+      {% include "partials/section_intro.html" with facts=media_facts text=page.media_intro %}
+    </div>
+
+    <div class="media-gallery">
+      {% for item in media_images %}
+        <figure class="media-gallery__item">
+          <div class="media-gallery__image">
+            {% picture item.image sizes="(max-width: 600px) 88vw, (max-width: 900px) 45vw, 25vw" alt=item.caption priority=forloop.counter|lt:3 %}
+            <span class="media-gallery__index">{{ forloop.counter|pad2 }}</span>
+            <span aria-hidden="true" class="media-gallery__arrow">{% include "icons/arrow.html" %}</span>
+          </div>
+          <figcaption>{{ item.caption }}</figcaption>
+        </figure>
+      {% endfor %}
+    </div>
+
+    <div class="section-more">
+      <a class="ip-button ip-button--outline" href="{% url 'core:media' %}">
+        <span>Explore the full gallery</span>
+        {% include "icons/arrow.html" %}
+      </a>
+    </div>
+  </div>
+</section>
+{% endif %}

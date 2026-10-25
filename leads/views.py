@@ -1,0 +1,79 @@
+import logging
+
+from django.conf import settings
+from django.core.cache import cache
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.urls import reverse
+from django.views.decorators.http import require_POST
+
+from core.models import SiteSettings
+from leads.forms import EnquiryForm, client_ip
+
+logger = logging.getLogger(__name__)
+
+
+def _rate_limited(request):
+    key = f"enquiry-rate:{client_ip(request)}"
+    count = cache.get_or_set(key, 0, 60 * 60)
+    if count >= settings.LEAD_RATE_LIMIT_PER_HOUR:
+        return True
+    try:
+        cache.incr(key)
+    except ValueError:
+        cache.set(key, 1, 60 * 60)
+    return False
+
+
+@require_POST
+def submit_enquiry(request):
+    form = EnquiryForm(request.POST)
+    if not form.is_valid():
+        errors = {field: messages[0] for field, messages in form.errors.items()}
+        return JsonResponse({"ok": False, "errors": errors}, status=400)
+
+    message = SiteSettings.load().enquiry_success_message
+    if form.is_spam():
+        return JsonResponse({"ok": True, "message": message})
+    if _rate_limited(request):
+        return JsonResponse(
+            {
+                "ok": False,
+                "message": "We’ve received several requests from this connection. Please call or WhatsApp our team.",
+            },
+            status=429,
+        )
+
+    enquiry = form.save(request)
+    _notify(request, enquiry)
+    return JsonResponse({"ok": True, "message": message})
+
+
+def _notify(request, enquiry):
+    if not settings.LEAD_NOTIFICATION_EMAILS:
+        return
+    admin_url = request.build_absolute_uri(reverse("admin:leads_enquiry_change", args=[enquiry.pk]))
+    lines = [
+        f"Source: {enquiry.get_source_display()}",
+        f"Project: {enquiry.project or '—'}",
+        f"Name: {enquiry.name or '—'}",
+        f"Phone: {enquiry.phone}",
+        f"Email: {enquiry.email}",
+        f"Preferred call time: {enquiry.get_call_time_display() or '—'}",
+        f"Interest: {enquiry.get_interest_display() or '—'}",
+        f"Based in: {enquiry.get_residency_display() or '—'}",
+        f"Message: {enquiry.message or '—'}",
+        f"Campaign: {enquiry.utm_source or '—'} / {enquiry.utm_medium or '—'} / {enquiry.utm_campaign or '—'}",
+        f"Page: {enquiry.page_url or '—'}",
+        "",
+        f"Open in admin: {admin_url}",
+    ]
+    try:
+        send_mail(
+            subject=f"New website enquiry – {enquiry.project or enquiry.get_source_display()}",
+            message="\n".join(lines),
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=settings.LEAD_NOTIFICATION_EMAILS,
+        )
+    except Exception:
+        logger.exception("Could not send enquiry notification for enquiry %s", enquiry.pk)

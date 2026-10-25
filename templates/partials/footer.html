@@ -1,0 +1,48 @@
+{% load static %}
+<footer class="site-footer">
+  <div class="page-wrap">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <a class="wordmark wordmark--footer" href="/" aria-label="M3M India home">
+          <img alt="" class="wordmark__logo wordmark__logo--color" height="56" width="180" loading="lazy" src="{% static 'images/logo/m3m-logo.png' %}">
+          <span class="visually-hidden">M3M India</span>
+        </a>
+      </div>
+      <div class="site-footer__address">
+        <p class="eyebrow">Corporate office</p>
+        <address>
+          {{ site.address_line_1 }}
+          <br>
+          {{ site.address_line_2 }}
+        </address>
+        <a href="tel:{{ site.phone_dial }}">Toll-free {{ site.phone_display }}</a>
+      </div>
+      <div class="site-footer__links">
+        <p class="eyebrow">Explore</p>
+        {% for item in navigation %}
+          <a href="{{ item.href }}">{{ item.label }}</a>
+        {% endfor %}
+      </div>
+      <div class="site-footer__connect">
+        <p class="eyebrow">Connect</p>
+        <a href="{{ site.whatsapp_url }}" rel="noreferrer" target="_blank">WhatsApp</a>
+        <a href="tel:{{ site.phone_dial }}">Call M3M</a>
+      </div>
+    </div>
+
+    <details class="footer-disclaimer">
+      <summary>Important information</summary>
+      <p>{{ site.footer_disclaimer }}</p>
+    </details>
+
+    <div class="site-footer__bottom">
+      <span>© {% now "Y" %} {{ site.site_name }}. All rights reserved.</span>
+      <div>
+        <a href="/privacy">Privacy</a>
+        <a href="/disclaimer">Disclaimer</a>
+        <a href="/compliance">Compliance</a>
+      </div>
+      <span>{{ site.footer_note }}</span>
+    </div>
+  </div>
+</footer>

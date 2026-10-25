@@ -1,0 +1,58 @@
+{% load site_tags %}
+{# Homepage teaser for the Billionaire Block page. Texts and media come from “Billionaire Block page” in the admin. #}
+{% with bb=billionaire %}
+<section class="bbt" aria-labelledby="bbt-title">
+  <div class="bbt__inner">
+    <div class="bbt__media" data-bbt-reveal>
+      <div class="bbt__main">
+        {% if bb.hero_video %}
+          <video class="bbt__video" autoplay muted loop playsinline preload="metadata"
+            {% if bb.hero_image %}poster="{{ bb.hero_image.url }}"{% endif %} aria-hidden="true" data-bbt-video>
+            <source src="{{ bb.hero_video.url }}" type="video/mp4">
+          </video>
+        {% else %}
+          {% picture bb.hero_image sizes="(max-width: 900px) 100vw, 50vw" alt=bb.hero_image_alt css_class="bbt__video" %}
+        {% endif %}
+        <span class="bbt__caption">Artistic impression</span>
+      </div>
+      {% if bb.about_image %}
+        <figure class="bbt__thumb bbt__thumb--one">
+          {% picture bb.about_image sizes="240px" alt="Aerial view of the enclave, artistic impression" css_class="bbt__cover" %}
+        </figure>
+      {% endif %}
+      {% if bb.building_image %}
+        <figure class="bbt__thumb bbt__thumb--two">
+          {% picture bb.building_image sizes="240px" alt="The residential towers by day, artistic impression" css_class="bbt__cover" %}
+        </figure>
+      {% endif %}
+      <svg class="bbt__seal" viewBox="0 0 120 120" aria-hidden="true">
+        <defs><path id="bbt-circle" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1 -92 0"/></defs>
+        <circle cx="60" cy="60" r="58" />
+        <text><textPath href="#bbt-circle">BILLIONAIRE BLOCK · BY INVITATION ONLY ·</textPath></text>
+        <text class="bbt__seal-mark" x="60" y="68" text-anchor="middle">BB</text>
+      </svg>
+    </div>
+
+    <div class="bbt__copy">
+      <p class="bbt__label" data-bbt-reveal><span aria-hidden="true"></span>{{ bb.teaser_label }}</p>
+      <p class="bbt__name" data-bbt-reveal>{{ bb.title }}</p>
+      <h2 class="bbt__heading" id="bbt-title" data-bbt-reveal>{{ bb.teaser_heading }}</h2>
+      <p class="bbt__text" data-bbt-reveal>{{ bb.teaser_text }}</p>
+      {% if bb.about_fact_list %}
+        <dl class="bbt__facts" data-bbt-reveal>
+          {% for value, label in bb.about_fact_list %}
+            <div><dt>{{ value }}</dt><dd>{{ label }}</dd></div>
+          {% endfor %}
+        </dl>
+      {% endif %}
+      <div class="bbt__actions" data-bbt-reveal>
+        <a class="bbt__button" href="{% url 'projects:billionaire_block' %}">
+          <span>{{ bb.teaser_button }}</span>
+          {% include "icons/arrow.html" %}
+        </a>
+        <a class="bbt__link" href="{% url 'projects:billionaire_block' %}#private-viewing">Request a private viewing</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endwith %}

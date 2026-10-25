@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Styleguide | {{ site.site_name }}{% endblock %}
+{% block description %}The visual language and interface foundations for M3M India.{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<main id="main-content" class="styleguide">
+  <section class="styleguide-hero">
+    <div class="page-wrap">
+      {% include "partials/section_label.html" with index="00" label="The visual language" %}
+      <h1 class="display-heading styleguide-hero__title">Ivory Gallery</h1>
+      <p class="styleguide-hero__intro">
+        A quiet, editorial foundation. Warm paper, considered type and space enough for architecture to speak.
+      </p>
+    </div>
+  </section>
+
+  <section class="styleguide-section page-wrap" aria-labelledby="palette-title">
+    {% include "partials/section_label.html" with index="01" label="Colour" %}
+    <h2 id="palette-title" class="section-heading">A restrained palette</h2>
+    <div class="swatch-grid">
+      {% for color in colors %}
+        <div class="swatch-card">
+          <div class="swatch {{ color.class_name }}" aria-hidden="true"></div>
+          <p class="swatch-card__name">{{ color.name }}</p>
+          <p class="swatch-card__value">{{ color.value }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="styleguide-section styleguide-section--stone">
+    <div class="page-wrap">
+      {% include "partials/section_label.html" with index="02" label="Typography" %}
+      <h2 class="section-heading">Room for the words</h2>
+      <div class="type-specimen">
+        <p class="eyebrow">Cormorant Garamond · Display</p>
+        <p class="type-specimen__display">A lasting sense of place.</p>
+        <p class="type-specimen__body">Manrope · Body and interface. Clear, composed and made for reading.</p>
+        <p class="eyebrow">Small uppercase label · 0.2em tracking</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="styleguide-section page-wrap" aria-labelledby="controls-title">
+    {% include "partials/section_label.html" with index="03" label="Interface" %}
+    <h2 id="controls-title" class="section-heading">Considered details</h2>
+    <div class="styleguide-controls">
+      <div class="control-group">
+        <p class="control-group__title">Actions</p>
+        <div class="button-row">
+          <button aria-haspopup="dialog" class="button button--solid" data-enquiry-open type="button">
+            <span>Private consultation</span>
+            {% include "icons/arrow.html" %}
+          </button>
+          <a class="button button--outline" href="/#residences">
+            <span>Explore residences</span>
+            {% include "icons/arrow.html" %}
+          </a>
+        </div>
+      </div>
+      <form class="styleguide-form" action="#">
+        <p class="control-group__title">Form fields</p>
+        <div class="field-grid">
+          <label class="field">
+            <span class="field__label">Your name</span>
+            <input class="field__input" autocomplete="name" name="name" placeholder="Name" type="text">
+          </label>
+          <label class="field">
+            <span class="field__label">Email address</span>
+            <input class="field__input" autocomplete="email" name="email" placeholder="name@example.com" type="email">
+          </label>
+        </div>
+        <label class="consent-field">
+          <input name="consent" type="checkbox">
+          <span>I agree to be contacted about M3M India projects.</span>
+        </label>
+      </form>
+    </div>
+  </section>
+
+  <section class="styleguide-note">
+    <div class="page-wrap styleguide-note__inner">
+      <p class="eyebrow">Foundation · Phase 1</p>
+      <p>The homepage, project stories and lead experience will be developed in the next phases.</p>
+    </div>
+  </section>
+</main>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% load site_tags %}
+<article class="insight-card insight-card--linked" data-category="{{ insight.category }}">
+  <a class="insight-card__image" href="{{ insight.get_absolute_url }}" tabindex="-1" aria-hidden="true">
+    {% picture insight.image sizes="(max-width: 700px) 90vw, (max-width: 1000px) 45vw, 30vw" %}
+  </a>
+  <div class="insight-card__content">
+    <p>{{ insight.category }}</p>
+    <h3><a href="{{ insight.get_absolute_url }}">{{ insight.title }}</a></h3>
+    <span>{{ insight.description }}</span>
+    <span class="insight-card__meta">{{ insight.published_on|date:"j M Y" }} · {{ insight.reading_minutes }} min read</span>
+    <a href="{{ insight.get_absolute_url }}" aria-label="Read the article: {{ insight.title }}">
+      Read article
+      {% include "icons/arrow.html" %}
+    </a>
+  </div>
+</article>

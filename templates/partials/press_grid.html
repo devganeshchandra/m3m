@@ -1,0 +1,61 @@
+{% load site_tags %}
+{% if press_publications %}
+<div class="press-logos" aria-label="As featured in">
+  <span class="press-logos__label">As featured in</span>
+  <ul>
+    {% for publication in press_publications %}
+      <li>
+        {% if publication.logo %}
+          <img src="{{ publication.logo.url }}" alt="{{ publication.name }}" loading="lazy" width="{{ publication.logo.width }}" height="{{ publication.logo.height }}">
+        {% else %}
+          <span>{{ publication.name }}</span>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+<div class="press-grid">
+  {% for item in press_items %}
+    <button aria-haspopup="dialog" class="press-card press-card--publication" type="button" data-press-open
+      data-title="{{ item.title }}" data-source="{{ item.publication.name }}" data-date="{{ item.published_on|date:'j F Y' }}"
+      data-summary="{{ item.summary }}" data-url="{{ item.article_url }}" data-logo="{% if item.publication.logo %}{{ item.publication.logo.url }}{% endif %}">
+      <span class="press-card__brand">
+        {% if item.publication.logo %}
+          <img src="{{ item.publication.logo.url }}" alt="{{ item.publication.name }}" loading="lazy" width="{{ item.publication.logo.width }}" height="{{ item.publication.logo.height }}">
+        {% elif item.image %}
+          {% picture item.image sizes="(max-width: 700px) 70vw, 360px" %}
+        {% else %}
+          <span class="press-card__brand-name">{{ item.publication.name }}</span>
+        {% endif %}
+      </span>
+      <span class="press-card__meta">
+        <span>{{ item.publication.name }}</span>
+        <span>{{ item.published_on|date:"j F Y" }}</span>
+      </span>
+      <strong>{{ item.title }}</strong>
+      <span class="press-card__summary">{{ item.summary }}</span>
+      <span class="press-card__action">Read on {{ item.publication.name }} <span aria-hidden="true">↗</span></span>
+    </button>
+  {% endfor %}
+</div>
+
+<dialog aria-labelledby="press-dialog-title" class="press-dialog" data-press-dialog>
+  <div class="press-dialog__content">
+    <button aria-label="Close article details" class="press-dialog__close" type="button" data-press-close>
+      <span aria-hidden="true">×</span>
+    </button>
+    <img class="press-dialog__logo" alt="" data-press-logo hidden>
+    <p class="section-label">
+      <span class="section-label__rule"></span>
+      <span data-press-meta></span>
+    </p>
+    <h2 id="press-dialog-title" data-press-title></h2>
+    <p data-press-summary></p>
+    <a href="#" rel="noreferrer" target="_blank" data-press-link>
+      <span data-press-link-label></span>
+      <span aria-hidden="true">↗</span>
+    </a>
+  </div>
+</dialog>

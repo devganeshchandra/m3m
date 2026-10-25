@@ -1,0 +1,10 @@
+# Keep Unix line endings so the project runs unchanged on Linux servers.
+* text=auto eol=lf
+*.sh text eol=lf
+*.bat text eol=crlf
+
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.webp binary
+*.pdf binary

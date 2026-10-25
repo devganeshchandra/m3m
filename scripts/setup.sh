@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+# Set up the M3M India website on a new machine.
+#
+#   ./scripts/setup.sh                                   # development (your laptop)
+#   ./scripts/setup.sh --production --domain www.m3mindia.com
+#
+# Works on Ubuntu/Debian (installs what it needs with apt), other Linux and
+# macOS with Python 3.12+, and Git Bash on Windows. Safe to run again: it
+# never overwrites an existing .env or your content.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+ROOT="$(pwd)"
+MODE="development"
+DOMAIN=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --production) MODE="production" ;;
+    --domain) DOMAIN="${2:?--domain needs a value, e.g. www.m3mindia.com}"; shift ;;
+    -h|--help) sed -n '2,10p' "$0"; exit 0 ;;
+    *) echo "Unknown option: $1" >&2; exit 1 ;;
+  esac
+  shift
+done
+
+if [[ "$MODE" == "production" && -z "$DOMAIN" ]]; then
+  echo "Production setup needs --domain, e.g. --domain www.m3mindia.com" >&2
+  exit 1
+fi
+
+step() { printf '\n\033[1;32m==> %s\033[0m\n' "$1"; }
+
+python_ok() {
+  "$1" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 12) else 1)' >/dev/null 2>&1
+}
+
+find_python() {
+  local candidate
+  for candidate in python3.14 python3.13 python3.12 python3 python; do
+    if command -v "$candidate" >/dev/null 2>&1 && python_ok "$candidate"; then
+      echo "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
+# 1. Python 3.12 or newer -----------------------------------------------------
+step "Checking Python (3.12 or newer is required)"
+if ! PYTHON="$(find_python)"; then
+  if command -v apt-get >/dev/null 2>&1; then
+    echo "Installing Python 3.12 with apt (needs sudo)…"
+    sudo apt-get update
+    if ! sudo apt-get install -y python3.12 python3.12-venv; then
+      # Ubuntu 22.04 and older ship Python 3.10: use the deadsnakes PPA.
+      sudo apt-get install -y software-properties-common
+      sudo add-apt-repository -y ppa:deadsnakes/ppa
+      sudo apt-get update
+      sudo apt-get install -y python3.12 python3.12-venv
+    fi
+    PYTHON="python3.12"
+  else
+    echo "Please install Python 3.12 or newer, then run this script again." >&2
+    exit 1
+  fi
+fi
+echo "Using $($PYTHON --version) ($PYTHON)"
+
+# Debian/Ubuntu split venv support into a separate package.
+if ! "$PYTHON" -c 'import ensurepip, venv' >/dev/null 2>&1; then
+  if command -v apt-get >/dev/null 2>&1; then
+    version="$("$PYTHON" -c 'import sys; print(f"{sys.version_info[0]}.{sys.version_info[1]}")')"
+    sudo apt-get install -y "python${version}-venv" || sudo apt-get install -y python3-venv
+  else
+    echo "Python's venv module is missing. Install it, then run again." >&2
+    exit 1
+  fi
+fi
+
+# 2. Virtual environment and packages ----------------------------------------
+step "Installing Python packages into .venv"
+if [[ ! -d .venv ]]; then
+  "$PYTHON" -m venv .venv
+fi
+if [[ -x .venv/bin/python ]]; then VENV_PY=".venv/bin/python"; else VENV_PY=".venv/Scripts/python"; fi
+"$VENV_PY" -m pip install --quiet --upgrade pip
+"$VENV_PY" -m pip install --quiet -r requirements.txt
+
+# 3. .env ---------------------------------------------------------------------
+set_env() {
+  # set_env KEY VALUE: replace the line KEY=... in .env
+  local key="$1" value="$2"
+  "$VENV_PY" - "$key" "$value" <<'PY'
+import pathlib, sys
+key, value = sys.argv[1], sys.argv[2]
+path = pathlib.Path(".env")
+lines = path.read_text(encoding="utf-8").splitlines()
+for i, line in enumerate(lines):
+    if line.startswith(key + "="):
+        lines[i] = f"{key}={value}"
+        break
+else:
+    lines.append(f"{key}={value}")
+path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+PY
+}
+
+step "Preparing .env settings"
+if [[ -f .env ]]; then
+  echo ".env already exists, leaving it unchanged."
+else
+  cp .env.example .env
+  set_env DJANGO_SECRET_KEY "$("$VENV_PY" -c 'import secrets; print(secrets.token_urlsafe(50))')"
+  if [[ "$MODE" == "production" ]]; then
+    bare="${DOMAIN#www.}"
+    set_env DJANGO_DEBUG 0
+    set_env DJANGO_ALLOWED_HOSTS "$bare,www.$bare,localhost,127.0.0.1"
+    set_env DJANGO_CSRF_TRUSTED_ORIGINS "https://$bare,https://www.$bare"
+    set_env SITE_URL "https://$DOMAIN"
+  else
+    set_env DJANGO_DEBUG 1
+  fi
+  chmod 600 .env 2>/dev/null || true
+  echo "Created .env ($MODE). Review it later for email settings."
+fi
+
+# 4. Database, static files, content -----------------------------------------
+step "Setting up the database"
+"$VENV_PY" manage.py migrate --noinput
+
+if [[ "$MODE" == "production" ]]; then
+  step "Collecting static files"
+  "$VENV_PY" manage.py collectstatic --noinput -v0
+fi
+
+if "$VENV_PY" manage.py shell -v0 -c "import sys; from projects.models import Project; sys.exit(0 if Project.objects.exists() else 1)"; then
+  echo "Content already present, skipping the starter content."
+else
+  step "Loading the starter website content"
+  "$VENV_PY" manage.py seed_content
+fi
+
+# 5. Admin account ------------------------------------------------------------
+if "$VENV_PY" manage.py shell -v0 -c "import sys; from django.contrib.auth.models import User; sys.exit(0 if User.objects.filter(is_superuser=True).exists() else 1)"; then
+  echo "An admin account already exists."
+elif [[ -t 0 ]]; then
+  step "Create the first admin account"
+  "$VENV_PY" manage.py createsuperuser
+else
+  echo "No admin account yet. Create one with: $VENV_PY manage.py createsuperuser"
+fi
+
+# 6. Done ---------------------------------------------------------------------
+step "Setup complete"
+if [[ "$MODE" == "production" ]]; then
+  cat <<EOF
+Next, put the site online with a background service and Nginx:
+  sudo ./scripts/install_server.sh $DOMAIN
+EOF
+else
+  cat <<EOF
+Start the site with:
+  $VENV_PY manage.py runserver
+Then open http://127.0.0.1:8000/ (admin: http://127.0.0.1:8000/admin/)
+EOF
+fi

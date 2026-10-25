@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load site_tags %}
+{% comment %}
+  Layout for the menu pages. Child templates fill the "page" block and may add
+  figures under the banner with the "hero_stats" block.
+{% endcomment %}
+
+{% block title %}{% if inner.seo_title %}{{ inner.seo_title }}{% else %}{{ inner.get_key_display }} | {{ site.site_name }}{% endif %}{% endblock %}
+{% block description %}{{ inner.seo_description|default:inner.intro }}{% endblock %}
+{% block og_title %}{% if inner.seo_title %}{{ inner.seo_title }}{% else %}{{ inner.get_key_display }} | {{ site.site_name }}{% endif %}{% endblock %}
+{% block og_description %}{{ inner.seo_description|default:inner.intro }}{% endblock %}
+{% block og_image %}{% if inner.banner %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ inner.banner.url }}">{% endif %}{% endblock %}
+
+{% block content %}
+<main id="main-content" class="inner-page inner-page--{{ inner.key }}">
+  <section class="inner-hero" aria-labelledby="page-title">
+    <div class="inner-hero__media" aria-hidden="true">
+      {% picture inner.banner sizes="100vw" alt=inner.banner_alt css_class="inner-hero__image" priority=True %}
+    </div>
+    <div class="inner-hero__veil" aria-hidden="true"></div>
+    <div class="inner-hero__content">
+      <nav class="inner-hero__crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{{ inner.get_key_display }}</span>
+      </nav>
+      <p class="inner-hero__eyebrow"><span aria-hidden="true"></span>{{ inner.eyebrow }}</p>
+      <h1 id="page-title">
+        {{ inner.title }}
+        {% if inner.title_emphasis %}<br><em>{{ inner.title_emphasis }}</em>{% endif %}
+      </h1>
+      <p class="inner-hero__intro">{{ inner.intro }}</p>
+      {% block hero_actions %}{% endblock %}
+    </div>
+    {% block hero_stats %}{% endblock %}
+    <a class="inner-hero__scroll" href="#page-start" aria-label="Scroll to content"><span></span></a>
+  </section>
+
+  <div id="page-start" class="inner-page__start"></div>
+  {% block page %}{% endblock %}
+
+  {% block cta %}{% include "partials/cta_band.html" %}{% endblock %}
+</main>
+{% endblock %}

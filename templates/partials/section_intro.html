@@ -1,0 +1,12 @@
+{# The right-hand side of a homepage section heading: a few live figures above the intro text. #}
+{# Expects: facts (list of (value, label)), text #}
+<div class="section-intro">
+  {% if facts %}
+    <ul class="section-intro__facts">
+      {% for value, label in facts %}
+        <li><strong>{{ value }}</strong><span>{{ label }}</span></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <p class="section-intro__text">{{ text }}</p>
+</div>

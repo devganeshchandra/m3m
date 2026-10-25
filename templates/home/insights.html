@@ -1,0 +1,28 @@
+{% if insights %}
+<section aria-labelledby="insights-title" class="insights-section" id="insights">
+  <div class="insights-section__inner">
+    <div class="insights-section__header">
+      <div>
+        <p class="section-label insights-section__label">
+          <span class="section-label__rule"></span>
+          {{ page.insights_label }}
+        </p>
+        <h2 id="insights-title">{{ page.insights_title }}</h2>
+      </div>
+      <p>{{ page.insights_intro }}</p>
+    </div>
+    <div class="insights-grid">
+      {% for insight in insights %}
+        {% include "partials/insight_card.html" %}
+      {% endfor %}
+    </div>
+
+    <div class="section-more">
+      <a class="ip-button ip-button--navy" href="{% url 'insights' %}">
+        <span>Read all insights</span>
+        {% include "icons/arrow.html" %}
+      </a>
+    </div>
+  </div>
+</section>
+{% endif %}

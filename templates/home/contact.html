@@ -1,0 +1,47 @@
+<section aria-labelledby="contact-title" class="contact-section" id="contact">
+  <div class="contact-section__inner">
+    <div class="contact-section__intro">
+      <p class="section-label contact-section__label">
+        <span class="section-label__rule"></span>
+        {{ page.contact_label }}
+      </p>
+      <h2 id="contact-title">
+        {{ page.contact_title_line_1 }}
+        <br>
+        <em>{{ page.contact_title_line_2 }}</em>
+      </h2>
+      <p>{{ page.contact_intro }}</p>
+      <div class="contact-section__buttons">
+        <button aria-haspopup="dialog" class="contact-section__enquire" data-enquiry-open type="button">
+          <span>{{ page.contact_button_label }}</span>
+          {% include "icons/arrow.html" %}
+        </button>
+        <a class="text-link" href="{% url 'core:contact' %}">
+          <span>All contact details</span>
+          {% include "icons/arrow.html" %}
+        </a>
+      </div>
+    </div>
+
+    <div class="contact-section__details">
+      <div class="contact-section__detail">
+        <span class="contact-section__eyebrow">Call us</span>
+        <a href="tel:{{ site.phone_dial }}">{{ site.phone_display }}</a>
+        <span>Toll-free · {{ site.site_name }}</span>
+      </div>
+      <div class="contact-section__detail">
+        <span class="contact-section__eyebrow">Visit us</span>
+        <address>{{ site.address_line_1 }} {{ site.address_line_2 }}</address>
+      </div>
+      <a class="contact-section__whatsapp" href="{{ site.whatsapp_url }}" rel="noreferrer" target="_blank">
+        {% include "icons/whatsapp.html" %}
+        <span>Continue the conversation on WhatsApp</span>
+        {% include "icons/arrow.html" %}
+      </a>
+    </div>
+  </div>
+  <div class="contact-section__footer">
+    <span>{{ site.site_name|upper }}</span>
+    <span>{{ page.contact_footer_tagline }}</span>
+  </div>
+</section>

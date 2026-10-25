@@ -1,0 +1,94 @@
+<section class="phase-one-hero" aria-labelledby="hero-title">
+  <div aria-label="M3M residences banners" aria-roledescription="carousel" class="hero-banner" role="region" data-hero-carousel>
+    <div class="hero-banner__slides" aria-hidden="true">
+      {% for banner in banners %}
+        <div class="hero-banner__slide{% if forloop.first %} is-active{% endif %}" style="background-image: url('{{ banner.image.url }}')"></div>
+      {% empty %}
+        <div class="hero-banner__slide is-active"></div>
+      {% endfor %}
+    </div>
+    {% if banners|length > 1 %}
+      <div class="hero-banner__controls" role="group" aria-label="Banner controls">
+        <button aria-label="Pause banners" class="hero-banner__toggle" type="button" data-carousel-toggle>Pause</button>
+        <div class="hero-banner__pagination" role="group" aria-label="Choose a banner">
+          {% for banner in banners %}
+            <button aria-label="Show banner {{ forloop.counter }} of {{ banners|length }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" class="hero-banner__pagination-button" type="button" data-carousel-dot="{{ forloop.counter0 }}"><span></span></button>
+          {% endfor %}
+        </div>
+        <span class="hero-banner__status" aria-live="off" data-carousel-status>Banner 1 of {{ banners|length }}</span>
+      </div>
+    {% endif %}
+  </div>
+  <div class="phase-one-hero__veil" aria-hidden="true"></div>
+  <div class="phase-one-hero__content">
+    <div class="phase-one-hero__copy">
+      <p class="eyebrow phase-one-hero__eyebrow">
+        <span>{{ site.site_name }}</span>
+        <span aria-hidden="true">·</span>
+        <span>{{ page.hero_eyebrow }}</span>
+      </p>
+      <h1 class="visually-hidden" id="hero-title">{{ site.site_name }} | {{ page.hero_eyebrow }}</h1>
+      <p class="phase-one-hero__headline">
+        {{ page.hero_headline_line_1 }}
+        <br>
+        <span>{{ page.hero_headline_line_2 }}</span>
+      </p>
+      <p class="phase-one-hero__intro">{{ page.hero_intro }}</p>
+      <a class="text-link" href="/#projects">
+        <span>{{ page.hero_link_label }}</span>
+        {% include "icons/arrow.html" %}
+      </a>
+    </div>
+
+    <aside class="hero-enquiry" aria-labelledby="hero-enquiry-title">
+      <p class="hero-enquiry__eyebrow">A more personal conversation</p>
+      <h2 class="hero-enquiry__title" id="hero-enquiry-title">{{ page.hero_form_title }}</h2>
+      <p class="hero-enquiry__intro">{{ page.hero_form_intro }}</p>
+
+      <form class="hero-enquiry__form" novalidate data-lead-form action="{% url 'submit_enquiry' %}" method="post">
+        {% include "partials/form_tracking.html" with source="hero" %}
+        <label class="hero-enquiry__field">
+          <span>Full name</span>
+          <input data-error-id="hero-name-error" autocomplete="name" maxlength="80" name="name" placeholder="Your name" required data-validate="name">
+          <span class="hero-enquiry__error" id="hero-name-error" hidden></span>
+        </label>
+
+        <div class="hero-enquiry__row">
+          <label class="hero-enquiry__field">
+            <span>Mobile / WhatsApp</span>
+            <input data-error-id="hero-phone-error" autocomplete="tel" inputmode="tel" maxlength="25" name="phone" placeholder="Mobile number" required type="tel" data-validate="phone">
+            <span class="hero-enquiry__error" id="hero-phone-error" hidden></span>
+          </label>
+
+          <label class="hero-enquiry__field">
+            <span>Preferred call time</span>
+            <select data-error-id="hero-callTime-error" name="callTime" required data-validate="callTime" data-no-blur-validate>
+              <option value="">Choose a window</option>
+              <option value="morning">Morning · 9 AM–12 PM</option>
+              <option value="afternoon">Afternoon · 12–3 PM</option>
+              <option value="evening">Evening · 3–6 PM</option>
+              <option value="flexible">I’m flexible</option>
+            </select>
+            <span class="hero-enquiry__error" id="hero-callTime-error" hidden></span>
+          </label>
+        </div>
+
+        <label class="hero-enquiry__field">
+          <span>Email address</span>
+          <input data-error-id="hero-email-error" autocomplete="email" maxlength="254" name="email" placeholder="name@example.com" required type="email" data-validate="email">
+          <span class="hero-enquiry__error" id="hero-email-error" hidden></span>
+        </label>
+
+        <div aria-live="polite" class="hero-enquiry__status" role="status" data-form-status></div>
+        <button class="hero-enquiry__submit" type="submit">
+          Request a private call / virtual tour <span aria-hidden="true">→</span>
+        </button>
+      </form>
+      <p class="hero-enquiry__note">Your details are used only to respond to this enquiry.</p>
+    </aside>
+  </div>
+  <div class="phase-one-hero__caption">
+    <span>{{ page.hero_caption_left }}</span>
+    <span>{{ page.hero_caption_right }}</span>
+  </div>
+</section>

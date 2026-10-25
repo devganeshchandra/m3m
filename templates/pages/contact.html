@@ -1,0 +1,150 @@
+{% extends "inner_base.html" %}
+
+{% block hero_actions %}
+<div class="inner-hero__actions">
+  <a class="ip-button ip-button--gold" href="tel:{{ site.phone_dial }}">
+    <span>Call {{ site.phone_display }}</span>
+    {% include "icons/arrow.html" %}
+  </a>
+  <a class="ip-button ip-button--ghost" href="{{ site.whatsapp_url }}" rel="noreferrer" target="_blank">
+    {% include "icons/whatsapp.html" %}
+    <span>WhatsApp us</span>
+  </a>
+</div>
+{% endblock %}
+
+{% block page %}
+<section class="contact-page" aria-labelledby="contact-intro-title">
+  <div class="contact-page__inner">
+    <div class="contact-page__info">
+      <p class="ip-label"><span aria-hidden="true"></span>{{ inner.intro_label }}</p>
+      <h2 class="ip-heading" id="contact-intro-title">{{ inner.intro_heading }}</h2>
+      <div class="contact-page__text">{{ inner.intro_text|linebreaks }}</div>
+
+      <ul class="contact-methods">
+        <li>
+          <span class="contact-methods__label">Call toll-free</span>
+          <a href="tel:{{ site.phone_dial }}">{{ site.phone_display }}</a>
+        </li>
+        <li>
+          <span class="contact-methods__label">WhatsApp</span>
+          <a href="{{ site.whatsapp_url }}" rel="noreferrer" target="_blank">Chat with our team</a>
+        </li>
+        {% if site.email %}
+          <li>
+            <span class="contact-methods__label">Email</span>
+            <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+          </li>
+        {% endif %}
+        <li>
+          <span class="contact-methods__label">Corporate office</span>
+          <address>{{ site.address_line_1 }}<br>{{ site.address_line_2 }}</address>
+        </li>
+        {% if site.office_hours %}
+          <li>
+            <span class="contact-methods__label">Office hours</span>
+            <span>{{ site.office_hours }}</span>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+
+    <div class="contact-form-card">
+      <h2 class="contact-form-card__title">Request a call back</h2>
+      <p class="contact-form-card__intro">Tell us a little about what you’re looking for. Fields marked * are required.</p>
+      <form class="contact-form" novalidate data-lead-form action="{% url 'submit_enquiry' %}" method="post">
+        {% include "partials/form_tracking.html" with source="contact" %}
+        <label class="contact-field">
+          <span>Full name *</span>
+          <input data-error-id="contact-name-error" autocomplete="name" maxlength="80" name="name" placeholder="Your name" required data-validate="name">
+          <span class="contact-field__error" id="contact-name-error" hidden></span>
+        </label>
+        <div class="contact-form__row">
+          <label class="contact-field">
+            <span>Mobile / WhatsApp *</span>
+            <input data-error-id="contact-phone-error" autocomplete="tel" inputmode="tel" maxlength="25" name="phone" placeholder="Mobile number" required type="tel" data-validate="phone">
+            <span class="contact-field__error" id="contact-phone-error" hidden></span>
+          </label>
+          <label class="contact-field">
+            <span>Email address *</span>
+            <input data-error-id="contact-email-error" autocomplete="email" maxlength="254" name="email" placeholder="name@example.com" required type="email" data-validate="email">
+            <span class="contact-field__error" id="contact-email-error" hidden></span>
+          </label>
+        </div>
+        <div class="contact-form__row">
+          <label class="contact-field">
+            <span>Project of interest</span>
+            <select name="project">
+              <option value="">Not sure yet</option>
+              {% for project in projects %}
+                <option value="{{ project.slug }}">{{ project.name }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="contact-field">
+            <span>Preferred call time *</span>
+            <select data-error-id="contact-callTime-error" name="callTime" required data-validate="callTime">
+              <option value="">Choose a window</option>
+              <option value="morning">Morning · 9 AM–12 PM</option>
+              <option value="afternoon">Afternoon · 12–3 PM</option>
+              <option value="evening">Evening · 3–6 PM</option>
+              <option value="flexible">I’m flexible</option>
+            </select>
+            <span class="contact-field__error" id="contact-callTime-error" hidden></span>
+          </label>
+        </div>
+        <label class="contact-field">
+          <span>Message</span>
+          <textarea name="message" maxlength="2000" rows="4" placeholder="Configuration, budget, a site visit… anything that helps us prepare."></textarea>
+        </label>
+        <label class="contact-consent">
+          <input data-error-id="contact-consent-error" name="consent" required type="checkbox" value="on" data-validate="consent">
+          <span>I agree to be contacted by M3M India about this enquiry. My details will not be used for unrelated marketing.</span>
+        </label>
+        <span class="contact-field__error" id="contact-consent-error" hidden></span>
+        <div aria-live="polite" class="contact-form__status" role="status" data-form-status></div>
+        <button class="ip-button ip-button--navy ip-button--wide" type="submit">
+          <span>Request a call back</span>
+          {% include "icons/arrow.html" %}
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% if site.map_embed_url %}
+<section class="contact-map" aria-label="Corporate office location">
+  <iframe src="{{ site.map_embed_url }}" title="Map showing the M3M India corporate office" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+  <div class="contact-map__card">
+    <p class="ip-label"><span aria-hidden="true"></span>Visit us</p>
+    <h2>Corporate office</h2>
+    <address>{{ site.address_line_1 }} {{ site.address_line_2 }}</address>
+    <a class="text-link" href="https://www.google.com/maps/dir/?api=1&amp;destination={{ site.street_address|add:', '|add:site.city|add:' '|add:site.postal_code|urlencode }}" rel="noreferrer" target="_blank">
+      <span>Get directions</span>
+      {% include "icons/arrow.html" %}
+    </a>
+  </div>
+</section>
+{% endif %}
+
+{% if faqs %}
+<section class="ip-section" aria-labelledby="faq-title">
+  <div class="ip-section__inner faq">
+    <div>
+      <p class="ip-label"><span aria-hidden="true"></span>Good to know</p>
+      <h2 class="ip-heading" id="faq-title">Frequently <em>asked.</em></h2>
+    </div>
+    <div class="faq__list">
+      {% for faq in faqs %}
+        <details class="faq__item"{% if forloop.first %} open{% endif %}>
+          <summary>{{ faq.question }}<span aria-hidden="true"></span></summary>
+          <p>{{ faq.answer }}</p>
+        </details>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block cta %}{% endblock %}

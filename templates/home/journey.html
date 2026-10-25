@@ -1,0 +1,64 @@
+<section aria-labelledby="about-title" class="journey-section" id="about">
+  <div class="journey-section__inner">
+    <div class="journey-section__top">
+      <div class="journey-section__intro">
+        <p class="section-label journey-section__label">
+          <span class="section-label__rule"></span>
+          {{ page.journey_label }}
+        </p>
+        <h2 id="about-title">
+          {{ page.journey_title_line_1 }}
+          <br>
+          <em>{{ page.journey_title_line_2 }}</em>
+        </h2>
+        <p class="journey-section__summary">{{ page.journey_summary }}</p>
+      </div>
+
+      {% if stats %}
+        <aside class="journey-glance" aria-labelledby="journey-glance-title">
+          <p class="journey-glance__label" id="journey-glance-title">M3M India at a glance</p>
+          <ul class="journey-glance__stats">
+            {% for stat in stats %}
+              <li>
+                <strong data-count-up>{{ stat.value }}</strong>
+                <span>{{ stat.label }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+          {% if page.journey_stats_note %}
+            <p class="journey-glance__note">
+              {{ page.journey_stats_note }}
+              <a href="{{ page.journey_link_url }}" rel="noreferrer" target="_blank">M3M India website <span aria-hidden="true">↗</span></a>
+            </p>
+          {% endif %}
+        </aside>
+      {% endif %}
+    </div>
+
+    {% if principles %}
+      <div class="journey-section__content" data-journey>
+        <div class="journey-values" role="group" aria-label="Our values">
+          {% for principle in principles %}
+            <button aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" class="journey-values__item{% if forloop.first %} is-active{% endif %}" id="journey-value-{{ forloop.counter0 }}" type="button" data-journey-item="{{ forloop.counter0 }}" data-title="{{ principle.title }}" data-description="{{ principle.description }}">
+              <span>{{ forloop.counter|stringformat:"02d" }}</span>
+              <strong>{{ principle.title }}</strong>
+              <span aria-hidden="true">↗</span>
+            </button>
+          {% endfor %}
+        </div>
+
+        {% with first=principles.0 %}
+          <div aria-labelledby="journey-value-0" class="journey-value-panel" id="journey-value-panel" aria-live="polite" tabindex="0" data-journey-panel>
+            <span class="journey-value-panel__mark" aria-hidden="true" data-journey-mark>01</span>
+            <h3 data-journey-title>{{ first.title }}</h3>
+            <p data-journey-description>{{ first.description }}</p>
+            <a href="{% url 'core:journey' %}">
+              {{ page.journey_link_label }}
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        {% endwith %}
+      </div>
+    {% endif %}
+  </div>
+</section>

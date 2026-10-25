@@ -1,0 +1,126 @@
+{% extends "inner_base.html" %}
+{% load site_tags %}
+
+{% block hero_stats %}
+{% if stats %}
+<dl class="inner-hero__stats">
+  {% for stat in stats %}
+    <div><dt>{{ stat.label }}</dt><dd>{{ stat.value }}</dd></div>
+  {% endfor %}
+</dl>
+{% endif %}
+{% endblock %}
+
+{% block page %}
+<section class="story" aria-labelledby="story-title">
+  <div class="story__inner">
+    <div class="story__copy">
+      <p class="ip-label"><span aria-hidden="true"></span>{{ inner.intro_label }}</p>
+      <h2 class="ip-heading" id="story-title">{{ inner.intro_heading }}</h2>
+      <div class="story__text">{{ inner.intro_text|linebreaks }}</div>
+    </div>
+    {% if story_images %}
+      <div class="story__collage">
+        {% for image in story_images %}
+          <figure class="story__figure story__figure--{{ forloop.counter }}">
+            {% picture image.image sizes="(max-width: 900px) 90vw, 40vw" alt=image.caption %}
+          </figure>
+        {% endfor %}
+        {% with first_stat=stats.0 %}
+          {% if first_stat %}
+            <div class="story__badge">
+              <span>{{ first_stat.label }}</span>
+              <strong>{{ first_stat.value }}</strong>
+            </div>
+          {% endif %}
+        {% endwith %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% if inner.quote_text %}
+<section class="quote-band" aria-label="Our philosophy">
+  <figure class="quote-band__inner">
+    <span class="quote-band__mark" aria-hidden="true">“</span>
+    <blockquote>{{ inner.quote_text }}</blockquote>
+    {% if inner.quote_attribution %}<figcaption>{{ inner.quote_attribution }}</figcaption>{% endif %}
+  </figure>
+</section>
+{% endif %}
+
+{% if principles %}
+<section class="values" aria-labelledby="values-title">
+  <div class="ip-section__inner">
+    <div class="ip-section__header">
+      <div>
+        <p class="ip-label"><span aria-hidden="true"></span>What guides us</p>
+        <h2 class="ip-heading" id="values-title">Four principles, <em>every address.</em></h2>
+      </div>
+      <p>The ideas that shape how we design, build and stay in conversation with the people who choose M3M.</p>
+    </div>
+    <ol class="values__grid">
+      {% for principle in principles %}
+        <li class="value-card">
+          <span class="value-card__index">{{ forloop.counter|pad2 }}</span>
+          <h3>{{ principle.title }}</h3>
+          <p>{{ principle.description }}</p>
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+{% endif %}
+
+{% if milestones %}
+<section class="timeline" aria-labelledby="timeline-title">
+  <div class="ip-section__inner">
+    <div class="ip-section__header">
+      <div>
+        <p class="ip-label"><span aria-hidden="true"></span>Milestones</p>
+        <h2 class="ip-heading" id="timeline-title">The journey <em>so far.</em></h2>
+      </div>
+    </div>
+    <ol class="timeline__list">
+      {% for milestone in milestones %}
+        <li class="timeline__item" data-reveal>
+          <span class="timeline__marker">{{ milestone.marker }}</span>
+          <div class="timeline__card">
+            {% if milestone.image %}
+              <div class="timeline__image">{% picture milestone.image sizes="(max-width: 800px) 90vw, 40vw" %}</div>
+            {% endif %}
+            <h3>{{ milestone.title }}</h3>
+            {% if milestone.description %}<p>{{ milestone.description }}</p>{% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ol>
+    {% if home.journey_link_url %}
+      <p class="ip-footnote">Figures as published on the <a href="{{ home.journey_link_url }}" rel="noreferrer" target="_blank">M3M India website</a>.</p>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% if featured_projects %}
+<section class="ip-section ip-section--mist" aria-labelledby="signature-title">
+  <div class="ip-section__inner">
+    <div class="ip-section__header">
+      <div>
+        <p class="ip-label"><span aria-hidden="true"></span>The work</p>
+        <h2 class="ip-heading" id="signature-title">Signature <em>addresses.</em></h2>
+      </div>
+      <a class="ip-button ip-button--outline" href="{% url 'projects:list' %}">
+        <span>Explore all projects</span>
+        {% include "icons/arrow.html" %}
+      </a>
+    </div>
+    <div class="projects-grid">
+      {% for project in featured_projects %}
+        {% include "partials/project_card.html" with number=forloop.counter show_status=True %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,85 @@
+<dialog aria-labelledby="enquiry-title" class="enquiry-dialog" data-enquiry-dialog>
+  <div class="enquiry-dialog__layout">
+    <aside class="enquiry-dialog__aside">
+      <div class="enquiry-dialog__image-copy">
+        <p class="eyebrow">M3M India · Private consultation</p>
+        <p class="enquiry-dialog__aside-title">A considered address.</p>
+        <p class="enquiry-dialog__assurance">Begin with a conversation. Explore at your own pace.</p>
+      </div>
+    </aside>
+
+    <section class="enquiry-dialog__content">
+      <button aria-label="Close enquiry form" class="enquiry-dialog__close" data-enquiry-close type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h2 class="enquiry-dialog__title" id="enquiry-title">Enquire now</h2>
+      <p class="enquiry-dialog__intro">
+        Share your details and preferred call time to begin a conversation about
+        <span data-enquiry-project-name>M3M residences</span>.
+      </p>
+      <ul class="enquiry-dialog__benefits">
+        <li>Personal project guidance</li>
+        <li>Choose a convenient call window</li>
+      </ul>
+
+      <form class="enquiry-form" novalidate data-lead-form action="{% url 'submit_enquiry' %}" method="post">
+        {% include "partials/form_tracking.html" with source="popup" %}
+        <input type="hidden" name="project" value="" data-enquiry-project>
+
+        <label class="enquiry-field">
+          <span class="enquiry-field__label">Full name</span>
+          <input aria-describedby="enquiry-name-hint" data-hint-id="enquiry-name-hint" data-error-id="enquiry-name-error" autocomplete="name" maxlength="80" name="name" placeholder="Full name" required data-validate="name">
+          <span class="enquiry-field__hint" id="enquiry-name-hint">Please use your name as it appears in conversation.</span>
+          <span class="enquiry-field__error" id="enquiry-name-error" hidden></span>
+        </label>
+
+        <div class="enquiry-form__row">
+          <label class="enquiry-field">
+            <span class="enquiry-field__label">Mobile / WhatsApp</span>
+            <input aria-describedby="enquiry-phone-hint" data-hint-id="enquiry-phone-hint" data-error-id="enquiry-phone-error" autocomplete="tel" inputmode="tel" maxlength="25" name="phone" placeholder="Mobile number" required type="tel" data-validate="phone">
+            <span class="enquiry-field__hint" id="enquiry-phone-hint">Enter 10 digits for India, or add +country code if calling internationally.</span>
+            <span class="enquiry-field__error" id="enquiry-phone-error" hidden></span>
+          </label>
+
+          <label class="enquiry-field">
+            <span class="enquiry-field__label">Preferred call time</span>
+            <select aria-describedby="enquiry-time-hint" data-hint-id="enquiry-time-hint" data-error-id="enquiry-time-error" name="callTime" required data-validate="callTime">
+              <option value="">Choose a convenient window</option>
+              <option value="morning">Morning · 9:00 AM–12:00 PM</option>
+              <option value="afternoon">Afternoon · 12:00–3:00 PM</option>
+              <option value="evening">Evening · 3:00–6:00 PM</option>
+              <option value="flexible">I’m flexible</option>
+            </select>
+            <span class="enquiry-field__hint" id="enquiry-time-hint">Time windows are in your local time; our team will confirm availability.</span>
+            <span class="enquiry-field__error" id="enquiry-time-error" hidden></span>
+          </label>
+        </div>
+
+        <label class="enquiry-field">
+          <span class="enquiry-field__label">Email address</span>
+          <input aria-describedby="enquiry-email-hint" data-hint-id="enquiry-email-hint" data-error-id="enquiry-email-error" autocomplete="email" maxlength="254" name="email" placeholder="Email address" required type="email" data-validate="email">
+          <span class="enquiry-field__hint" id="enquiry-email-hint">We’ll use this only to follow up on your enquiry.</span>
+          <span class="enquiry-field__error" id="enquiry-email-error" hidden></span>
+        </label>
+
+        <label class="enquiry-consent">
+          <input data-error-id="enquiry-consent-error" name="consent" required type="checkbox" value="on" data-validate="consent">
+          <span>I agree to be contacted by M3M India about this enquiry. My details will not be used for unrelated marketing.</span>
+        </label>
+        <span class="enquiry-field__error" id="enquiry-consent-error" hidden></span>
+
+        <div aria-live="polite" class="enquiry-form__status" role="status" data-form-status></div>
+        <button class="enquiry-form__submit" type="submit">
+          Request a private call / virtual tour
+          {% include "icons/arrow.html" %}
+        </button>
+      </form>
+
+      <div class="enquiry-dialog__contact">
+        <span>For immediate assistance</span>
+        <a href="tel:{{ site.phone_dial }}">Call {{ site.phone_display }}</a>
+        <a href="{{ site.whatsapp_url }}" rel="noreferrer" target="_blank">WhatsApp our team</a>
+      </div>
+    </section>
+  </div>
+</dialog>

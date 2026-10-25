@@ -1,0 +1,21 @@
+export function WhatsAppIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      className="whatsapp-icon"
+      fill="none"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M20 11.7a8 8 0 0 1-11.8 7l-4.2 1.1 1.1-4.1A8 8 0 1 1 20 11.7Z"
+        stroke="currentColor"
+        strokeWidth="1.35"
+      />
+      <path
+        d="M8.6 8.1c.2-.4.4-.4.7-.4h.4c.2 0 .3 0 .4.3l.7 1.6c.1.2.1.4 0 .5l-.5.6c-.2.2-.2.3 0 .6.5.9 1.2 1.5 2.1 1.9.3.1.4.1.6-.1l.7-.8c.2-.2.3-.2.6-.1l1.6.8c.2.1.3.2.3.4 0 .3-.2 1.1-.7 1.5-.5.5-1.1.6-1.7.5-.6-.1-1.4-.4-2.3-.8-1.2-.5-2.1-1.5-2.9-2.5-.7-.9-1.1-1.8-1.2-2.5-.1-.7.2-1.2.5-1.5Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
