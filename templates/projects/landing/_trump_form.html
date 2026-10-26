@@ -1,0 +1,51 @@
+{% comment %}
+  Lead form for the Trump Tower landing page: residence (two big 4 BHK / 5 BHK buttons), full name,
+  mobile and email. Expects: prefix (unique per form), project, button. Posts landing leads with the
+  same validation and junk filtering as the other landing pages; the residence is added to the note
+  the sales team reads.
+{% endcomment %}
+<form class="tt-form" novalidate data-lead-form data-tt-form action="{% url 'submit_enquiry' %}" method="post">
+  {% include "partials/form_tracking.html" with source="landing" %}
+  <input type="hidden" name="project" value="{{ project.slug }}">
+  <input type="hidden" name="interest" value="residential">
+  <input type="hidden" name="message" value="" data-tt-message data-request="Requested: Price list & floor plans">
+  <input type="hidden" name="unit" value="" data-tt-unit data-validate="choice"
+    data-required-message="Choose 4 BHK or 5 BHK." data-error-id="{{ prefix }}-unit-error">
+
+  <div class="tt-units" role="group" aria-label="Residence">
+    {% for value, label in residences %}
+      <button type="button" class="tt-unit" aria-pressed="false" data-tt-unit-choice="{{ value }}">
+        <strong>{{ label }}</strong><span>Residence</span>
+      </button>
+    {% endfor %}
+  </div>
+  <span class="tt-field__error" id="{{ prefix }}-unit-error" role="alert" hidden></span>
+
+  <label class="tt-field">
+    <span class="visually-hidden">Full name</span>
+    <input name="name" type="text" autocomplete="name" maxlength="80" placeholder="Full name" required
+      data-validate="realName" data-error-id="{{ prefix }}-name-error">
+    <span class="tt-field__error" id="{{ prefix }}-name-error" role="alert" hidden></span>
+  </label>
+  <label class="tt-field">
+    <span class="visually-hidden">Mobile number</span>
+    <input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="25" placeholder="Mobile number" required
+      data-validate="phone" data-error-id="{{ prefix }}-phone-error">
+    <span class="tt-field__error" id="{{ prefix }}-phone-error" role="alert" hidden></span>
+  </label>
+  <label class="tt-field">
+    <span class="visually-hidden">Email</span>
+    <input name="email" type="email" autocomplete="email" maxlength="254" placeholder="Email address" required
+      data-validate="leadEmail" data-error-id="{{ prefix }}-email-error">
+    <span class="tt-field__error" id="{{ prefix }}-email-error" role="alert" hidden></span>
+  </label>
+  <button class="tt-btn tt-btn--gold tt-form__submit" type="submit">
+    {{ button }}
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <p class="tt-form__status" role="status" aria-live="polite" data-form-status></p>
+  <p class="tt-form__note">
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="13" height="13"><path d="M7 11V8a5 5 0 0 1 10 0v3M6 11h12v9H6z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+    Your details are safe. M3M India may call, WhatsApp or email you about this project.
+  </p>
+</form>

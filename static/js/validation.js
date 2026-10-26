@@ -13,6 +13,39 @@
   var CALL_TIME_ERROR = "Choose a preferred time for your call.";
   var CONSENT_ERROR =
     "Please confirm that we may contact you about this enquiry.";
+  // Ad landing pages: extra checks against junk leads (mirrors validate_real_name / validate_lead_email).
+  var JUNK_NAME_ERROR = "Please enter your real full name so our team can address you properly.";
+  var DISPOSABLE_EMAIL_ERROR = "Please use a permanent email address so we can send you the details.";
+  var INTEREST_ERROR = "Choose residential or commercial.";
+  var JUNK_NAMES = [
+    "test", "testing", "tester", "asdf", "asd", "qwerty", "abc", "abcd", "xyz", "na", "none", "null",
+    "name", "fullname", "full name", "user", "demo", "sample", "fake", "aaa", "xxx", "hello", "hi",
+  ];
+  var DISPOSABLE_DOMAINS = [
+    "mailinator.com", "guerrillamail.com", "10minutemail.com", "tempmail.com", "temp-mail.org",
+    "yopmail.com", "trashmail.com", "getnada.com", "sharklasers.com", "dispostable.com",
+    "throwawaymail.com", "maildrop.cc", "fakeinbox.com", "mintemail.com", "emailondeck.com",
+    "example.com", "example.org", "test.com",
+  ];
+
+  function validateRealName(value) {
+    var name = String(value || "").trim().replace(/\s+/g, " ");
+    var error = validateName(name);
+    if (error) return error;
+    var lower = name.toLowerCase();
+    var compact = lower.replace(/ /g, "");
+    var distinct = new Set(compact.split("")).size;
+    return JUNK_NAMES.indexOf(lower) !== -1 || JUNK_NAMES.indexOf(compact) !== -1 || distinct <= 2
+      ? JUNK_NAME_ERROR
+      : "";
+  }
+
+  function validateLeadEmail(value) {
+    var error = validateEmail(value);
+    if (error) return error;
+    var domain = String(value).trim().split("@").pop().toLowerCase();
+    return DISPOSABLE_DOMAINS.indexOf(domain) !== -1 ? DISPOSABLE_EMAIL_ERROR : "";
+  }
 
   function validateName(value) {
     var name = String(value || "").trim().replace(/\s+/g, " ");
@@ -72,6 +105,14 @@
         return validateEmail(control.value);
       case "callTime":
         return control.value ? "" : CALL_TIME_ERROR;
+      case "realName":
+        return validateRealName(control.value);
+      case "leadEmail":
+        return validateLeadEmail(control.value);
+      case "choice":
+        return control.value ? "" : control.dataset.requiredMessage || "Please choose an option.";
+      case "interest":
+        return control.value === "residential" || control.value === "commercial" ? "" : INTEREST_ERROR;
       case "consent":
         return control.checked ? "" : control.dataset.consentMessage || CONSENT_ERROR;
       default:

@@ -17,7 +17,9 @@
   <meta property="og:url" content="{{ site_url }}{{ request.path }}">
   {% block og_image %}{% if site.share_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site.share_image.url }}">{% endif %}{% endblock %}
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="{% static 'images/logo/m3m-logo.png' %}">
+  <link rel="icon" href="{% static 'images/logo/favicon.ico' %}" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="{% static 'images/logo/favicon-96.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/logo/apple-touch-icon.png' %}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap">
@@ -28,7 +30,7 @@
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
-  {% include "partials/header.html" %}
+  {% block site_header %}{% include "partials/header.html" %}{% endblock %}
   <div class="page-shell">
     {% block content %}{% endblock %}
   </div>

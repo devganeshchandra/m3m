@@ -1,0 +1,56 @@
+{% comment %}
+  Two-step lead form for the Cullinan landing page.
+  Step 1: one tap on the unit type (3 / 4 / 5 BHK or a retail shop), which sets the project type.
+  Step 2: full name, mobile and email. Same validation and junk filtering as every landing form.
+  Expects: prefix (unique per form), project, button (label).
+{% endcomment %}
+<form class="cl-form" novalidate data-lead-form data-cl-form action="{% url 'submit_enquiry' %}" method="post"
+  data-residential-project="{{ project.slug }}" data-commercial-project="m3m-the-cullinan-avenue">
+  {% include "partials/form_tracking.html" with source="landing" %}
+  <input type="hidden" name="project" value="{{ project.slug }}" data-cl-project>
+  <input type="hidden" name="message" value="" data-cl-message data-request="Requested: Project details">
+  <input type="hidden" name="interest" value="" data-validate="interest" data-error-id="{{ prefix }}-interest-error" data-cl-interest>
+
+  <fieldset class="cl-form__step cl-form__step--one">
+    <legend><span>1</span> I’m interested in</legend>
+    <div class="cl-units">
+      {% for value, label, note in units %}
+        <label class="cl-unit">
+          <input type="radio" name="unit" value="{{ value }}" data-cl-unit>
+          <strong>{{ label }}</strong>
+          <small>{{ note }}</small>
+        </label>
+      {% endfor %}
+    </div>
+    <span class="cl-field__error" id="{{ prefix }}-interest-error" role="alert" hidden></span>
+  </fieldset>
+
+  <fieldset class="cl-form__step cl-form__step--two" data-cl-step-two>
+    <legend><span>2</span> Where should we send it?</legend>
+    <label class="cl-field">
+      <span class="visually-hidden">Full name</span>
+      <input name="name" type="text" autocomplete="name" maxlength="80" placeholder="Full name" required
+        data-validate="realName" data-error-id="{{ prefix }}-name-error">
+      <span class="cl-field__error" id="{{ prefix }}-name-error" role="alert" hidden></span>
+    </label>
+    <label class="cl-field">
+      <span class="visually-hidden">Mobile number</span>
+      <input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="25" placeholder="Mobile number" required
+        data-validate="phone" data-error-id="{{ prefix }}-phone-error">
+      <span class="cl-field__error" id="{{ prefix }}-phone-error" role="alert" hidden></span>
+    </label>
+    <label class="cl-field">
+      <span class="visually-hidden">Email</span>
+      <input name="email" type="email" autocomplete="email" maxlength="254" placeholder="Email address" required
+        data-validate="leadEmail" data-error-id="{{ prefix }}-email-error">
+      <span class="cl-field__error" id="{{ prefix }}-email-error" role="alert" hidden></span>
+    </label>
+    <button class="cl-button cl-button--solid cl-form__submit" type="submit">
+      {{ button }}
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>
+    </button>
+  </fieldset>
+
+  <p class="cl-form__status" role="status" aria-live="polite" data-form-status></p>
+  <p class="cl-form__note">By submitting, you agree that M3M India may call, WhatsApp or email you about this project.</p>
+</form>

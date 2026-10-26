@@ -382,8 +382,7 @@ This article is general information, not financial or legal advice. Speak with a
 ]
 
 # Billionaire Block page. Images are artistic impressions in seed/images/billionaire_block/.
-# PLACEHOLDERS: every figure, size, distance and amenity below is indicative. Confirm each one
-# against the final project brief in the admin before the page goes live.
+# Facts are limited to what Business Today and Outlook Luxe reported in January 2026.
 BILLIONAIRE_BLOCK_FILES = {
     "hero_video": "billionaire_block/hero.mp4",
     "hero_image": "home_banners/towers-above-clouds.jpg",
@@ -399,148 +398,72 @@ BILLIONAIRE_BLOCK_FILES = {
 # (name, tagline, size, configuration, features, image, image alt)
 BILLIONAIRE_RESIDENCES = [
     (
-        "Signature Residences",
-        "Single-floor homes, open to the sky on four sides.",
-        "10,000 – 12,500 sq ft",
-        "4 & 5 bedrooms with staff quarters",
-        "Private lift opening into the foyer\n"
-        "Four-side open, with views in every direction\n"
-        "Formal and family living wings\n"
-        "Wraparound sky deck",
+        "Signature Residences by ELIE SAAB",
+        "Four-bedroom homes with waterfront views.",
+        "4,200 – 4,650 sq ft",
+        "4 bedrooms",
+        "Wrap-around decks with private jacuzzis\n"
+        "Waterfront views\n"
+        "Generous floor-to-ceiling heights\n"
+        "ELIE SAAB Maison furnishings",
         "billionaire_block/salon.jpg",
-        "Signature Residence living salon at dusk",
-    ),
-    (
-        "Sky Villas",
-        "Duplex homes with double-height living and a private pool deck.",
-        "14,000 – 16,000 sq ft",
-        "5 bedrooms across two floors, with staff quarters",
-        "Double-height salon with a sculptural staircase\n"
-        "Private pool deck and garden terrace\n"
-        "Principal suite occupying its own wing\n"
-        "Show kitchen and separate chef’s kitchen",
-        "billionaire_block/sky-villa.jpg",
-        "Sky Villa double-height living room with a floating staircase",
-    ),
-    (
-        "The Penthouse",
-        "One home at the summit. Nothing above it but sky.",
-        "25,000+ sq ft",
-        "Bespoke triplex with rooftop pavilion",
-        "Rooftop infinity pool and glass pavilion\n"
-        "Private screening room and wine cellar\n"
-        "Personal spa with steam and massage suite\n"
-        "Interiors finished to the owner’s brief",
-        "billionaire_block/penthouse.jpg",
-        "Penthouse rooftop pool above a sea of clouds",
+        "Living salon with city views at dusk, artistic impression",
     ),
 ]
 
 # (section, title, value, text, image, image alt)
 BILLIONAIRE_ITEMS = [
-    # Key numbers: value is the figure, text is the unit shown beside it.
-    ("stat", "Residences in the collection", "48", "", "", ""),
-    ("stat", "Area of each residence", "12,000+", "sq ft", "", ""),
-    ("stat", "Ceiling height", "14", "ft", "", ""),
-    ("stat", "Private residents’ club", "1,00,000", "sq ft", "", ""),
-    # Residence features
-    ("feature", "Private elevator into the residence", "", "The lift opens only into your own foyer, never onto a corridor.", "", ""),
-    ("feature", "Four-side open", "", "Light, air and views on every side of the home.", "", ""),
-    ("feature", "14 ft ceilings", "", "Volumes proportioned for art, chandeliers and calm.", "", ""),
-    ("feature", "Italian marble", "", "Book-matched slabs, selected block by block at the quarry.", "", ""),
-    ("feature", "Home automation", "", "Light, climate, shading and security from a single panel.", "", ""),
-    ("feature", "Private pool decks", "", "Plunge pools and sun decks in select residences.", "", ""),
-    ("feature", "Staff quarters with service entry", "", "A separate service lift and entrance for the household team.", "", ""),
-    ("feature", "VRV with fresh-air system", "", "Quiet, zoned climate control with filtered fresh air.", "", ""),
-    ("feature", "Private wine cellar", "", "A temperature-controlled cellar within the residence.", "", ""),
-    # The club
-    ("club", "Infinity pool", "", "A heated pool with an edge that meets the sky.", "billionaire_block/sky-pool.jpg", "Infinity pool above the city at night"),
-    ("club", "Spa & hammam", "", "Marble hammam, steam, sauna and treatment suites.", "billionaire_block/spa.jpg", "Domed marble hammam with soft steam"),
-    ("club", "Cigar lounge", "", "Leather, walnut and a walk-in humidor.", "billionaire_block/cigar-lounge.jpg", "Cigar lounge with leather club chairs and a humidor"),
-    ("club", "Whisky bar", "", "Rare single malts behind a backlit onyx bar.", "billionaire_block/whisky-bar.jpg", "Whisky bar with a backlit onyx counter"),
-    ("club", "Private dining", "", "A table for twelve, served by the club’s chefs.", "billionaire_block/private-dining.jpg", "Private dining room set for twelve"),
-    ("club", "Padel & squash", "", "Glass-walled courts with coaching on request.", "billionaire_block/padel.jpg", "Indoor padel court with glass walls"),
-    ("club", "Golf simulator", "", "The world’s great courses, in every season.", "billionaire_block/golf-simulator.jpg", "Golf simulator suite with leather chairs"),
-    ("club", "Private cinema", "", "Twelve reclining seats and reference-grade sound.", "billionaire_block/cinema.jpg", "Private screening room with velvet recliners"),
-    ("club", "Art gallery", "", "A curated, rotating collection for residents.", "billionaire_block/lift-lobby.jpg", "Sculpture on a plinth before a backlit onyx wall"),
-    ("club", "Library", "", "Double-height shelves and quiet reading rooms.", "billionaire_block/library.jpg", "Library with double-height oak shelves"),
-    ("club", "Kids’ academy", "", "Supervised studios for play, art and learning.", "billionaire_block/kids-academy.jpg", "Children’s studio with a climbing wall and easels"),
-    # Lifestyle services
-    ("service", "24×7 concierge", "", "One call for anything, at any hour.", "", ""),
-    ("service", "Chauffeur & valet", "", "Your car is ready before you reach the lobby.", "", ""),
-    ("service", "In-residence dining", "", "The club’s chefs cook in your home on request.", "", ""),
-    ("service", "Housekeeping", "", "Discreet daily care by a trained residence team.", "", ""),
-    ("service", "Wellness doctor", "", "A resident physician for consultations at home.", "", ""),
-    ("service", "Personal trainer", "", "Programmes built around your schedule.", "", ""),
-    ("service", "Car detailing", "", "Your collection, cared for in the basement atelier.", "", ""),
-    ("service", "Pet care", "", "Grooming, walking and care when you travel.", "", ""),
-    # Privacy & security
-    ("security", "Private lift lobbies", "", "No shared corridors. Your lift arrives only at your door.", "", ""),
-    ("security", "One or two residences per floor", "", "Neighbours you choose to meet, not ones you pass.", "", ""),
-    ("security", "Biometric & facial recognition", "", "Access that knows residents, staff and expected guests.", "", ""),
-    ("security", "Private porte-cochère per tower", "", "Every tower has its own covered, discreet arrival.", "", ""),
-    ("security", "Helipad", "", "For arrivals that cannot wait for traffic.", "", ""),
-    # Location: value is the indicative travel time.
-    ("location", "Golf Course Road", "2 min", "", "", ""),
-    ("location", "DLF Cyber City", "15 min", "", "", ""),
-    ("location", "Indira Gandhi International Airport", "35 min", "", "", ""),
-    ("location", "Leading international schools", "10 min", "", "", ""),
-    ("location", "Medanta & Fortis hospitals", "15 min", "", "", ""),
-    ("location", "DLF Golf & Country Club", "10 min", "", "", ""),
+    # Key numbers (Business Today and Outlook Luxe, January 2026): value is the figure, text the unit.
+    ("stat", "Acre enclave", "170", "", "", ""),
+    ("stat", "Signature Residences by ELIE SAAB", "300", "", "", ""),
+    ("stat", "Largest residence", "4,650", "sq ft", "", ""),
+    ("stat", "Completion scheduled", "2030", "", "", ""),
     # Gallery
     ("gallery", "The enclave from above", "", "", "billionaire_block/aerial-masterplan.jpg", "Aerial view of a green enclave with lakes, golf greens and villas"),
     ("gallery", "The towers above the clouds", "", "", "billionaire_block/sky-towers.jpg", "Sculptural towers rising above the clouds"),
-    ("gallery", "Sky Villa salon", "", "", "billionaire_block/sky-villa.jpg", "Double-height Sky Villa salon"),
+    ("gallery", "A double-height salon", "", "", "billionaire_block/sky-villa.jpg", "Double-height living salon with a floating staircase"),
     ("gallery", "The retail podium", "", "", "billionaire_block/podium-facade.jpg", "Daylight façade of the retail podium with a sculpted canopy"),
-    ("gallery", "Penthouse terrace", "", "", "billionaire_block/penthouse.jpg", "Penthouse pool above the clouds"),
+    ("gallery", "A pool above the clouds", "", "", "billionaire_block/penthouse.jpg", "Terrace pool above a sea of clouds"),
     ("gallery", "Twin towers at sunset", "", "", "billionaire_block/twin-towers-sunset.jpg", "Twin residential towers at sunset"),
     ("gallery", "The towers by day", "", "", "billionaire_block/towers-day.jpg", "Residential towers and landscaped podium by day"),
     ("gallery", "Principal suite", "", "", "billionaire_block/suite.jpg", "Principal suite at golden hour"),
     ("gallery", "The towers at blue hour", "", "", "billionaire_block/towers-blue-hour.jpg", "Residential towers and retail podium at blue hour"),
     ("gallery", "The towers by night", "", "", "billionaire_block/towers-night.jpg", "Residential towers lit at night beside the expressway"),
-    # Specifications
-    ("spec", "Flooring", "", "Book-matched Italian marble in living and dining areas. Engineered oak in bedrooms. Natural stone on terraces and pool decks.", "", ""),
-    ("spec", "Kitchen", "", "Show kitchen with stone island and integrated appliances by leading European makers. Separate chef’s kitchen with commercial-grade equipment, cold room and pantry.", "", ""),
-    ("spec", "Bathrooms", "", "Marble-clad walls and floors, freestanding stone baths, rain showers, heated floors and designer sanitaryware with brushed-bronze fittings.", "", ""),
-    ("spec", "Doors", "", "Full-height veneered doors with concealed frames and bespoke bronze hardware. Main entrance door with biometric lock.", "", ""),
-    ("spec", "Windows", "", "Floor-to-ceiling double-glazed, acoustic and thermally insulated glazing in slim aluminium frames, with motorised sheers and blackout blinds.", "", ""),
-    ("spec", "Smart home", "", "Integrated control of lighting scenes, climate, shading, audio-visual and security, from wall panels and mobile devices.", "", ""),
-    ("spec", "Air conditioning", "", "VRV system with individual room control and a central fresh-air system with filtration and humidity control.", "", ""),
-    # Amenities: items with an image appear as photos, the rest only in the list beside them.
-    ("amenity_indoor", "Boxing ring", "", "", "billionaire_block/amenity-boxing-ring.jpg", "Two boxers sparring in a boxing ring"),
-    ("amenity_indoor", "Bowling alley", "", "", "billionaire_block/amenity-bowling-alley.jpg", "Bowling lane with a red ball before the pins"),
-    ("amenity_indoor", "Mini theatre", "", "", "billionaire_block/amenity-mini-theatre.jpg", "Mini theatre with red and black seats facing the screen"),
-    ("amenity_indoor", "CrossFit gym", "", "", "billionaire_block/amenity-crossfit-gym.jpg", "Woman training with battle ropes in a gym"),
-    ("amenity_indoor", "Library", "", "", "billionaire_block/amenity-library.jpg", "Library lounge with armchairs beside tall bookshelves"),
-    ("amenity_indoor", "E-sports room", "", "", "", ""),
-    ("amenity_indoor", "Business centre", "", "", "", ""),
-    ("amenity_indoor", "Indoor games room", "", "", "", ""),
-    ("amenity_wellness", "Swimming pool", "", "", "billionaire_block/amenity-swimming-pool.jpg", "Swimmers in a landscaped pool below the towers"),
-    ("amenity_wellness", "Cricket practice pitch", "", "", "billionaire_block/amenity-cricket-pitch.jpg", "Batsman in the nets of a cricket practice pitch"),
-    ("amenity_wellness", "Golf putting", "", "", "billionaire_block/amenity-golf-putting.jpg", "Golfer on a putting green with sand bunkers"),
-    ("amenity_wellness", "Yoga & aerobic deck", "", "", "billionaire_block/amenity-yoga-deck.jpg", "Two women meditating on an open-air yoga deck"),
-    ("amenity_wellness", "Cycle track", "", "", "", ""),
-    ("amenity_wellness", "Jogging track", "", "", "", ""),
-    ("amenity_wellness", "Trampoline park", "", "", "", ""),
-    ("amenity_wellness", "Fitness station", "", "", "", ""),
-    ("amenity_wellness", "Ping-pong area", "", "", "", ""),
-    ("amenity_leisure", "Jungle gym, sand pit & musical garden", "", "", "billionaire_block/amenity-jungle-gym.jpg", "Aerial view of a children’s play garden with a jungle gym and sand pit"),
-    ("amenity_leisure", "Seating alcove", "", "", "billionaire_block/amenity-seating-alcove.jpg", "Shaded seating alcove under a timber canopy in the gardens"),
-    ("amenity_leisure", "Swimming pool & meditation deck", "", "", "billionaire_block/amenity-meditation-deck.jpg", "Aerial view of a curved pool beside a meditation deck at dusk"),
-    ("amenity_leisure", "Festival lawn", "", "", "", ""),
-    ("amenity_leisure", "Walking trail", "", "", "", ""),
-    ("amenity_leisure", "Tree house with bird-watching deck", "", "", "", ""),
-    ("amenity_leisure", "Reading garden", "", "", "", ""),
-    ("amenity_leisure", "Frisbee zone", "", "", "", ""),
-    ("amenity_leisure", "Picnic & barbecue area", "", "", "", ""),
-    ("amenity_leisure", "Pets’ park", "", "", "", ""),
-    ("amenity_leisure", "Circles of joy", "", "", "", ""),
-    ("amenity_leisure", "Resting pavilion", "", "", "", ""),
-    ("amenity_leisure", "Sunrise & sunset deck", "", "", "", ""),
-    ("amenity_leisure", "Bonfire court", "", "", "", ""),
     ("gallery", "The living room", "", "", "billionaire_block/living-room.jpg", "Woman reading by full-height glass doors in a sunlit living room"),
     ("gallery", "Infinity pool deck", "", "", "billionaire_block/infinity-pool-deck.jpg", "Woman walking beside an infinity pool above a forested valley"),
     ("gallery", "Private terrace", "", "", "billionaire_block/private-terrace.jpg", "Woman on a glass-railed terrace overlooking green hills"),
+    # The vision: four ideas (M3M / ELIE SAAB announcement)
+    ("service", "An enclave, not one project", "", "A planned precinct for several branded residences.", "", ""),
+    ("service", "International design", "", "ELIE SAAB’s design language and Maison furnishings.", "", ""),
+    ("service", "Homes within a township", "", "Offices, retail and hospitality alongside.", "", ""),
+    ("service", "A complete lifestyle", "", "Concierge, wellness, pools, fitness, lounges and play.", "", ""),
+    # Amenities announced for Signature Residences by ELIE SAAB (images are representative)
+    ("club", "Swimming pools", "", "Poolside leisure, woven into the residences.", "billionaire_block/sky-pool.jpg", "Pool deck at night, representative image"),
+    ("club", "Wellness & spa", "", "Spaces for rest and personal well-being.", "billionaire_block/spa.jpg", "Spa with a domed marble ceiling, representative image"),
+    ("club", "Fitness centres", "", "A fitness centre for residents.", "billionaire_block/amenity-crossfit-gym.jpg", "Woman training with battle ropes, representative image"),
+    ("club", "Residents’ lounges", "", "Shared interiors by ELIE SAAB Maison.", "billionaire_block/library.jpg", "Lounge with tall bookshelves, representative image"),
+    ("club", "Outdoor living", "", "Wrap-around decks and waterfront views.", "billionaire_block/amenity-seating-alcove.jpg", "Shaded garden seating, representative image"),
+    ("club", "Concierge", "", "Resident assistance, from arrival onwards.", "billionaire_block/arrival.jpg", "Arrival court at night, representative image"),
+    ("club", "Children’s play areas", "", "Dedicated spaces for younger residents.", "billionaire_block/kids-academy.jpg", "Children’s studio, representative image"),
+    # The township: Smart City Delhi Airport (SCDA project information)
+    ("security", "Luxury residences", "", "", "", ""),
+    ("security", "Grade-A offices", "", "", "", ""),
+    ("security", "High-street retail", "", "", "", ""),
+    ("security", "Premium hospitality", "", "", "", ""),
+    ("security", "Walking & cycling routes", "", "Along landscaped pathways.", "", ""),
+    # Location: access the location is planned around; no travel times are quoted
+    ("location", "Indira Gandhi International Airport", "", "", "", ""),
+    ("location", "Aerocity", "", "", "", ""),
+    ("location", "Delhi and the NCR", "", "", "", ""),
+    ("location", "Gurugram’s business districts", "", "", "", ""),
+    # Before you buy: a buyer checklist
+    ("spec", "RERA registration", "", "The promoter and Haryana RERA number for this specific project.", "", ""),
+    ("spec", "Approved plans", "", "The sanctioned layout and building plans.", "", ""),
+    ("spec", "Towers, floors and residences", "", "The final count, as approved.", "", ""),
+    ("spec", "Areas", "", "Carpet and super area, as written in the agreement.", "", ""),
+    ("spec", "Amenities", "", "Which facilities the agreement actually includes.", "", ""),
+    ("spec", "Schedule", "", "Construction milestones and the possession date.", "", ""),
+    ("spec", "Running costs", "", "Maintenance, clubhouse access and service charges.", "", ""),
 ]
 
 # News about the Billionaire's Block, summarised from the published articles (checked 24 Oct 2026).
@@ -617,11 +540,11 @@ BILLIONAIRE_NEWS = [
         "M3M’s Billionaires’ Block received the Unique Branded Residences’ Master Development Award at the India "
         "Property Awards 2026, according to a press release distributed by ANI on 17 July 2026.\n\n"
         "The release describes the development as an integrated branded destination that brings together "
-        "architecture, public spaces, wellness, hospitality and resident services, and names Roseate as a "
-        "hospitality partner.",
+        "architecture, public spaces, wellness, hospitality and resident services, and names Roseate among M3M’s "
+        "hospitality partners.",
         "India Property Awards 2026\n"
         "Unique Branded Residences’ Master Development Award\n"
-        "Roseate named as hospitality partner",
+        "Roseate named among M3M’s hospitality partners",
         "https://www.latestly.com/agency-news/business-news-m3ms-billionaires-block-wins-unique-branded-residences-master-development-award-at-the-india-property-awards-2026-7520457.html",
         True,
     ),

@@ -1,0 +1,248 @@
+{% load static %}
+{% comment %}
+  Billionaire Block: the research story, from the plan to the sources.
+  Facts follow the January 2026 M3M India / Smartworld Developers / ELIE SAAB announcement as reported by
+  Business Today and Outlook Luxe. Every image is an AI-generated concept or artistic impression, never an
+  official render. Edit the copy here; images are in static/images/billionaire/.
+{% endcomment %}
+
+{# ---------- 1. The plan: carousel and the four headline facts ---------- #}
+<section class="bbx-plan" id="overview" aria-labelledby="bbx-plan-title">
+  <header class="bbx-plan__head">
+    <p class="bbx-eyebrow">The plan</p>
+    <h2 class="bbx-display" id="bbx-plan-title" data-bb-lines>What exactly is <em>M3M</em> planning to develop?</h2>
+  </header>
+
+  <div class="bbx-carousel" data-bbx-carousel aria-roledescription="carousel" aria-label="Concept images of the township">
+    <ul class="bbx-carousel__slides">
+      {% for file, caption, alt in plan_slides %}
+        <li class="bbx-carousel__slide{% if forloop.first %} is-active{% endif %}" aria-roledescription="slide"
+          aria-label="{{ forloop.counter }} of {{ plan_slides|length }}: {{ caption }}" {% if not forloop.first %}aria-hidden="true"{% endif %}>
+          <img src="{% static 'images/billionaire/'|add:file|add:'.jpg' %}"
+            srcset="{% static 'images/billionaire/'|add:file|add:'-1200.jpg' %} 1200w, {% static 'images/billionaire/'|add:file|add:'.jpg' %} 2400w"
+            sizes="100vw" alt="{{ alt }}" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
+          <p class="bbx-carousel__caption"><span>{{ forloop.counter|stringformat:"02d" }}</span>{{ caption }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="bbx-carousel__controls">
+      <button class="bbx-carousel__arrow" type="button" data-bbx-step="-1" aria-label="Previous image">‹</button>
+      <div class="bbx-carousel__dots" role="group" aria-label="Choose an image">
+        {% for slide in plan_slides %}
+          <button type="button" data-bbx-dot="{{ forloop.counter0 }}" aria-label="Show image {{ forloop.counter }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"><span></span></button>
+        {% endfor %}
+      </div>
+      <button class="bbx-carousel__arrow" type="button" data-bbx-step="1" aria-label="Next image">›</button>
+    </div>
+    <p class="bbx-carousel__note">AI-generated concepts, not official renders</p>
+  </div>
+
+  <dl class="bbx-facts">
+    <div>
+      <dt>Location</dt>
+      <dd><strong>Sector 111, Gurugram</strong><span>Dwarka Expressway, within SCDA</span></dd>
+    </div>
+    <div>
+      <dt>Billionaire’s Block</dt>
+      <dd><strong><span data-count="170">170</span> acres</strong><span>Planned branded-residence enclave</span></dd>
+    </div>
+    <div>
+      <dt>Larger SCDA township</dt>
+      <dd><strong><span data-count="250">250</span> acres</strong><span>Mixed-use master development</span></dd>
+    </div>
+    <div>
+      <dt>First announced branded project</dt>
+      <dd><strong>ELIE SAAB Residences</strong><span>300 planned residences in Gurugram</span></dd>
+    </div>
+  </dl>
+  <p class="bbx-footnote">The 170-acre enclave is part of the wider SCDA township, not an addition to it. Township area as described in SCDA project information.</p>
+</section>
+
+{# ---------- 2. M3M Residences by ELIE SAAB ---------- #}
+<section class="bbx-brand" id="residences" aria-labelledby="bbx-brand-title">
+  <div class="bbx-brand__media">
+    <figure class="bbx-brand__main" data-bb-clip>
+      <img src="{% static 'images/billionaire/living-room.jpg' %}" alt="Couture-inspired living room opening to a terrace and lake at sunset, AI-generated concept" loading="lazy" decoding="async">
+    </figure>
+    <figure class="bbx-brand__inset" data-bb-clip>
+      <img src="{% static 'images/billionaire/deck-jacuzzi-1200.jpg' %}" alt="Wrap-around deck with a private jacuzzi above a lake at dusk, AI-generated concept" loading="lazy" decoding="async">
+    </figure>
+  </div>
+  <div class="bbx-brand__copy">
+    <p class="bbx-eyebrow">First in the enclave</p>
+    <h2 class="bbx-display" id="bbx-brand-title" data-bb-lines>M3M Residences <em>by ELIE SAAB</em></h2>
+    <p class="bbx-lead">Four-bedroom homes, waterfront views and the couture house’s own Maison furnishings.</p>
+    <ul class="bbx-chips">
+      <li><span data-count="300">300</span> residences</li>
+      <li>4 bedrooms</li>
+      <li>4,200–4,650 sq ft</li>
+      <li><span data-count="2030">2030</span></li>
+    </ul>
+    <a class="bb-button bb-button--gold" href="#private-viewing" data-magnetic>Request Project Details</a>
+  </div>
+</section>
+
+{# ---------- 3. Announced details ---------- #}
+<section class="bbx-details" aria-labelledby="bbx-details-title">
+  <header class="bbx-details__head">
+    <p class="bbx-eyebrow">Announced details</p>
+    <h2 class="bbx-display" id="bbx-details-title" data-bb-lines>A clearly defined <em>luxury</em> residence.</h2>
+  </header>
+  <dl class="bbx-spec">
+    {% for label, value in announced_details %}
+      <div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+    {% endfor %}
+  </dl>
+  <p class="bbx-footnote">Source: joint M3M India, Smartworld Developers and ELIE SAAB announcement, January 2026.</p>
+</section>
+
+{# ---------- 4. Community ---------- #}
+<section class="bbx-community" id="community" aria-labelledby="bbx-community-title">
+  <header class="bbx-section-head">
+    <p class="bbx-eyebrow">Community</p>
+    <h2 class="bbx-display" id="bbx-community-title" data-bb-lines>What type of society is <em>M3M</em> trying to create?</h2>
+    <p class="bbx-lead">Two levels: a private enclave, inside a complete township.</p>
+  </header>
+  <div class="bbx-community__grid">
+    {% for letter, title, file, alt, points in community %}
+      <article class="bbx-community__card">
+        <figure data-bb-clip>
+          <img src="{% static 'images/billionaire/'|add:file|add:'-1200.jpg' %}" alt="{{ alt }}" loading="lazy" decoding="async">
+          <span class="bbx-community__letter">{{ letter }}</span>
+        </figure>
+        <h3>{{ title }}</h3>
+        <ul class="bbx-ticks">
+          {% for point in points %}<li>{{ point }}</li>{% endfor %}
+        </ul>
+      </article>
+    {% endfor %}
+  </div>
+  <p class="bbx-footnote">Stated project objectives and design intentions, not proof that every planned facility is built.</p>
+</section>
+
+{# ---------- 5. Amenities ---------- #}
+<section class="bbx-amenities" id="amenities" aria-labelledby="bbx-amenities-title">
+  <header class="bbx-section-head bbx-section-head--light">
+    <p class="bbx-eyebrow">Amenities</p>
+    <h2 class="bbx-display" id="bbx-amenities-title" data-bb-lines>What amenities are they <em>planning</em> to deliver?</h2>
+  </header>
+  <ul class="bbx-amenities__grid">
+    {% for title, line, file, alt in amenities %}
+      <li class="bbx-amenity">
+        <img src="{% static 'images/billionaire/'|add:file|add:'.jpg' %}" alt="{{ alt }}" loading="lazy" decoding="async">
+        <div class="bbx-amenity__copy">
+          <span>{{ forloop.counter|stringformat:"02d" }}</span>
+          <h3>{{ title }}</h3>
+          <p>{{ line }}</p>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+  <p class="bbx-footnote bbx-footnote--light">Named in the ELIE SAAB project announcement. Final specifications follow the approved plans. Images are representative.</p>
+</section>
+
+{# ---------- 6. Towers, blocks and layouts ---------- #}
+<section class="bbx-towers" id="towers" aria-labelledby="bbx-towers-title">
+  <figure class="bbx-towers__image" data-bb-clip>
+    <img src="{% static 'images/billionaire/tower-elevation.jpg' %}" alt="Slender residential tower with wrap-around balconies at dusk, AI-generated concept" loading="lazy" decoding="async">
+  </figure>
+  <div class="bbx-towers__copy">
+    <p class="bbx-eyebrow">Towers &amp; layouts</p>
+    <h2 class="bbx-display" id="bbx-towers-title" data-bb-lines>What type of towers, blocks and <em>layouts</em>?</h2>
+    <h3 class="bbx-mini">What is established</h3>
+    <ul class="bbx-ticks">
+      <li><strong>The wider enclave</strong> hosts a selection of branded residences.</li>
+      <li><strong>The first residence</strong> is ELIE SAAB, with 300 four-bedroom homes.</li>
+      <li><strong>Apartment scale</strong> of about 4,200–4,650 sq ft.</li>
+      <li><strong>Design emphasis</strong> on large living spaces, wrap-around decks and waterfront views.</li>
+      <li><strong>Vertical format:</strong> a luxury high-rise residential development.</li>
+    </ul>
+    <h3 class="bbx-mini">Awaiting the sanctioned master plan</h3>
+    <ul class="bbx-pending">
+      <li>Number of towers</li><li>Floors &amp; heights</li><li>Block layout</li><li>Open-space plan</li>
+    </ul>
+  </div>
+  <figure class="bbx-towers__model" data-bb-clip>
+    <img src="{% static 'images/billionaire/masterplan-model-1200.jpg' %}" alt="Architectural scale model of a master-planned township, AI-generated concept" loading="lazy" decoding="async">
+  </figure>
+</section>
+
+{# ---------- 7. Strategy ---------- #}
+<section class="bbx-strategy" id="strategy" aria-labelledby="bbx-strategy-title">
+  <header class="bbx-section-head">
+    <p class="bbx-eyebrow">Strategy</p>
+    <h2 class="bbx-display" id="bbx-strategy-title" data-bb-lines>What is M3M’s broader <em>development strategy</em>?</h2>
+  </header>
+  <ol class="bbx-strategy__list">
+    {% for title, text, file, alt in strategies %}
+      <li class="bbx-strategy__item">
+        <figure><img src="{% static 'images/billionaire/'|add:file|add:'.jpg' %}" alt="{{ alt }}" loading="lazy" decoding="async"></figure>
+        <p class="bbx-strategy__number">Strategy {{ forloop.counter }}</p>
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+      </li>
+    {% endfor %}
+  </ol>
+</section>
+
+{# ---------- 8. Location and connectivity ---------- #}
+<section class="bbx-location" id="location" aria-labelledby="bbx-location-title">
+  <figure class="bbx-location__image" data-bb-clip>
+    <img src="{% static 'images/billionaire/airport-corridor.jpg' %}" alt="Expressway corridor with flyovers leading towards an airport, AI-generated concept" loading="lazy" decoding="async">
+    <figcaption>Sector 111 · SCDA · Dwarka Expressway</figcaption>
+  </figure>
+  <div class="bbx-location__panel">
+    <p class="bbx-eyebrow">Location</p>
+    <h2 class="bbx-display" id="bbx-location-title" data-bb-lines>Location &amp; <em>connectivity</em></h2>
+    <p class="bbx-lead">Sector 111, Gurugram, within SCDA and along the Dwarka Expressway corridor.</p>
+    <ul class="bbx-routes">
+      <li>Delhi and the NCR</li>
+      <li>Indira Gandhi International Airport</li>
+      <li>The Aerocity area</li>
+      <li>Gurugram’s business districts</li>
+      <li>The wider SCDA development</li>
+    </ul>
+    <p class="bbx-footnote">From the project announcement. Travel times depend on the entrance, route and traffic.</p>
+  </div>
+</section>
+
+{# ---------- 9. Launch timeline, investment and legal checks ---------- #}
+<section class="bbx-checks" id="before-you-buy" aria-labelledby="bbx-checks-title">
+  <div class="bbx-checks__intro">
+    <p class="bbx-eyebrow">Timeline, investment &amp; legal</p>
+    <h2 class="bbx-display" id="bbx-checks-title" data-bb-lines>Launch timeline, investment <em>&amp; legal checks</em></h2>
+    <dl class="bbx-checks__figures">
+      <div><dt data-count="₹3,500 cr">₹3,500 cr</dt><dd>Combined investment, Gurugram and Noida ELIE SAAB projects</dd></div>
+      <div><dt data-count="2030">2030</dt><dd>Announced completion target</dd></div>
+    </dl>
+    <figure class="bbx-checks__image" data-bb-clip>
+      <img src="{% static 'images/billionaire/due-diligence-1200.jpg' %}" alt="Architectural plans, a bound agreement and a tower model on a desk, AI-generated concept" loading="lazy" decoding="async">
+    </figure>
+  </div>
+  <div class="bbx-checks__list">
+    <h3 class="bbx-mini">Before treating any specification as final, verify</h3>
+    <ol>
+      {% for check in legal_checks %}<li>{{ check }}</li>{% endfor %}
+    </ol>
+    <p class="bbx-callout">The Billionaire’s Block is the enclave’s identity. Each residential project has its own promoter, approvals and RERA disclosures, so check that project’s documents.</p>
+  </div>
+</section>
+
+{# ---------- 10. Sources ---------- #}
+<section class="bbx-sources" id="sources" aria-labelledby="bbx-sources-title">
+  <header class="bbx-section-head">
+    <p class="bbx-eyebrow">Sources</p>
+    <h2 class="bbx-display" id="bbx-sources-title" data-bb-lines>Sources for <em>further research</em></h2>
+  </header>
+  <ul class="bbx-sources__grid">
+    {% for title, text, link_label, url in sources %}
+      <li>
+        <a href="{{ url }}" target="_blank" rel="noopener noreferrer">
+          <h3>{{ title }}</h3>
+          <p>{{ text }}</p>
+          <span>{{ link_label }} <i aria-hidden="true">↗</i></span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>

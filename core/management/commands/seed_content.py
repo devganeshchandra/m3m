@@ -244,6 +244,7 @@ class Command(BaseCommand):
         if not HeroBanner.objects.exists():
             banner = HeroBanner(alt_text="Towers rising above the clouds at sunset", order=0)
             self._attach(banner, "image", "home_banners/towers-above-clouds.jpg")
+            self._attach(banner, "video", "billionaire_block/hero.mp4")
             banner.save()
 
         for order, data in enumerate(PROJECTS):

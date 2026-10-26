@@ -10,77 +10,42 @@
       <p>{{ page.guided_intro }}</p>
     </header>
 
+    {# One compact card. Every option is a whole chip (the radio inside is never drawn) that turns navy when chosen. #}
     <form aria-label="Build a personal M3M project shortlist" class="finder" novalidate data-guided-form data-lead-form action="{% url 'submit_enquiry' %}" method="post">
       {% include "partials/form_tracking.html" with source="guided" %}
 
-      <div class="finder__choices">
-        {# 1. Direction #}
+      <div class="finder__progress" data-guided-progress>
+        <span><span data-guided-progress-count>0</span> of 4 chosen</span>
+        <span class="finder__progress-track" aria-hidden="true"><span data-guided-progress-bar></span></span>
+      </div>
+
+      {# 1 and 3 side by side as two-way switches #}
+      <div class="finder__row">
         <fieldset class="finder__group" aria-describedby="guided-interest-error">
           <legend class="finder__legend"><span class="finder__step">1</span>I’m looking for</legend>
-          <div class="finder__directions">
-            <label class="finder-direction">
+          <div class="finder-switch">
+            <label class="finder-option">
               <input name="interest" type="radio" value="residential">
-              <span class="finder-direction__icon" aria-hidden="true">
-                <svg viewBox="0 0 32 32" width="30" height="30"><path d="M5 28V13l11-8 11 8v15M12 28v-8h8v8M3 28h26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="finder-direction__copy">
-                <strong>A home</strong>
-                <span>Residences, penthouses &amp; apartments</span>
-              </span>
-              <span class="finder__tick" aria-hidden="true"></span>
+              <svg aria-hidden="true" viewBox="0 0 32 32" width="18" height="18"><path d="M5 28V13l11-8 11 8v15M12 28v-8h8v8M3 28h26" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+              <span>A home</span>
             </label>
-            <label class="finder-direction">
+            <label class="finder-option">
               <input name="interest" type="radio" value="commercial">
-              <span class="finder-direction__icon" aria-hidden="true">
-                <svg viewBox="0 0 32 32" width="30" height="30"><path d="M4 12h24l-2-6H6l-2 6Zm0 0v3a4 4 0 0 0 8 0 4 4 0 0 0 8 0 4 4 0 0 0 8 0v-3M6 18v10h20V18M13 28v-6h6v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="finder-direction__copy">
-                <strong>A business address</strong>
-                <span>Retail, dining &amp; commercial spaces</span>
-              </span>
-              <span class="finder__tick" aria-hidden="true"></span>
+              <svg aria-hidden="true" viewBox="0 0 32 32" width="18" height="18"><path d="M4 12h24l-2-6H6l-2 6Zm0 0v3a4 4 0 0 0 8 0 4 4 0 0 0 8 0 4 4 0 0 0 8 0v-3M6 18v10h20V18M13 28v-6h6v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+              <span>A business address</span>
             </label>
           </div>
           <span class="finder__error guided-card__error" id="guided-interest-error" role="alert" hidden></span>
         </fieldset>
 
-        {# 2. Project #}
-        <fieldset class="finder__group" aria-describedby="guided-project-error">
-          <legend class="finder__legend">
-            <span class="finder__step">2</span>Pick an address
-            <span class="finder__count"><span data-guided-match-count>{{ guided_projects|length }}</span> to explore</span>
-          </legend>
-          <div class="finder__projects">
-            {% for project in guided_projects %}
-              <label class="finder-project" data-interests="{{ project.interests|join:' ' }}">
-                <input name="project" type="radio" value="{{ project.slug }}"
-                  data-name="{{ project.name }}" data-category="{{ project.category }}"
-                  data-location="{{ project.location }}" data-offering="{{ project.offering }}"
-                  data-url="{{ project.get_absolute_url }}" data-interests="{{ project.interests|join:' ' }}"
-                  data-image-html="{% filter force_escape %}{% picture project.image sizes='(max-width: 900px) 100vw, 480px' alt=project.name %}{% endfilter %}">
-                <span class="finder-project__image">
-                  {% picture project.image sizes="(max-width: 600px) 45vw, 200px" %}
-                </span>
-                <span class="finder-project__copy">
-                  <strong>{{ project.name }}</strong>
-                  <span>{{ project.location }}</span>
-                </span>
-                <span class="finder__tick" aria-hidden="true"></span>
-              </label>
-            {% endfor %}
-          </div>
-          <span class="finder__error guided-card__error" id="guided-project-error" role="alert" hidden></span>
-        </fieldset>
-
-        {# 3. Residency #}
         <fieldset class="finder__group" aria-describedby="guided-residency-error">
           <legend class="finder__legend"><span class="finder__step">3</span>I’m based in</legend>
-          <div class="finder__residency">
-            <label class="finder-pill">
+          <div class="finder-switch">
+            <label class="finder-option">
               <input name="residency" type="radio" value="india">
               <span>India</span>
             </label>
-            <label class="finder-pill">
+            <label class="finder-option">
               <input name="residency" type="radio" value="nri">
               <span>Overseas (NRI)</span>
             </label>
@@ -89,58 +54,61 @@
         </fieldset>
       </div>
 
-      {# Live summary and contact details #}
-      <aside class="finder__summary">
-        <div class="finder__progress" data-guided-progress>
-          <span><span data-guided-progress-count>0</span> of 4 chosen</span>
-          <span class="finder__progress-track" aria-hidden="true"><span data-guided-progress-bar></span></span>
+      {# 2. Project chips #}
+      <fieldset class="finder__group" aria-describedby="guided-project-error">
+        <legend class="finder__legend">
+          <span class="finder__step">2</span>Pick an address
+          <span class="finder__count"><span data-guided-match-count>{{ guided_projects|length }}</span> to explore</span>
+        </legend>
+        <div class="finder__projects">
+          {% for project in guided_projects %}
+            <label class="finder-project" data-interests="{{ project.interests|join:' ' }}">
+              <input name="project" type="radio" value="{{ project.slug }}"
+                data-name="{{ project.name }}" data-category="{{ project.category }}"
+                data-location="{{ project.location }}" data-offering="{{ project.offering }}"
+                data-url="{{ project.get_absolute_url }}" data-interests="{{ project.interests|join:' ' }}">
+              <span class="finder-project__image">
+                {% picture project.image sizes="96px" %}
+              </span>
+              <span class="finder-project__copy">
+                <strong>{{ project.name }}</strong>
+                <span>{{ project.location }}</span>
+              </span>
+            </label>
+          {% endfor %}
         </div>
+        <span class="finder__error guided-card__error" id="guided-project-error" role="alert" hidden></span>
+      </fieldset>
 
-        <article class="finder-preview" data-guided-preview>
-          <div class="finder-preview__image">
-            <span data-guided-preview-image></span>
-            <span class="finder-preview__placeholder" data-guided-preview-empty>
-              <svg aria-hidden="true" viewBox="0 0 48 48" width="44" height="44"><path d="M10 42V18l14-10 14 10v24M18 42V30h12v12M6 42h36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-              Your address will appear here
-            </span>
-          </div>
-          <div class="finder-preview__copy">
-            <p class="finder-preview__eyebrow">Your M3M edit</p>
-            <h3 data-guided-preview-name>Choose an address to begin</h3>
-            <p class="finder-preview__meta" data-guided-preview-meta>Your selection, location and offering are summarised here.</p>
-            <a class="finder-preview__link" href="#" data-guided-preview-link hidden>
-              Explore this project
-              {% include "icons/arrow.html" %}
-            </a>
-          </div>
-        </article>
-
-        <div class="finder__contact">
-          <p class="finder__legend finder__legend--small"><span class="finder__step">4</span>Where should we send it?</p>
+      {# 4. Contact details and send, on one line #}
+      <div class="finder__group finder__contact">
+        <p class="finder__legend"><span class="finder__step">4</span>Where should we send it?</p>
+        <div class="finder__fields">
           <label class="finder-field">
-            <span>Mobile / WhatsApp</span>
-            <input data-error-id="guided-phone-error" autocomplete="tel" id="guided-phone" inputmode="tel" maxlength="25" name="phone" placeholder="Mobile number" required type="tel" data-validate="phone" data-validate-on-submit>
+            <span class="visually-hidden">Mobile / WhatsApp</span>
+            <input data-error-id="guided-phone-error" autocomplete="tel" id="guided-phone" inputmode="tel" maxlength="25" name="phone" placeholder="Mobile / WhatsApp" required type="tel" data-validate="phone" data-validate-on-submit>
             <span class="finder__error guided-card__error" id="guided-phone-error" role="alert" hidden></span>
           </label>
           <label class="finder-field">
-            <span>Email address</span>
-            <input data-error-id="guided-email-error" autocomplete="email" id="guided-email" maxlength="254" name="email" placeholder="name@example.com" required type="email" data-validate="email" data-validate-on-submit>
+            <span class="visually-hidden">Email address</span>
+            <input data-error-id="guided-email-error" autocomplete="email" id="guided-email" maxlength="254" name="email" placeholder="Email address" required type="email" data-validate="email" data-validate-on-submit>
             <span class="finder__error guided-card__error" id="guided-email-error" role="alert" hidden></span>
           </label>
-          <label class="finder-consent">
-            <input data-error-id="guided-consent-error" id="guided-consent" name="consent" required type="checkbox" value="on" data-validate="consent" data-validate-on-submit data-consent-message="Please confirm that we may contact you about this request.">
-            <span>M3M India may contact me about this project.</span>
-          </label>
-          <span class="finder__error guided-card__error" id="guided-consent-error" role="alert" hidden></span>
-
           <button class="finder__submit" type="submit">
             <span>Send me my M3M edit</span>
             {% include "icons/arrow.html" %}
           </button>
-          <p aria-live="polite" class="finder__status" role="status" data-form-status></p>
+        </div>
+        <div class="finder__footer">
+          <label class="finder-consent">
+            <input data-error-id="guided-consent-error" id="guided-consent" name="consent" required type="checkbox" value="on" data-validate="consent" data-validate-on-submit data-consent-message="Please confirm that we may contact you about this request.">
+            <span>M3M India may contact me about this project.</span>
+          </label>
           <p class="finder__note">No account. No commitment. Used only for this request.</p>
         </div>
-      </aside>
+        <span class="finder__error guided-card__error" id="guided-consent-error" role="alert" hidden></span>
+        <p aria-live="polite" class="finder__status" role="status" data-form-status></p>
+      </div>
     </form>
   </div>
 </section>

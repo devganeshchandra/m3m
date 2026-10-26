@@ -78,7 +78,7 @@ class HomePageAdmin(SingletonAdmin):
         ),
         (
             "Projects section",
-            {"fields": ["projects_label", ("projects_title_line_1", "projects_title_line_2"), "projects_intro"]},
+            {"fields": ["projects_label", ("projects_title_line_1", "projects_title_line_2"), "projects_intro", "projects_facts"]},
         ),
         (
             "Our Journey section",

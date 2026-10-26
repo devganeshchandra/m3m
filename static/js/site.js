@@ -343,6 +343,13 @@
   function initCarousel() {
     var carousel = $("[data-hero-carousel]");
     if (!carousel) return;
+    // Banner videos stay on their poster image for visitors who prefer less motion.
+    if (reduceMotion) {
+      $all("[data-hero-video]", carousel).forEach(function (video) {
+        video.removeAttribute("autoplay");
+        video.pause();
+      });
+    }
     var slides = $all(".hero-banner__slide", carousel);
     if (slides.length < 2) return;
     var dots = $all("[data-carousel-dot]", carousel);
@@ -460,11 +467,12 @@
     var contactControls = ["phone", "email", "consent"].map(function (name) {
       return $('[name="' + name + '"]', form);
     });
+    // The preview panel is optional: the single-card layout shows the choice on the tile itself.
     var preview = $("[data-guided-preview]", form);
-    var previewName = $("[data-guided-preview-name]", preview);
-    var previewMeta = $("[data-guided-preview-meta]", preview);
-    var emptyName = previewName.textContent;
-    var emptyMeta = previewMeta.textContent;
+    var previewName = preview && $("[data-guided-preview-name]", preview);
+    var previewMeta = preview && $("[data-guided-preview-meta]", preview);
+    var emptyName = preview && previewName.textContent;
+    var emptyMeta = preview && previewMeta.textContent;
 
     function checked(inputs) {
       return inputs.filter(function (input) { return input.checked; })[0] || null;
@@ -494,6 +502,7 @@
     }
 
     function renderPreview() {
+      if (!preview) return;
       var project = checked(projectInputs);
       var link = $("[data-guided-preview-link]", preview);
       preview.classList.toggle("is-filled", Boolean(project));

@@ -101,21 +101,48 @@
 
   /* ---------- Preloader and hero ---------- */
 
+  // Wraps each word in a mask for the rise-in effect. Words inside an inline element such as
+  // <em> keep it, so a heading's gold italic phrase survives the split.
   function splitWords(element) {
     if (element.dataset.split) return $all(".bb-word > span", element);
     element.dataset.split = "true";
-    var words = element.textContent.trim().split(/\s+/);
-    element.setAttribute("aria-label", element.textContent.trim());
+    // Each piece remembers whether a space came before it, so "layouts?" stays together.
+    var pieces = [];
+    var pendingSpace = false;
+    Array.prototype.slice.call(element.childNodes).forEach(function (node) {
+      var tag = node.nodeType === 1 ? node.tagName : null;
+      var text = node.textContent;
+      var pattern = /(\s*)(\S+)/g;
+      var match;
+      while ((match = pattern.exec(text))) {
+        pieces.push({
+          word: match[2],
+          tag: tag,
+          className: tag ? node.className : "",
+          space: pieces.length > 0 && (pendingSpace || match[1].length > 0),
+        });
+        pendingSpace = false;
+      }
+      if (/\s$/.test(text)) pendingSpace = true;
+    });
+    element.setAttribute("aria-label", element.textContent.trim().replace(/\s+/g, " "));
     element.innerHTML = "";
-    words.forEach(function (word, index) {
+    pieces.forEach(function (piece) {
       var outer = document.createElement("span");
       var inner = document.createElement("span");
       outer.className = "bb-word";
       outer.setAttribute("aria-hidden", "true");
-      inner.textContent = word;
+      if (piece.tag) {
+        var wrap = document.createElement(piece.tag);
+        if (piece.className) wrap.className = piece.className;
+        wrap.textContent = piece.word;
+        inner.appendChild(wrap);
+      } else {
+        inner.textContent = piece.word;
+      }
       outer.appendChild(inner);
+      if (piece.space) element.appendChild(document.createTextNode(" "));
       element.appendChild(outer);
-      if (index < words.length - 1) element.appendChild(document.createTextNode(" "));
     });
     return $all(".bb-word > span", element);
   }
@@ -203,6 +230,107 @@
         scrollTrigger: { trigger: layer.parentElement, start: "top bottom", end: "bottom top", scrub: true },
       });
     });
+  }
+
+  /* ---------- The research story: motion for every section ---------- */
+
+  function initStoryMotion() {
+    if (!motion) return;
+
+    // Eyebrows: the gold rule draws in, then the label slides after it.
+    $all(".bbx-eyebrow").forEach(function (eyebrow) {
+      gsap.from(eyebrow, {
+        x: -24,
+        opacity: 0,
+        duration: 1.1,
+        ease: EASE,
+        scrollTrigger: { trigger: eyebrow, start: "top 92%", onEnter: function () { eyebrow.classList.add("is-drawn"); } },
+      });
+    });
+
+    // Paragraphs, notes and buttons rise in.
+    ScrollTrigger.batch(".bbx-lead, .bbx-footnote, .bbx-mini, .bbx-callout, .bbx-section .bb-button, .bbx-brand .bb-button", {
+      start: "top 92%",
+      once: true,
+      onEnter: function (batch) {
+        gsap.from(batch, { y: 30, opacity: 0, duration: 1.1, stagger: 0.08, ease: EASE, clearProps: "transform,opacity" });
+      },
+    });
+
+    // Lists, rows, chips and cards: staggered, each group as it scrolls into view.
+    [
+      ".bbx-facts > div", ".bbx-chips li", ".bbx-spec > div", ".bbx-community__card",
+      ".bbx-ticks li", ".bbx-amenity", ".bbx-pending li", ".bbx-strategy__item",
+      ".bbx-checks__figures > div", ".bbx-sources__grid li",
+    ].forEach(function (selector) {
+      ScrollTrigger.batch(selector, {
+        start: "top 92%",
+        once: true,
+        onEnter: function (batch) {
+          gsap.from(batch, {
+            y: 40,
+            opacity: 0,
+            scale: 0.97,
+            duration: 1.1,
+            stagger: 0.09,
+            ease: EASE,
+            clearProps: "transform,opacity",
+          });
+        },
+      });
+    });
+
+    // Location and route rows slide in from the side.
+    ScrollTrigger.batch(".bbx-routes li, .bbx-checks__list li", {
+      start: "top 92%",
+      once: true,
+      onEnter: function (batch) {
+        gsap.from(batch, { x: 40, opacity: 0, duration: 1, stagger: 0.07, ease: EASE, clearProps: "transform,opacity" });
+      },
+    });
+
+    // Images: a slow zoom-out while they cross the screen, so every photo feels alive.
+    $all(".bbx-brand img, .bbx-community__card img, .bbx-towers img, .bbx-strategy__item img, .bbx-location img, .bbx-checks img, .bbx-amenity img").forEach(function (image) {
+      gsap.fromTo(image, { scale: 1.18 }, {
+        scale: 1,
+        ease: "none",
+        scrollTrigger: { trigger: image.parentElement, start: "top bottom", end: "bottom top", scrub: true },
+      });
+    });
+
+    // The inset photo floats against the main one.
+    var inset = $(".bbx-brand__inset");
+    if (inset) {
+      gsap.fromTo(inset, { yPercent: 18 }, {
+        yPercent: -12,
+        ease: "none",
+        scrollTrigger: { trigger: ".bbx-brand", start: "top bottom", end: "bottom top", scrub: true },
+      });
+    }
+
+    // The community letters and strategy numbers pop in.
+    ScrollTrigger.batch(".bbx-community__letter, .bbx-strategy__number", {
+      start: "top 90%",
+      once: true,
+      onEnter: function (batch) {
+        gsap.from(batch, { scale: 0, rotate: -20, duration: 0.9, stagger: 0.12, ease: "back.out(2)", clearProps: "transform" });
+      },
+    });
+
+    // Cards tilt gently towards the pointer on desktop.
+    if (window.matchMedia("(pointer: fine)").matches) {
+      $all(".bbx-amenity, .bbx-strategy__item, .bbx-community__card, .bbx-sources__grid a").forEach(function (card) {
+        card.addEventListener("pointermove", function (event) {
+          var box = card.getBoundingClientRect();
+          var x = (event.clientX - box.left) / box.width - 0.5;
+          var y = (event.clientY - box.top) / box.height - 0.5;
+          gsap.to(card, { rotateY: x * 6, rotateX: -y * 6, transformPerspective: 900, duration: 0.6, ease: "power2.out" });
+        });
+        card.addEventListener("pointerleave", function () {
+          gsap.to(card, { rotateY: 0, rotateX: 0, duration: 0.8, ease: "power3.out" });
+        });
+      });
+    }
   }
 
   /* ---------- Count-up figures ---------- */
@@ -665,6 +793,70 @@
     }
   }
 
+  /* ---------- The plan: image carousel ---------- */
+
+  // Cross-fades every few seconds; arrows, dots and swipe step through it. Autoplay pauses on
+  // hover and keyboard focus, and never starts for visitors who prefer reduced motion.
+  function initStoryCarousel() {
+    var carousel = $("[data-bbx-carousel]");
+    if (!carousel) return;
+    var slides = $all(".bbx-carousel__slide", carousel);
+    var dots = $all("[data-bbx-dot]", carousel);
+    var current = 0;
+    var timer = null;
+
+    function show(index) {
+      current = (index + slides.length) % slides.length;
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle("is-active", i === current);
+        slide.setAttribute("aria-hidden", i === current ? "false" : "true");
+      });
+      dots.forEach(function (dot, i) {
+        dot.setAttribute("aria-pressed", i === current ? "true" : "false");
+      });
+    }
+
+    function stop() {
+      clearInterval(timer);
+      timer = null;
+    }
+
+    function start() {
+      if (reduceMotion || timer) return;
+      timer = setInterval(function () {
+        show(current + 1);
+      }, 5500);
+    }
+
+    $all("[data-bbx-step]", carousel).forEach(function (button) {
+      button.addEventListener("click", function () {
+        show(current + Number(button.dataset.bbxStep));
+      });
+    });
+    dots.forEach(function (dot) {
+      dot.addEventListener("click", function () {
+        show(Number(dot.dataset.bbxDot));
+      });
+    });
+
+    var touchX = null;
+    carousel.addEventListener("touchstart", function (event) {
+      touchX = event.touches[0].clientX;
+    }, { passive: true });
+    carousel.addEventListener("touchend", function (event) {
+      if (touchX === null) return;
+      var distance = event.changedTouches[0].clientX - touchX;
+      if (Math.abs(distance) > 40) show(current + (distance < 0 ? 1 : -1));
+      touchX = null;
+    });
+
+    carousel.addEventListener("mouseenter", stop);
+    carousel.addEventListener("mouseleave", start);
+    carousel.addEventListener("focusin", stop);
+    carousel.addEventListener("focusout", start);
+    start();
+  }
+
   /* ---------- Start ---------- */
 
   function init() {
@@ -678,7 +870,9 @@
     initCursor();
     initReveals();
     initCountUp();
+    initStoryMotion();
     initClub();
+    initStoryCarousel();
     initPreloader();
     if (!motion) return;
     window.addEventListener("load", function () {

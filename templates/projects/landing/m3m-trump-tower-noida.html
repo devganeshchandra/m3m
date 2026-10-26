@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+{% load static %}
+{% comment %}
+  Ad landing page for M3M Trump Tower Noida, Sector 94 (used automatically for this project).
+  Theme: "midnight & champagne" — deep midnight navy, champagne gold and ivory, Playfair Display
+  headings, image-led sections with slideshows and hover reveals.
+  Only the arrival render is official; every other image is a representative luxury interior and
+  is labelled so. Prices, unit counts, sizes and land area are not published (listing sites
+  disagree); they are offered in the price list, which is the lead hook.
+  Lists (slides, interiors, club, travel times) are in projects/landing_content.py.
+{% endcomment %}
+
+{% block title %}M3M Trump Tower Noida, Sector 94 | 4 &amp; 5 BHK Branded Residences{% endblock %}
+{% block description %}M3M Trump Tower Noida, Sector 94 on Noida Expressway: 4 &amp; 5 BHK branded residences. Get the price list, floor plans and payment plan.{% endblock %}
+{% block og_title %}M3M Trump Tower Noida · 4 &amp; 5 BHK Residences{% endblock %}
+{% block og_description %}Branded 4 &amp; 5 BHK residences in Sector 94, Noida. Get the price list and floor plans.{% endblock %}
+{% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/landing/trump/arrival-sm.jpg' %}">{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/landing-nav.css' %}">
+  <link rel="stylesheet" href="{% static 'css/landing-forms.css' %}">
+  <link rel="stylesheet" href="{% static 'css/landing-fx.css' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Montserrat:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="{% static 'css/landing-trump.css' %}">
+  <link rel="preload" as="image" href="{% static 'images/landing/trump/arrival.jpg' %}">
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Residence",
+    "name": "{{ project.name|escapejs }}",
+    "description": "{{ project.summary|escapejs }}",
+    "url": "{{ site_url|escapejs }}{{ project.get_absolute_url|escapejs }}",
+    "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/landing/trump/arrival-sm.jpg' %}",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "{{ project.location|escapejs }}",
+      "addressLocality": "{{ project.city|escapejs }}",
+      "addressCountry": "IN"
+    }
+  }
+</script>
+{% endblock %}
+
+{% block site_header %}
+  {% include "projects/landing/_landing_nav.html" with theme="tt" brand="Trump Tower Noida" open_attr="data-tt-open" %}
+{% endblock %}
+
+{% block content %}
+{% with img="images/landing/trump/" %}
+<main class="tt" id="main-content">
+
+  {# ---------- Hero: cinematic slideshow, headline left, enquiry card right ---------- #}
+  <section class="tt-hero" aria-labelledby="tt-title" data-tt-hero>
+    <div class="tt-hero__slides" aria-hidden="true">
+      {% for file, caption in slides %}
+        <figure class="tt-hero__slide{% if forloop.first %} is-active{% endif %}">
+          <img src="{% static img|add:file|add:'.jpg' %}" alt="" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+        </figure>
+      {% endfor %}
+    </div>
+    <div class="tt-hero__shade" aria-hidden="true"></div>
+
+    <div class="tt-hero__inner">
+      <div class="tt-hero__copy">
+        <p class="tt-badge tt-rise"><span class="tt-badge__dot" aria-hidden="true"></span> Now launched · Sector 94, Noida</p>
+        <h1 class="tt-hero__title tt-rise" id="tt-title">
+          <small>M3M</small>
+          Trump Tower
+          <em>Noida</em>
+        </h1>
+        <p class="tt-hero__line tt-rise">An address the world recognises, now on Noida Expressway. Branded 4 &amp; 5 BHK residences.</p>
+        <ul class="tt-hero__points tt-rise">
+          <li><strong>4 &amp; 5</strong><span>BHK residences</span></li>
+          <li><strong>Trump</strong><span>branded living</span></li>
+          <li><strong>Sector 94</strong><span>Noida Expressway</span></li>
+        </ul>
+        <div class="tt-hero__caption tt-rise">
+          <span data-tt-slide-caption>{{ slides.0.1 }}</span>
+          <ol class="tt-hero__dots">
+            {% for file, caption in slides %}
+              <li><button type="button" data-tt-slide="{{ forloop.counter0 }}" data-caption="{{ caption }}" aria-label="Show image {{ forloop.counter }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"></button></li>
+            {% endfor %}
+          </ol>
+        </div>
+      </div>
+
+      <aside class="tt-card tt-rise" aria-labelledby="tt-card-title">
+        <div class="tt-card__ribbon">Private preview</div>
+        <h2 class="tt-card__title" id="tt-card-title">Get the price list</h2>
+        <p class="tt-card__sub">Floor plans, payment plan &amp; a site visit, sent to you.</p>
+        {% include "projects/landing/_trump_form.html" with prefix="hero" button="Get price list" %}
+      </aside>
+    </div>
+    <p class="tt-hero__legal">UP RERA {{ project.rera }} · Arrival court: artistic impression · Other images representative</p>
+  </section>
+
+  {# ---------- Trust band ---------- #}
+  <section class="tt-band" aria-label="At a glance">
+    <ul>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V9l8-5 8 5v12M9 21v-6h6v6" /></svg><div><strong>4 &amp; 5 BHK</strong><span>Branded residences</span></div></li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z" /><circle cx="12" cy="10" r="2.5" /></svg><div><strong>Sector 94</strong><span>Noida Expressway</span></div></li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.6 6.7 19.4l1.2-6L3.4 9.3l6-.7Z" /></svg><div><strong>Trump</strong><span>A global luxury name</span></div></li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM9 8h6M9 12h6M9 16h4" /></svg><div><strong>UP RERA</strong><span>{{ project.rera }}</span></div></li>
+    </ul>
+  </section>
+
+  {# ---------- How it works: three steps, one action ---------- #}
+  <section class="tt-steps" aria-labelledby="tt-steps-title">
+    <h2 class="tt-steps__title" id="tt-steps-title">Your price list in <em>three simple steps.</em></h2>
+    <ol class="tt-steps__list">
+      <li class="tt-up"><span>1</span><strong>Share your details</strong><p>Name, mobile and 4 or 5 BHK. It takes 20 seconds.</p></li>
+      <li class="tt-up"><span>2</span><strong>Get the price list</strong><p>Our team shares prices, floor plans and the payment plan.</p></li>
+      <li class="tt-up"><span>3</span><strong>Visit privately</strong><p>See the project at a time that suits you.</p></li>
+    </ol>
+    <button class="tt-btn tt-btn--gold tt-btn--shine" type="button" data-tt-open="Get the price list">Start now, it's free</button>
+  </section>
+
+  {# ---------- Residences ---------- #}
+  <section class="tt-section tt-residences" id="residences" aria-labelledby="tt-res-title">
+    <header class="tt-head">
+      <p class="tt-eyebrow">The residences</p>
+      <h2 class="tt-title" id="tt-res-title">Homes with a <em>famous name.</em></h2>
+      <p class="tt-lead">Generous 4 and 5 BHK residences, finished to a branded standard.</p>
+    </header>
+
+    <div class="tt-units-showcase">
+      {% for value, label in residences %}
+        <article class="tt-showcase tt-up">
+          {% if forloop.first %}
+            <img src="{% static img|add:'salon-sm.jpg' %}" alt="" aria-hidden="true" loading="lazy">
+          {% else %}
+            <img src="{% static img|add:'lounge-hall-sm.jpg' %}" alt="" aria-hidden="true" loading="lazy">
+          {% endif %}
+          <div class="tt-showcase__body">
+            <p class="tt-eyebrow tt-eyebrow--light">Residence</p>
+            <h3>{{ label }}</h3>
+            <ul><li>Size on request</li><li>Floor plan on request</li><li>Launch price on request</li></ul>
+            <button class="tt-btn tt-btn--gold" type="button" data-tt-open="Get the {{ label }} price &amp; floor plan" data-tt-unit-preset="{{ value }}">Unlock {{ label }} details</button>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    <ul class="tt-rooms">
+      {% for file, title, line in interiors %}
+        <li class="tt-room tt-up">
+          <img src="{% static img|add:file|add:'-sm.jpg' %}" alt="{{ title }}, representative image" loading="lazy">
+          <div class="tt-room__text"><h3>{{ title }}</h3><p>{{ line }}</p></div>
+        </li>
+      {% endfor %}
+    </ul>
+    <p class="tt-note">Interior images are representative and do not show the actual residences.</p>
+  </section>
+
+  {# ---------- Price band ---------- #}
+  <section class="tt-cta-band" aria-label="Price list">
+    <img src="{% static img|add:'clouds.jpg' %}" alt="" aria-hidden="true" loading="lazy">
+    <div class="tt-cta-band__inner tt-up">
+      <p class="tt-eyebrow tt-eyebrow--light">Launch price list</p>
+      <h2>Be among the first <em>to know the price.</em></h2>
+      <button class="tt-btn tt-btn--gold tt-btn--shine" type="button" data-tt-open="Get the launch price list">Unlock the price list</button>
+    </div>
+  </section>
+
+  {# ---------- Lifestyle mosaic ---------- #}
+  <section class="tt-section tt-life" id="lifestyle" aria-labelledby="tt-life-title">
+    <header class="tt-head tt-head--light">
+      <p class="tt-eyebrow tt-eyebrow--light">The lifestyle</p>
+      <h2 class="tt-title tt-title--light" id="tt-life-title">Every day, <em>a little extraordinary.</em></h2>
+    </header>
+    <ul class="tt-mosaic">
+      {% for file, title in club %}
+        <li class="tt-mosaic__tile tt-up">
+          <img src="{% static img|add:file|add:'-sm.jpg' %}" alt="{{ title }}, representative image" loading="lazy">
+          <h3>{{ title }}</h3>
+        </li>
+      {% endfor %}
+      <li class="tt-mosaic__tile tt-mosaic__tile--cta tt-up">
+        <p>The full amenity list is in the official brochure.</p>
+        <button class="tt-btn tt-btn--gold" type="button" data-tt-open="Download the brochure">Get the brochure</button>
+      </li>
+    </ul>
+    <p class="tt-note tt-note--light">Lifestyle images are representative. Amenities follow the official project documents.</p>
+  </section>
+
+  {# ---------- Location ---------- #}
+  <section class="tt-section tt-location" id="location" aria-labelledby="tt-loc-title">
+    <div class="tt-location__copy">
+      <p class="tt-eyebrow">Location</p>
+      <h2 class="tt-title" id="tt-loc-title">Sector 94, <em>at the heart of Noida.</em></h2>
+      <ul class="tt-times">
+        {% for minutes, place in connectivity %}
+          <li class="tt-up"><span class="tt-times__min"><strong>{{ minutes }}</strong>min</span><span>{{ place }}</span></li>
+        {% endfor %}
+      </ul>
+      <p class="tt-note tt-note--left">Travel times as stated by M3M India for its Sector 94 projects; they vary with route and traffic.</p>
+      <button class="tt-btn tt-btn--dark" type="button" data-tt-open="Book a site visit">Book a site visit</button>
+    </div>
+    <div class="tt-location__visual tt-up">
+      <div class="tt-location__map">
+        <iframe title="Map of Sector 94, Noida" src="{{ project.map_embed_url|default:'https://www.google.com/maps?q=Sector+94,+Noida,+Uttar+Pradesh&output=embed' }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+
+  {# ---------- Questions buyers ask ---------- #}
+  <section class="tt-section tt-faq" id="faq" aria-labelledby="tt-faq-title">
+    <header class="tt-head">
+      <p class="tt-eyebrow">Questions</p>
+      <h2 class="tt-title" id="tt-faq-title">What buyers <em>ask us first.</em></h2>
+    </header>
+    <div class="tt-faq__list">
+      <details class="tt-faq__item" open>
+        <summary>What is the price of M3M Trump Tower Noida?</summary>
+        <p>Prices depend on the residence, floor and view. Request the launch price list and our team will share the current prices and payment plan.</p>
+        <button class="tt-btn tt-btn--dark" type="button" data-tt-open="Get the launch price list">Get the price list</button>
+      </details>
+      <details class="tt-faq__item">
+        <summary>Which residences are available?</summary>
+        <p>The project offers 4 BHK and 5 BHK residences. Sizes and floor plans are shared on request.</p>
+        <button class="tt-btn tt-btn--dark" type="button" data-tt-open="Get the floor plans">Get the floor plans</button>
+      </details>
+      <details class="tt-faq__item">
+        <summary>Where is the project?</summary>
+        <p>In Sector 94, Noida, on the Noida Expressway corridor, minutes from Amity University and Jasola Business Park.</p>
+        <button class="tt-btn tt-btn--dark" type="button" data-tt-open="Get the location map">Get the location map</button>
+      </details>
+      <details class="tt-faq__item">
+        <summary>Is the project RERA registered?</summary>
+        <p>Yes. The UP RERA registration is {{ project.rera }}; details can be checked on up-rera.in.</p>
+      </details>
+      <details class="tt-faq__item">
+        <summary>Can I visit the site?</summary>
+        <p>Yes. Share your details and our team will arrange a private visit at a time that suits you.</p>
+        <button class="tt-btn tt-btn--dark" type="button" data-tt-open="Book a private site visit">Book a site visit</button>
+      </details>
+    </div>
+  </section>
+
+  {# ---------- Final form ---------- #}
+  <section class="tt-final" id="enquire" aria-labelledby="tt-final-title">
+    <img src="{% static img|add:'pool.jpg' %}" alt="" aria-hidden="true" loading="lazy">
+    <div class="tt-final__inner">
+      <div class="tt-final__copy tt-up">
+        <p class="tt-eyebrow tt-eyebrow--light">Private preview</p>
+        <h2 class="tt-title tt-title--light" id="tt-final-title">Your Trump address <em>starts here.</em></h2>
+        <ul class="tt-final__perks">
+          <li>Launch price list</li>
+          <li>4 &amp; 5 BHK floor plans</li>
+          <li>Payment plan</li>
+          <li>Private site visit</li>
+        </ul>
+        <div class="tt-final__direct">
+          <a class="tt-direct tt-direct--wa" href="https://wa.me/{{ site.whatsapp_number }}?text={{ 'Hi, I would like the price list and floor plans for M3M Trump Tower Noida.'|urlencode }}" target="_blank" rel="noopener">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+            Ask on WhatsApp
+          </a>
+          <a class="tt-direct" href="tel:{{ site.phone_dial }}">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+            Call {{ site.phone_display }}
+          </a>
+        </div>
+      </div>
+      <div class="tt-card tt-card--final tt-up">
+        <h2 class="tt-card__title">Request a callback</h2>
+        <p class="tt-card__sub">Our team calls you within a working day.</p>
+        {% include "projects/landing/_trump_form.html" with prefix="final" button="Request a callback" %}
+      </div>
+    </div>
+  </section>
+
+  {# ---------- Disclaimer ---------- #}
+  <section class="tt-disclaimer" aria-label="Disclaimer">
+    <p><strong>M3M Trump Tower Noida</strong> · UP RERA {{ project.rera }} · Project details at <a href="https://www.up-rera.in/projects" target="_blank" rel="noopener">up-rera.in/projects</a></p>
+    <p>M3M Trump Tower Noida is not owned, developed or sold by The Trump Organization or any of its current or former principals or affiliates; the “Trump” name and mark are used under licence. Except for the arrival-court render, all images are representative luxury interiors and do not show the actual project. Nothing here constitutes a legal offer or forms part of any binding agreement. Please verify all details, including areas, specifications and prices, with M3M India Private Limited and the RERA disclosures before making any decision.</p>
+  </section>
+</main>
+
+{# ---------- Lead popup (buttons, 4-second timer and exit intent) ---------- #}
+<dialog class="tt-dialog" aria-labelledby="tt-dialog-title" data-tt-dialog>
+  <button class="tt-dialog__close" type="button" aria-label="Close" data-tt-close>×</button>
+  <div class="tt-dialog__media" aria-hidden="true">
+    <img src="{% static img|add:'arrival-sm.jpg' %}" alt="" loading="lazy">
+    <p><small>M3M</small>Trump Tower<span>Noida</span></p>
+  </div>
+  <div class="tt-dialog__body">
+    <div class="tt-card__ribbon">Private preview</div>
+    <h2 class="tt-card__title" id="tt-dialog-title" data-tt-dialog-title>Get the price list</h2>
+    <p class="tt-card__sub">Floor plans, payment plan &amp; a site visit, sent to you.</p>
+    {% include "projects/landing/_popup_forms.html" with theme="tt" start="a" %}
+  </div>
+</dialog>
+
+{# Slide-in offer, half-way down the page #}
+<aside class="tt-slidein" hidden data-tt-slidein aria-label="Floor plans offer">
+  <button class="tt-slidein__close" type="button" aria-label="Close" data-tt-slidein-close>×</button>
+  <img src="{% static 'images/landing/trump/suite-sm.jpg' %}" alt="" aria-hidden="true">
+  <div>
+    <p>Still deciding?</p>
+    <strong>Get the 4 &amp; 5 BHK floor plans</strong>
+    <button class="tt-btn tt-btn--gold" type="button" data-tt-open="Get the floor plans">Send them to me</button>
+  </div>
+</aside>
+
+{# Desktop side tab, always in reach #}
+<button class="tt-sidetab" type="button" data-tt-open="Get the price list">Get price list</button>
+
+<div class="tt-sticky">
+  <a href="tel:{{ site.phone_dial }}">Call</a>
+  <button type="button" class="tt-btn tt-btn--gold" data-tt-open="Get the price list">Get price list</button>
+</div>
+{% endwith %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/landing-forms.js' %}" defer></script>
+<script src="{% static 'js/landing-trump.js' %}" defer></script>
+<script src="{% static 'js/landing-fx.js' %}" defer></script>
+{% endblock %}

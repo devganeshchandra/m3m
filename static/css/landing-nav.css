@@ -1,0 +1,302 @@
+/*
+ * Header for project ad landing pages (templates/projects/landing/_landing_nav.html), shown in
+ * place of the site menu so the page feels like its own website. One layout, three themes:
+ * jl (Jacob & Co., black and gold), cl (The Cullinan, white and sapphire), tt (Trump Tower,
+ * midnight and champagne).
+ */
+
+/* The landing pages offset their first section by --header-h; this header is shorter. */
+body:has(.lnav) {
+  --header-h: 72px;
+}
+
+.lnav {
+  --lnav-bg: rgb(12 11 10 / 92%);
+  --lnav-text: #f6f2ea;
+  --lnav-muted: rgb(246 242 234 / 65%);
+  --lnav-accent: #e8d3a3;
+  --lnav-cta-bg: linear-gradient(135deg, #f1dfb4, #c9a96e 55%, #b48e4c);
+  --lnav-cta-text: #1c160c;
+  --lnav-line: rgb(201 169 110 / 25%);
+  --lnav-head: "Cormorant Garamond", Georgia, serif;
+  --lnav-radius: 999px;
+  position: fixed;
+  z-index: 60;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  height: 72px;
+  align-items: center;
+  gap: 24px;
+  padding: 0 clamp(16px, 4vw, 64px);
+  border-bottom: 1px solid var(--lnav-line);
+  color: var(--lnav-text);
+  background: var(--lnav-bg);
+  font-family: "Montserrat", "Manrope", "Helvetica Neue", Arial, sans-serif;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: box-shadow 300ms ease;
+}
+
+.lnav.is-scrolled {
+  box-shadow: 0 10px 30px rgb(0 0 0 / 18%);
+}
+
+.lnav--cl {
+  --lnav-bg: rgb(255 255 255 / 94%);
+  --lnav-text: #111a2b;
+  --lnav-muted: #556178;
+  --lnav-accent: #1b3a6b;
+  --lnav-cta-bg: linear-gradient(120deg, #1b3a6b, #0f2244);
+  --lnav-cta-text: #fff;
+  --lnav-line: rgb(17 26 43 / 10%);
+  --lnav-head: "Outfit", "Helvetica Neue", Arial, sans-serif;
+  --lnav-radius: 0;
+  --lnav-panel: #fff;
+}
+
+.lnav--tt {
+  --lnav-bg: rgb(11 18 32 / 92%);
+  --lnav-text: #fff;
+  --lnav-muted: rgb(255 255 255 / 65%);
+  --lnav-accent: #f3e2b4;
+  --lnav-cta-bg: linear-gradient(135deg, #f7e7bd, #d4b26a 45%, #b08a43 75%, #ecd59a);
+  --lnav-cta-text: #1b1405;
+  --lnav-line: rgb(212 178 106 / 25%);
+  --lnav-head: "Playfair Display", Georgia, serif;
+  --lnav-radius: 10px;
+  --lnav-panel: #0b1220;
+}
+
+.lnav__brand {
+  display: grid;
+  flex: 0 0 auto;
+  color: inherit;
+  line-height: 1;
+}
+
+.lnav__brand small {
+  margin-bottom: 4px;
+  color: var(--lnav-accent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.45em;
+}
+
+.lnav__brand span {
+  font-family: var(--lnav-head);
+  font-size: 1.35rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lnav__links {
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: center;
+  gap: clamp(16px, 2.2vw, 34px);
+}
+
+.lnav__links a {
+  position: relative;
+  padding: 6px 0;
+  color: var(--lnav-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 250ms ease;
+}
+
+.lnav__links a::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--lnav-cta-bg);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 350ms ease;
+}
+
+.lnav__links a:hover,
+.lnav__links a.is-current {
+  color: var(--lnav-text);
+}
+
+.lnav__links a:hover::after,
+.lnav__links a.is-current::after {
+  transform: scaleX(1);
+}
+
+.lnav__menu-cta {
+  display: none;
+}
+
+.lnav__actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 18px;
+}
+
+.lnav__call {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--lnav-text);
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lnav__call svg {
+  color: var(--lnav-accent);
+}
+
+.lnav__cta {
+  min-height: 44px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: var(--lnav-radius);
+  color: var(--lnav-cta-text);
+  background: var(--lnav-cta-bg);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 250ms ease, box-shadow 250ms ease;
+}
+
+.lnav__cta:hover {
+  box-shadow: 0 10px 24px rgb(0 0 0 / 22%);
+  transform: translateY(-1px);
+}
+
+.lnav a:focus-visible,
+.lnav button:focus-visible {
+  outline: 2px solid var(--lnav-accent);
+  outline-offset: 4px;
+}
+
+.lnav__toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--lnav-line);
+  border-radius: var(--lnav-radius);
+  color: inherit;
+  background: none;
+  cursor: pointer;
+}
+
+.lnav__toggle i {
+  width: 18px;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform 300ms ease;
+}
+
+/* Open: the two bars give way to a close mark. */
+.lnav.is-open .lnav__toggle i {
+  display: none;
+}
+
+.lnav.is-open .lnav__toggle::after {
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 1;
+  content: "×";
+}
+
+/* Laptops: drop the phone number before the links run out of room. */
+@media (max-width: 1240px) {
+  .lnav__call span {
+    display: none;
+  }
+}
+
+/* Tablets and phones: the section links open from the menu button as a dropdown panel. */
+@media (max-width: 900px) {
+  body:has(.lnav) {
+    --header-h: 64px;
+  }
+
+  .lnav {
+    height: 64px;
+    gap: 12px;
+  }
+
+  .lnav__brand span {
+    font-size: 1.1rem;
+  }
+
+  .lnav__links {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    padding: 8px clamp(16px, 4vw, 64px) 18px;
+    border-bottom: 1px solid var(--lnav-line);
+    background: var(--lnav-panel, #0c0b0a);
+    box-shadow: 0 20px 40px rgb(0 0 0 / 20%);
+  }
+
+  .lnav.is-open .lnav__links {
+    display: flex;
+  }
+
+  .lnav__links a {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--lnav-line);
+    font-size: 13px;
+  }
+
+  .lnav__links a::after {
+    display: none;
+  }
+
+  .lnav__menu-cta {
+    display: block;
+    color: var(--lnav-accent) !important;
+  }
+
+  .lnav__actions {
+    margin-left: auto;
+    gap: 10px;
+  }
+
+  .lnav__cta {
+    min-height: 40px;
+    padding: 0 14px;
+    font-size: 11px;
+  }
+
+  .lnav__toggle {
+    display: flex;
+  }
+}
+
+@media (max-width: 420px) {
+  .lnav__brand span {
+    font-size: 0.95rem;
+  }
+
+  .lnav__call {
+    display: none;
+  }
+}

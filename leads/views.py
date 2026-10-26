@@ -1,14 +1,17 @@
 import logging
+from datetime import timedelta
 
 from django.conf import settings
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.urls import reverse
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from core.models import SiteSettings
 from leads.forms import EnquiryForm, client_ip
+from leads.models import Enquiry
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +46,20 @@ def submit_enquiry(request):
             },
             status=429,
         )
+
+    # Ad landing pages: the same number asking again within a day adds to the existing lead
+    # instead of creating a duplicate for the sales team to call twice.
+    data = form.cleaned_data
+    if data["source"] == Enquiry.Source.LANDING:
+        recent = Enquiry.objects.filter(
+            phone=data["phone"], project=data["project_obj"], created_at__gte=timezone.now() - timedelta(days=1)
+        ).first()
+        if recent:
+            request_note = form.full_message()
+            if request_note and request_note not in recent.message:
+                recent.message = "\n".join(filter(None, [recent.message, request_note]))
+                recent.save(update_fields=["message", "updated_at"])
+            return JsonResponse({"ok": True, "message": message})
 
     enquiry = form.save(request)
     _notify(request, enquiry)

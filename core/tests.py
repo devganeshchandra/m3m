@@ -11,7 +11,8 @@ from PIL import Image
 
 from content.models import Insight, Video
 from core.models import HeroBanner, HomePage, InnerPage, Page, SiteSettings
-from projects.models import BillionaireBlockPage, BillionaireItem, Project
+from leads.models import Enquiry
+from projects.models import BillionaireBlockPage, Project
 
 MEDIA_ROOT = tempfile.mkdtemp()
 
@@ -40,7 +41,8 @@ class SiteTests(TestCase):
         self.assertContains(response, 'class="project-card"', count=3)
         self.assertContains(response, "Explore all 9 projects")
         # Live figures beside the section headings, the journey card and the single-screen finder.
-        self.assertContains(response, "<strong>9</strong><span>Addresses</span>", html=False)
+        self.assertContains(response, "<strong>66</strong><span>Iconic projects</span>", html=False)
+        self.assertContains(response, "Landmarks across")
         self.assertContains(response, "M3M India at a glance")
         self.assertContains(response, "Projects delivered")
         self.assertContains(response, 'class="finder-project"', count=9)
@@ -52,6 +54,12 @@ class SiteTests(TestCase):
         page.save()
         self.assertContains(self.client.get("/"), "A brand new")
 
+    def test_projects_figures_fall_back_to_live_counts(self):
+        page = HomePage.load()
+        page.projects_facts = ""
+        page.save()
+        self.assertContains(self.client.get("/"), "<strong>9</strong><span>Addresses</span>", html=False)
+
     def test_contact_settings_are_used_everywhere(self):
         settings = SiteSettings.load()
         settings.phone_display = "1800 000 0000"
@@ -62,9 +70,10 @@ class SiteTests(TestCase):
         self.assertContains(response, "https://wa.me/911234567890")
 
     def test_project_page(self):
-        response = self.client.get("/projects/m3m-trump-tower-noida")
-        self.assertContains(response, "UPRERAPRJ794824/10/2025")
-        self.assertContains(response, "<title>M3M Trump Tower Noida | M3M India</title>", html=False)
+        # A project without an ad landing page uses the standard project page.
+        response = self.client.get("/projects/m3m-the-line-pentsuites")
+        self.assertContains(response, "UPRERAPRJ246070")
+        self.assertContains(response, "<title>M3M The Line Pentsuites | M3M India</title>", html=False)
 
     def test_unpublished_project_is_hidden(self):
         Project.objects.filter(slug="m3m-trump-tower-noida").update(is_published=False)
@@ -72,7 +81,7 @@ class SiteTests(TestCase):
         self.assertNotContains(self.client.get("/"), "M3M Trump Tower Noida")
 
     def test_project_landing_sections(self):
-        project = Project.objects.get(slug="m3m-trump-tower-noida")
+        project = Project.objects.get(slug="m3m-the-line-pentsuites")
         project.highlights.create(title="Golf course views")
         project.configurations.create(unit_type="4 BHK", size="4,800 sq. ft.")
         response = self.client.get(project.get_absolute_url())
@@ -123,33 +132,113 @@ class SiteTests(TestCase):
 
     def test_billionaire_block_page(self):
         response = self.client.get("/billionaire-block")
-        self.assertContains(response, "<title>Billionaire Block by M3M | Residences by invitation only</title>", html=False)
+        self.assertContains(
+            response, "<title>M3M Billionaire Block, Sector 111 Gurugram | ELIE SAAB Residences</title>", html=False
+        )
         self.assertContains(response, '"@type": "RealEstateListing"', html=False)
-        self.assertContains(response, "Some addresses are bought. This one is earned.")
-        self.assertContains(response, 'data-count="12,000+"', html=False)
-        self.assertContains(response, "Sky Villas")
-        self.assertContains(response, 'class="bb-club__card"', count=11)
-        self.assertContains(response, "Biometric &amp; facial recognition")
-        self.assertContains(response, "Indira Gandhi International Airport")
-        self.assertContains(response, "data-bb-lightbox=", count=13)
-        # Amenities: three groups, every amenity named, photos only where one is uploaded.
-        self.assertContains(response, 'class="bb-amenities__group"', count=3)
-        self.assertContains(response, "Bonfire court")
-        self.assertContains(response, "<figcaption>Bowling alley</figcaption>", html=False)
-        self.assertContains(response, "Air conditioning")
+        # The research story, in order, from the plan to the sources.
+        html = response.content.decode()
+        order = [
+            "What exactly is", "M3M Residences", "A clearly defined", "What type of society is",
+            "What amenities are they", "What type of towers, blocks and", "broader", "Location &amp;",
+            "Launch timeline, investment", "Sources for",
+        ]
+        positions = [html.index(heading) for heading in order]
+        self.assertEqual(positions, sorted(positions))
+        self.assertContains(response, 'aria-roledescription="slide"', count=5, html=False)
+        self.assertContains(response, '<span data-count="250">250</span> acres', html=False)
+        self.assertContains(response, "Wrap-around decks and private jacuzzis")
+        self.assertContains(response, 'class="bbx-amenity"', count=7)
+        self.assertContains(response, "₹3,500 cr")
+        self.assertContains(response, "https://haryanarera.gov.in/", html=False)
+        for unverified in ("Sky Villas", "The Penthouse", "Helipad", "Bowling alley", "bb-club__card", "RERA:"):
+            self.assertNotContains(response, unverified)
         self.assertContains(response, "Request Invitation")
         self.assertContains(response, 'name="source" value="billionaire"', html=False)
         self.assertContains(response, 'name="source" value="brochure"', html=False)
         self.assertContains(response, "billionaire-block/hero")
-        # Published news cards with their popup content and source links.
-        self.assertContains(response, 'class="bb-news__card"', count=4)
-        self.assertContains(response, "Gurugram residences priced from about ₹15 crore")
-        self.assertContains(response, "https://luxe.outlookindia.com/", html=False)
-        self.assertContains(response, "a paid press release", count=1)
 
     def test_billionaire_block_is_highlighted_in_the_site_menu(self):
         response = self.client.get("/")
         self.assertContains(response, "desktop-nav__link--featured", html=False)
+
+    def test_jacob_co_uses_its_ad_landing_page(self):
+        response = self.client.get("/projects/m3m-jacob-co-residences")
+        self.assertTemplateUsed(response, "projects/landing/m3m-jacob-co-residences.html")
+        # Five forms: hero and final, plus the popup's three rotating styles; all send landing leads.
+        self.assertContains(response, 'name="source" value="landing"', count=5, html=False)
+        for field, count in (('data-validate="realName"', 5), ('data-validate="leadEmail"', 5),
+                             ('data-validate="interest"', 2), ('data-pf-variant=', 3)):
+            self.assertContains(response, field, count=count, html=False)
+        self.assertContains(response, 'data-commercial-project="m3m-jacob-jewel-crest-noida"', html=False)
+        self.assertContains(response, "Jacob &amp; Co Ventures LLC")
+        # Other projects keep the standard page.
+        self.assertTemplateUsed(self.client.get("/projects/m3m-the-line-pentsuites"), "projects/detail.html")
+
+    def test_cullinan_uses_its_own_ad_landing_page(self):
+        response = self.client.get("/projects/m3m-the-cullinan-residential")
+        self.assertTemplateUsed(response, "projects/landing/m3m-the-cullinan-residential.html")
+        self.assertTemplateNotUsed(response, "projects/landing/m3m-jacob-co-residences.html")
+        # Two-step forms in the hero and final sections, plus the popup's three rotating styles.
+        self.assertContains(response, 'name="source" value="landing"', count=5, html=False)
+        self.assertContains(response, 'name="unit" value="retail"', count=2, html=False)
+        self.assertContains(response, 'data-commercial-project="m3m-the-cullinan-avenue"', count=2, html=False)
+        self.assertContains(response, 'class="cl-strip__card"', count=12, html=False)
+        self.assertContains(response, "Lavish Buildmart Pvt. Ltd.")
+        self.assertContains(response, "UPRERAPRJ442214")
+
+    def test_cullinan_retail_lead_reaches_the_avenue(self):
+        response = self.client.post("/api/enquiries", {
+            "source": "landing", "name": "Asha Verma", "phone": "9876543210", "email": "asha@gmail.com",
+            "interest": "commercial", "project": "m3m-the-cullinan-avenue",
+            "message": "Requested: Get retail shop details\nInterested in: Retail shop",
+        })
+        self.assertTrue(response.json()["ok"])
+        enquiry = Enquiry.objects.get(source="landing")
+        self.assertEqual(enquiry.project.slug, "m3m-the-cullinan-avenue")
+        self.assertIn("Interested in: Retail shop", enquiry.message)
+
+    def test_trump_tower_uses_its_own_ad_landing_page(self):
+        response = self.client.get("/projects/m3m-trump-tower-noida")
+        self.assertTemplateUsed(response, "projects/landing/m3m-trump-tower-noida.html")
+        # Hero and final forms plus the popup's three rotating styles, each with the residence choice.
+        self.assertContains(response, 'name="source" value="landing"', count=5, html=False)
+        for field in ('data-validate="choice"', 'data-validate="realName"', 'data-validate="leadEmail"'):
+            self.assertContains(response, field, count=5, html=False)
+        self.assertContains(response, "not owned, developed or sold by The Trump Organization")
+        # Disputed listing figures stay off the page.
+        for unverified in ("₹", "crore", "acres", "158"):
+            self.assertNotContains(response, unverified)
+
+    def test_trump_tower_lead_records_the_residence(self):
+        response = self.client.post("/api/enquiries", {
+            "source": "landing", "name": "Asha Verma", "phone": "9876543210", "email": "asha@gmail.com",
+            "interest": "residential", "project": "m3m-trump-tower-noida",
+            "message": "Requested: Request the private dossier\nInterested in: 5 BHK",
+        })
+        self.assertTrue(response.json()["ok"])
+        enquiry = Enquiry.objects.get(source="landing")
+        self.assertEqual(enquiry.project.slug, "m3m-trump-tower-noida")
+        self.assertIn("5 BHK", enquiry.message)
+
+    def test_landing_pages_have_their_own_header(self):
+        for slug in ("m3m-jacob-co-residences", "m3m-the-cullinan-residential", "m3m-trump-tower-noida"):
+            response = self.client.get(f"/projects/{slug}")
+            self.assertContains(response, 'class="lnav', html=False)
+            self.assertContains(response, 'href="#residences"', html=False)
+            self.assertNotContains(response, 'class="site-header"', html=False)
+        # Every other page keeps the site menu.
+        self.assertContains(self.client.get("/projects/m3m-the-line-pentsuites"), 'class="site-header"', html=False)
+
+    def test_landing_popups_rotate_the_three_form_styles(self):
+        # Each page's popup starts with the next page's form style: Jacob → b, Cullinan → c, Trump → a.
+        for slug, start, theme in (("m3m-jacob-co-residences", "b", "jl"),
+                                   ("m3m-the-cullinan-residential", "c", "cl"),
+                                   ("m3m-trump-tower-noida", "a", "tt")):
+            response = self.client.get(f"/projects/{slug}")
+            self.assertContains(response, f'class="pf pf--{theme}" data-pf data-pf-start="{start}"', html=False)
+            self.assertContains(response, "js/landing-forms.js", html=False)
+            self.assertContains(response, "js/landing-fx.js", html=False)
 
     def test_homepage_teases_billionaire_block(self):
         response = self.client.get("/")
@@ -166,10 +255,7 @@ class SiteTests(TestCase):
         page = BillionaireBlockPage.load()
         page.tagline = "A new horizon."
         page.save()
-        BillionaireItem.objects.filter(title="Golf simulator").update(is_published=False)
-        response = self.client.get("/billionaire-block")
-        self.assertContains(response, "A new horizon.")
-        self.assertNotContains(response, "Golf simulator")
+        self.assertContains(self.client.get("/billionaire-block"), "A new horizon.")
 
     def test_large_upload_is_downsized(self):
         admin = User.objects.create_superuser("admin", "a@example.com", "pass")

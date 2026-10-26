@@ -45,7 +45,14 @@ class EnquiryForm(forms.Form):
         if source in {Enquiry.Source.HERO, Enquiry.Source.POPUP, Enquiry.Source.CONTACT}:
             if data.get("callTime") not in Enquiry.CallTime.values:
                 errors["callTime"] = "Choose a preferred time for your call."
-        if source != Enquiry.Source.GUIDED:
+        if source == Enquiry.Source.LANDING:
+            if message := validation.validate_real_name(data.get("name")):
+                errors["name"] = message
+            if data.get("interest") not in Enquiry.Interest.values:
+                errors["interest"] = "Choose residential or commercial."
+            if message := validation.validate_lead_email(data.get("email")):
+                errors["email"] = message
+        elif source != Enquiry.Source.GUIDED:
             if message := validation.validate_name(data.get("name")):
                 errors["name"] = message
 
@@ -61,11 +68,14 @@ class EnquiryForm(forms.Form):
         if not phone:
             errors["phone"] = validation.PHONE_ERROR
         # The brochure form asks only for a name and phone number.
-        if source != Enquiry.Source.BROCHURE or data.get("email"):
+        if source not in {Enquiry.Source.BROCHURE, Enquiry.Source.LANDING} or (
+            source == Enquiry.Source.BROCHURE and data.get("email")
+        ):
             if message := validation.validate_email(data.get("email")):
                 errors["email"] = message
         # These forms have no consent checkbox: sending them is the request to be contacted.
-        no_consent = {Enquiry.Source.HERO, Enquiry.Source.BILLIONAIRE, Enquiry.Source.BROCHURE}
+        # The landing page states the contact terms beside its submit button.
+        no_consent = {Enquiry.Source.HERO, Enquiry.Source.BILLIONAIRE, Enquiry.Source.BROCHURE, Enquiry.Source.LANDING}
         if source not in no_consent and not data.get("consent"):
             errors["consent"] = GUIDED_CONSENT_ERROR if source == Enquiry.Source.GUIDED else CONSENT_ERROR
 

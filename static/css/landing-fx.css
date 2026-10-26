@@ -1,0 +1,196 @@
+/*
+ * Interaction effects for project landing pages (static/js/landing-fx.js). Colours follow the
+ * page: Jacob & Co. (gold on black), The Cullinan (sapphire on white), Trump Tower (champagne
+ * on midnight). Everything is skipped for visitors who prefer reduced motion.
+ */
+
+body:has(.jl) {
+  --fx-glow: rgb(232 211 163 / 24%);
+  --fx-pill: rgb(232 211 163 / 14%);
+  --fx-pill-radius: 999px;
+}
+
+body:has(.cl) {
+  --fx-glow: rgb(143 184 232 / 28%);
+  --fx-pill: rgb(27 58 107 / 8%);
+  --fx-pill-radius: 0;
+}
+
+body:has(.tt) {
+  --fx-glow: rgb(243 226 180 / 24%);
+  --fx-pill: rgb(243 226 180 / 14%);
+  --fx-pill-radius: 10px;
+}
+
+/* ---------- Headings: words rise in, then ripple in a wave on hover ---------- */
+
+.fx-ready .fx-heading .fx-w {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.55em) rotate(2deg);
+  transition:
+    opacity 700ms ease calc(var(--i) * 55ms),
+    transform 1000ms cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * 55ms);
+}
+
+.fx-ready .fx-heading.is-in .fx-w {
+  opacity: 1;
+  transform: none;
+}
+
+.fx-ready .fx-heading.is-in.is-waving .fx-w {
+  animation: fx-wave 750ms cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i) * 40ms) both;
+}
+
+@keyframes fx-wave {
+  0%, 100% { transform: none; }
+  40% { transform: translateY(-0.16em); }
+}
+
+/* The coloured phrase gains an underline that draws in on hover. */
+.fx-heading em {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: left 92%;
+  background-repeat: no-repeat;
+  background-size: 0% 2px;
+  transition: background-size 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fx-heading:hover em {
+  background-size: 100% 2px;
+}
+
+/* ---------- Cards: tilt, lift and a light that follows the pointer ---------- */
+
+.fx-card.fx-card {
+  position: relative;
+  transform-style: preserve-3d;
+  transition:
+    transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 400ms ease,
+    border-color 300ms ease,
+    background-color 300ms ease;
+}
+
+.fx-card.fx-card:hover {
+  box-shadow: 0 28px 60px rgb(0 0 0 / 22%);
+}
+
+.fx-glow {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), var(--fx-glow), transparent 45%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms ease;
+}
+
+.fx-card:hover > .fx-glow {
+  opacity: 1;
+}
+
+/* ---------- Buttons: magnetic pull, a glow under the pointer, a ripple on click ---------- */
+
+.fx-btn.fx-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 220ms ease-out,
+    box-shadow 300ms ease,
+    background-color 300ms ease,
+    color 300ms ease,
+    border-color 300ms ease;
+}
+
+.fx-btn__glow {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(140px circle at var(--mx, 50%) var(--my, 50%), rgb(255 255 255 / 45%), transparent 60%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
+.fx-btn:hover > .fx-btn__glow {
+  opacity: 1;
+}
+
+.fx-btn svg {
+  transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.fx-btn:hover svg {
+  transform: translateX(4px);
+}
+
+.fx-ripple {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.25;
+  pointer-events: none;
+  transform: scale(0);
+  animation: fx-ripple 650ms ease-out forwards;
+}
+
+@keyframes fx-ripple {
+  to { opacity: 0; transform: scale(1); }
+}
+
+/* ---------- Tabs: a highlight that glides between items ---------- */
+
+.fx-tabs {
+  position: relative;
+}
+
+.fx-tabs > :not(.fx-pill) {
+  position: relative;
+  z-index: 1;
+}
+
+.fx-pill {
+  --pad-x: 0px;
+  --pad-y: 0px;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  margin: calc(-1 * var(--pad-y)) 0 0 calc(-1 * var(--pad-x));
+  padding: var(--pad-y) var(--pad-x);
+  box-sizing: content-box;
+  border-radius: var(--fx-pill-radius);
+  background: var(--fx-pill);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 450ms cubic-bezier(0.16, 1, 0.3, 1),
+    width 450ms cubic-bezier(0.16, 1, 0.3, 1),
+    height 450ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 300ms ease;
+}
+
+.lnav__links > .fx-pill {
+  --pad-x: 14px;
+  --pad-y: 2px;
+}
+
+.cl-filters > .fx-pill {
+  background: rgb(255 255 255 / 16%);
+}
+
+.tt-hero__dots > .fx-pill {
+  --pad-x: 6px;
+  --pad-y: 8px;
+  border-radius: 999px;
+  background: rgb(212 178 106 / 22%);
+}
+
+/* The Cullinan's room tabs: the selected tab is already filled, so the highlight reads as a hover. */
+.cl-tour__tabs > .fx-pill {
+  background: rgb(27 58 107 / 8%);
+}

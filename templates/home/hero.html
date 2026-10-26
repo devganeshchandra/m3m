@@ -2,7 +2,13 @@
   <div aria-label="M3M residences banners" aria-roledescription="carousel" class="hero-banner" role="region" data-hero-carousel>
     <div class="hero-banner__slides" aria-hidden="true">
       {% for banner in banners %}
-        <div class="hero-banner__slide{% if forloop.first %} is-active{% endif %}" style="background-image: url('{{ banner.image.url }}')"></div>
+        <div class="hero-banner__slide{% if forloop.first %} is-active{% endif %}" style="background-image: url('{{ banner.image.url }}')">
+          {% if banner.video %}
+            <video class="hero-banner__video" autoplay muted loop playsinline preload="metadata" poster="{{ banner.image.url }}" data-hero-video>
+              <source src="{{ banner.video.url }}" type="video/mp4">
+            </video>
+          {% endif %}
+        </div>
       {% empty %}
         <div class="hero-banner__slide is-active"></div>
       {% endfor %}

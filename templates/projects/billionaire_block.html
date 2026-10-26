@@ -21,11 +21,14 @@
   <meta property="og:url" content="{{ site_url }}{{ request.path }}">
   {% if page.hero_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ page.hero_image.url }}">{% endif %}
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="{% static 'images/logo/m3m-logo.png' %}">
+  <link rel="icon" href="{% static 'images/logo/favicon.ico' %}" sizes="any">
+  <link rel="icon" type="image/png" sizes="96x96" href="{% static 'images/logo/favicon-96.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/logo/apple-touch-icon.png' %}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap">
   <link rel="stylesheet" href="{% static 'css/billionaire.css' %}">
+  <link rel="stylesheet" href="{% static 'css/billionaire-story.css' %}">
   {% if page.hero_image %}<link rel="preload" as="image" href="{{ page.hero_image.url }}">{% endif %}
   <script type="application/ld+json">
     {
@@ -72,11 +75,13 @@
       <span class="bb-nav__name">{{ page.title }}<small>by M3M</small></span>
     </a>
     <nav class="bb-nav__links" aria-label="Billionaire Block">
-      <a href="#about">About</a>
-      <a href="#news">News</a>
+      <a href="#overview">Overview</a>
       <a href="#residences">Residences</a>
-      <a href="#club">The Club</a>
-      <a href="#gallery">Gallery</a>
+      <a class="bb-nav__link--3" href="#community">Community</a>
+      <a href="#amenities">Amenities</a>
+      <a class="bb-nav__link--2" href="#strategy">Strategy</a>
+      <a href="#location">Location</a>
+      <a class="bb-nav__link--2" href="#before-you-buy">Legal</a>
     </nav>
     <div class="bb-nav__actions">
       <a class="bb-home-link" href="{{ home_url }}" aria-label="M3M Home: back to the M3M India website">
@@ -84,7 +89,7 @@
         <span class="bb-home-link__long">M3M Home</span>
         <span class="bb-home-link__short" aria-hidden="true">Home</span>
       </a>
-      <a class="bb-button bb-button--outline bb-nav__cta" href="#private-viewing" data-magnetic>Private Viewing</a>
+      <a class="bb-button bb-button--outline bb-nav__cta" href="#private-viewing" data-magnetic>Enquire Now</a>
       <button class="bb-nav__toggle" type="button" aria-expanded="false" aria-controls="bb-menu" data-bb-menu-toggle>
         <span class="visually-hidden">Open menu</span>
         <span aria-hidden="true"></span><span aria-hidden="true"></span>
@@ -94,15 +99,16 @@
 
   <div class="bb-menu" id="bb-menu" hidden data-bb-menu>
     <nav aria-label="Menu">
-      <a href="#about">About</a>
+      <a href="#overview">Overview</a>
+      <a href="#residences">ELIE SAAB Residences</a>
+      <a href="#community">Community</a>
       <a href="#amenities">Amenities</a>
-      <a href="#news">News</a>
-      <a href="#residences">Residences</a>
-      <a href="#club">The Club</a>
+      <a href="#towers">Towers &amp; layouts</a>
+      <a href="#strategy">Strategy</a>
       <a href="#location">Location</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#specifications">Specifications</a>
-      <a href="#private-viewing">Private Viewing</a>
+      <a href="#before-you-buy">Timeline &amp; legal checks</a>
+      <a href="#sources">Sources</a>
+      <a href="#private-viewing">Enquire</a>
       <a href="{{ home_url }}">M3M Home</a>
     </nav>
     <button class="bb-link-button bb-menu__brochure" type="button" data-bb-open="brochure">Download the brochure</button>
@@ -130,456 +136,19 @@
         <p class="bb-label bb-hero__label" data-bb-hero-item>{{ page.eyebrow }}</p>
         <h1 class="bb-hero__title" id="bb-title" data-bb-hero-title>{{ page.title }}</h1>
         <p class="bb-hero__tagline" data-bb-hero-item>{{ page.tagline }}</p>
+        <div class="bb-hero__actions" data-bb-hero-item>
+          <a class="bb-button bb-button--gold" href="#private-viewing" data-magnetic>Enquire Now</a>
+          <a class="bb-button bb-button--outline" href="#residences" data-magnetic>Explore Residences</a>
+        </div>
       </div>
       {% if page.hero_image %}<span class="visually-hidden">{{ page.hero_image_alt }}</span>{% endif %}
       <p class="bb-hero__caption">Artistic impression</p>
-      <a class="bb-hero__scroll" href="#about" aria-label="Scroll to discover">
+      <a class="bb-hero__scroll" href="#overview" aria-label="Scroll to discover">
         <span>Scroll</span><i aria-hidden="true"></i>
       </a>
     </section>
 
-    {# ---------- About the project and what is being built ---------- #}
-    <section class="bb-about" id="about" aria-label="{{ page.about_label }}">
-      <article class="bb-story" aria-labelledby="bb-about-title">
-        <figure class="bb-story__media{% if page.about_image_2 %} bb-story__media--pair{% endif %}">
-          <div class="bb-story__frame" data-bb-clip>
-            <div class="bb-parallax" data-bb-parallax>
-              {% picture page.about_image sizes="(max-width: 900px) 100vw, 55vw" alt="Aerial view of a green enclave with lakes and golf greens, artistic impression" css_class="bb-cover" %}
-            </div>
-          </div>
-          {% if page.about_image_2 %}
-            <div class="bb-story__frame" data-bb-clip>
-              <div class="bb-parallax" data-bb-parallax>
-                {% picture page.about_image_2 sizes="(max-width: 900px) 100vw, 55vw" alt="Residential towers and retail podium at blue hour, artistic impression" css_class="bb-cover" %}
-              </div>
-            </div>
-          {% endif %}
-          <figcaption>Artistic impression</figcaption>
-        </figure>
-        <div class="bb-story__copy">
-          <p class="bb-story__number" aria-hidden="true">01</p>
-          <p class="bb-label" data-bb-fade>{{ page.about_label }}</p>
-          <h2 class="bb-heading" id="bb-about-title" data-bb-lines>{{ page.about_heading }}</h2>
-          <div class="bb-prose" data-bb-fade>{{ page.about_text|linebreaks }}</div>
-          {% if page.about_fact_list %}
-            <dl class="bb-story__facts" data-bb-fade>
-              {% for value, label in page.about_fact_list %}
-                <div><dt>{{ value }}</dt><dd>{{ label }}</dd></div>
-              {% endfor %}
-            </dl>
-          {% endif %}
-        </div>
-      </article>
-
-      <article class="bb-story bb-story--reverse" aria-labelledby="bb-building-title">
-        <figure class="bb-story__media{% if page.building_image_2 %} bb-story__media--pair{% endif %}">
-          <div class="bb-story__frame" data-bb-clip>
-            <div class="bb-parallax" data-bb-parallax>
-              {% picture page.building_image sizes="(max-width: 900px) 100vw, 55vw" alt="Residential towers and landscaped podium by day, artistic impression" css_class="bb-cover" %}
-            </div>
-          </div>
-          {% if page.building_image_2 %}
-            <div class="bb-story__frame" data-bb-clip>
-              <div class="bb-parallax" data-bb-parallax>
-                {% picture page.building_image_2 sizes="(max-width: 900px) 100vw, 55vw" alt="Residence salon with city views at sunset, artistic impression" css_class="bb-cover" %}
-              </div>
-            </div>
-          {% endif %}
-          <figcaption>Artistic impression</figcaption>
-        </figure>
-        <div class="bb-story__copy">
-          <p class="bb-story__number" aria-hidden="true">02</p>
-          <p class="bb-label" data-bb-fade>{{ page.building_label }}</p>
-          <h2 class="bb-heading" id="bb-building-title" data-bb-lines>{{ page.building_heading }}</h2>
-          <div class="bb-prose" data-bb-fade>{{ page.building_text|linebreaks }}</div>
-          {% if page.building_point_list %}
-            <ul class="bb-story__points" data-bb-fade>
-              {% for point in page.building_point_list %}<li>{{ point }}</li>{% endfor %}
-            </ul>
-          {% endif %}
-          {% if page.building_note %}<p class="bb-note">{{ page.building_note }}</p>{% endif %}
-        </div>
-      </article>
-    </section>
-
-    {# ---------- Amenities: every amenity by name, with a photo wherever one is uploaded ---------- #}
-    {% if amenity_groups %}
-      <section class="bb-amenities" id="amenities" aria-labelledby="bb-amenities-title">
-        <header class="bb-section-head bb-section-head--split">
-          <p class="bb-label" data-bb-fade>{{ page.amenities_label }}</p>
-          <h2 class="bb-heading" id="bb-amenities-title" data-bb-lines>{{ page.amenities_heading }}</h2>
-          <p class="bb-section-head__text" data-bb-fade>{{ page.amenities_intro }}</p>
-        </header>
-        {% for heading, amenities in amenity_groups %}
-          <div class="bb-amenities__group">
-            <div class="bb-amenities__head" data-bb-fade>
-              <span class="bb-index">{{ forloop.counter|pad2 }}</span>
-              <h3>{{ heading }}</h3>
-              <ul class="bb-amenities__names">
-                {% for amenity in amenities %}<li>{{ amenity.title }}</li>{% endfor %}
-              </ul>
-            </div>
-            {# Photos sit in justified rows: each keeps its proportions and every row fills the full width. #}
-            <ul class="bb-amenities__photos">
-              {% for amenity in amenities %}
-                {% if amenity.image %}
-                  <li style="--w: {{ amenity.image.width }}; --h: {{ amenity.image.height }}" data-bb-fade>
-                    <figure>
-                      {% picture amenity.image sizes="(max-width: 700px) 100vw, 50vw" alt=amenity.image_alt css_class="bb-cover" %}
-                      <figcaption>{{ amenity.title }}</figcaption>
-                    </figure>
-                  </li>
-                {% endif %}
-              {% endfor %}
-            </ul>
-          </div>
-        {% endfor %}
-      </section>
-    {% endif %}
-
-    {# ---------- News: published stories about the project ---------- #}
-    {% if news %}
-      <section class="bb-news" id="news" aria-labelledby="bb-news-title">
-        <header class="bb-news__head">
-          <div>
-            <p class="bb-label" data-bb-fade>{{ page.news_label }}</p>
-            <h2 class="bb-heading" id="bb-news-title" data-bb-lines>{{ page.news_heading }}</h2>
-          </div>
-          <p class="bb-section-head__text" data-bb-fade>{{ page.news_intro }}</p>
-        </header>
-        <ul class="bb-news__grid">
-          {% for story in news %}
-            <li data-bb-fade>
-              <button class="bb-news__card" type="button" aria-haspopup="dialog" data-bb-news="{{ forloop.counter0 }}">
-                <span class="bb-news__top">
-                  <span class="bb-news__date" aria-hidden="true">
-                    <strong>{{ story.published_on|date:"d" }}</strong>
-                    <small>{{ story.published_on|date:"M Y" }}</small>
-                  </span>
-                  {% if story.tag %}<span class="bb-news__tag">{{ story.tag }}</span>{% endif %}
-                </span>
-                <span class="bb-news__source">{{ story.publication }}<span class="visually-hidden">, {{ story.published_on|date:"j F Y" }}</span></span>
-                <span class="bb-news__title">{{ story.title }}</span>
-                <span class="bb-news__summary">{{ story.summary }}</span>
-                <span class="bb-news__more">Read the story <i aria-hidden="true"></i></span>
-              </button>
-              <template data-bb-news-template="{{ forloop.counter0 }}">
-                <p class="bb-label">{% if story.tag %}{{ story.tag }} · {% endif %}{{ story.publication }}</p>
-                <p class="bb-news__meta">{{ story.published_on|date:"j F Y" }}</p>
-                <h2 id="bb-news-dialog-title">{{ story.title }}</h2>
-                <div class="bb-news__body">{{ story.body|linebreaks }}</div>
-                {% if story.key_point_list %}
-                  <ul class="bb-news__points">
-                    {% for point in story.key_point_list %}<li>{{ point }}</li>{% endfor %}
-                  </ul>
-                {% endif %}
-                {% if story.is_press_release %}
-                  <p class="bb-news__notice">Source: a paid press release distributed by the publication.</p>
-                {% endif %}
-                <a class="bb-button bb-button--outline" href="{{ story.url }}" target="_blank" rel="noopener noreferrer">
-                  Read on {{ story.publication }} <span aria-hidden="true">↗</span>
-                </a>
-              </template>
-            </li>
-          {% endfor %}
-        </ul>
-      </section>
-    {% endif %}
-
-    {# ---------- 3. Manifesto ---------- #}
-    <section class="bb-manifesto" id="manifesto" aria-label="Manifesto">
-      <h2 class="bb-manifesto__statement" data-bb-words>{{ page.manifesto_heading }}</h2>
-      <p class="bb-manifesto__text" data-bb-fade>{{ page.manifesto_text }}</p>
-    </section>
-
-    {# ---------- 4. Key numbers ---------- #}
-    {% if items.stat %}
-      <section class="bb-numbers" aria-label="Billionaire Block in numbers">
-        <ul class="bb-numbers__list">
-          {% for stat in items.stat %}
-            <li data-bb-fade>
-              <p class="bb-numbers__value"><span data-count="{{ stat.value }}">{{ stat.value }}</span>{% if stat.text %}<small>{{ stat.text }}</small>{% endif %}</p>
-              <p class="bb-numbers__label">{{ stat.title }}</p>
-            </li>
-          {% endfor %}
-        </ul>
-      </section>
-    {% endif %}
-
-    {# ---------- 5. Architecture & design ---------- #}
-    <section class="bb-architecture" aria-labelledby="bb-architecture-title">
-      <figure class="bb-architecture__media" data-bb-clip>
-        <div class="bb-parallax" data-bb-parallax>
-          {% picture page.architecture_image sizes="(max-width: 900px) 100vw, 55vw" alt="Twin residential towers at sunset, artistic impression" css_class="bb-cover" %}
-        </div>
-        <figcaption>Artistic impression</figcaption>
-      </figure>
-      <div class="bb-architecture__copy">
-        <p class="bb-label" data-bb-fade>{{ page.architecture_label }}</p>
-        <h2 class="bb-heading" id="bb-architecture-title" data-bb-lines>{{ page.architecture_heading }}</h2>
-        <div class="bb-prose" data-bb-fade>{{ page.architecture_text|linebreaks }}</div>
-        {% if page.credits %}
-          <dl class="bb-credits" data-bb-fade>
-            {% for label, value in page.credits %}
-              <div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
-            {% endfor %}
-          </dl>
-        {% endif %}
-      </div>
-    </section>
-
-    {# ---------- 6. The residences ---------- #}
-    {% if residences %}
-      <section class="bb-residences" id="residences" aria-labelledby="bb-residences-title">
-        <header class="bb-section-head bb-residences__head">
-          <div>
-            <p class="bb-label" data-bb-fade>{{ page.residences_label }}</p>
-            <h2 class="bb-heading" id="bb-residences-title" data-bb-lines>{{ page.residences_heading }}</h2>
-          </div>
-          {# Summary card: every residence type and its size, beside the heading. #}
-          <aside class="bb-residences__card" aria-label="The collection at a glance" data-bb-fade>
-            <p class="bb-residences__card-title">The collection at a glance</p>
-            <ol class="bb-residences__card-list">
-              {% for residence in residences %}
-                <li>
-                  <span class="bb-index">{{ forloop.counter|pad2 }}</span>
-                  <span class="bb-residences__card-name">{{ residence.name }}</span>
-                  <span class="bb-residences__card-size">{{ residence.size }}</span>
-                </li>
-              {% endfor %}
-            </ol>
-            <div class="bb-residences__card-actions">
-              <a class="bb-link-button" href="#private-viewing">Book a private viewing</a>
-              <button class="bb-link-button" type="button" data-bb-open="brochure">Download brochure</button>
-            </div>
-          </aside>
-        </header>
-        <div class="bb-tabs" role="tablist" aria-label="Residence types" data-bb-tabs>
-          {% for residence in residences %}
-            <button class="bb-tabs__tab" role="tab" type="button" id="bb-tab-{{ forloop.counter }}"
-              aria-controls="bb-panel-{{ forloop.counter }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-              {% if not forloop.first %}tabindex="-1"{% endif %}>
-              <span>{{ forloop.counter|pad2 }}</span>{{ residence.name }}
-            </button>
-          {% endfor %}
-        </div>
-        {% for residence in residences %}
-          <article class="bb-residence" role="tabpanel" id="bb-panel-{{ forloop.counter }}" aria-labelledby="bb-tab-{{ forloop.counter }}"
-            {% if not forloop.first %}hidden{% endif %} data-bb-panel>
-            <figure class="bb-residence__media">
-              {% picture residence.image sizes="(max-width: 900px) 100vw, 60vw" alt=residence.image_alt css_class="bb-cover" %}
-              <figcaption>Artistic impression</figcaption>
-            </figure>
-            <div class="bb-residence__copy">
-              <h3>{{ residence.name }}</h3>
-              {% if residence.tagline %}<p class="bb-residence__tagline">{{ residence.tagline }}</p>{% endif %}
-              <dl class="bb-residence__facts">
-                <div><dt>Size</dt><dd>{{ residence.size }}</dd></div>
-                <div><dt>Configuration</dt><dd>{{ residence.configuration }}</dd></div>
-              </dl>
-              {% if residence.feature_list %}
-                <ul class="bb-residence__features">
-                  {% for feature in residence.feature_list %}<li>{{ feature }}</li>{% endfor %}
-                </ul>
-              {% endif %}
-              <button class="bb-button bb-button--outline" type="button" data-bb-open="plan"
-                data-name="{{ residence.name }}" data-size="{{ residence.size }}" data-configuration="{{ residence.configuration }}"
-                data-features="{{ residence.features }}" data-plan="{% if residence.floor_plan %}{{ residence.floor_plan.url }}{% endif %}" data-magnetic>
-                View Floor Plan
-              </button>
-            </div>
-          </article>
-        {% endfor %}
-      </section>
-    {% endif %}
-
-    {# ---------- 7. Residence features ---------- #}
-    {% if items.feature %}
-      <section class="bb-features" aria-labelledby="bb-features-title">
-        <header class="bb-features__head bb-sticky">
-          <p class="bb-label" data-bb-fade>{{ page.features_label }}</p>
-          <h2 class="bb-heading" id="bb-features-title" data-bb-lines>{{ page.features_heading }}</h2>
-          <p class="bb-section-head__text" data-bb-fade>{{ page.features_intro }}</p>
-        </header>
-        <ol class="bb-features__grid">
-          {% for feature in items.feature %}
-            <li data-bb-fade>
-              <span class="bb-index">{{ forloop.counter|pad2 }}</span>
-              <h3>{{ feature.title }}</h3>
-              {% if feature.text %}<p>{{ feature.text }}</p>{% endif %}
-            </li>
-          {% endfor %}
-        </ol>
-      </section>
-    {% endif %}
-
-    {# ---------- 8. The club (pinned horizontal scroll on large screens) ---------- #}
-    {% if items.club %}
-      <section class="bb-club" id="club" aria-labelledby="bb-club-title" data-bb-club>
-        <div class="bb-club__inner">
-          <header class="bb-club__head">
-            <p class="bb-label">{{ page.club_label }}</p>
-            <h2 class="bb-heading" id="bb-club-title">{{ page.club_heading }}</h2>
-            <p class="bb-club__intro">{{ page.club_intro }}</p>
-            <p class="bb-club__hint" aria-hidden="true">Scroll to explore <i></i></p>
-          </header>
-          <ul class="bb-club__track" data-bb-club-track>
-            {% for space in items.club %}
-              <li class="bb-club__card">
-                <figure>
-                  {% picture space.image sizes="(max-width: 900px) 80vw, 30vw" alt=space.image_alt css_class="bb-cover" %}
-                </figure>
-                <div class="bb-club__copy">
-                  <span class="bb-index">{{ forloop.counter|pad2 }}</span>
-                  <h3>{{ space.title }}</h3>
-                  {% if space.text %}<p>{{ space.text }}</p>{% endif %}
-                </div>
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
-      </section>
-    {% endif %}
-
-    {# ---------- 9. Lifestyle services ---------- #}
-    {% if items.service %}
-      <section class="bb-services" aria-labelledby="bb-services-title">
-        <header class="bb-section-head bb-section-head--split">
-          <div>
-            <p class="bb-label" data-bb-fade>{{ page.services_label }}</p>
-            <h2 class="bb-heading" id="bb-services-title" data-bb-lines>{{ page.services_heading }}</h2>
-          </div>
-          <p class="bb-section-head__text" data-bb-fade>{{ page.services_intro }}</p>
-        </header>
-        <ul class="bb-services__grid">
-          {% for service in items.service %}
-            <li data-bb-fade>
-              <h3>{{ service.title }}</h3>
-              {% if service.text %}<p>{{ service.text }}</p>{% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-      </section>
-    {% endif %}
-
-    {# ---------- 10. Privacy & security ---------- #}
-    {% if items.security %}
-      <section class="bb-security" aria-labelledby="bb-security-title">
-        <div class="bb-security__head bb-sticky">
-          <p class="bb-label" data-bb-fade>{{ page.security_label }}</p>
-          <h2 class="bb-heading" id="bb-security-title" data-bb-lines>{{ page.security_heading }}</h2>
-          <p class="bb-section-head__text" data-bb-fade>{{ page.security_text }}</p>
-          {% if page.security_image %}
-            <figure class="bb-side-image" data-bb-clip>
-              {% picture page.security_image sizes="(max-width: 900px) 100vw, 40vw" alt="Daylight façade of the retail podium, artistic impression" css_class="bb-cover" %}
-            </figure>
-          {% endif %}
-        </div>
-        <ol class="bb-security__list">
-          {% for point in items.security %}
-            <li data-bb-fade>
-              <span class="bb-index">{{ forloop.counter|pad2 }}</span>
-              <div>
-                <h3>{{ point.title }}</h3>
-                {% if point.text %}<p>{{ point.text }}</p>{% endif %}
-              </div>
-            </li>
-          {% endfor %}
-        </ol>
-      </section>
-    {% endif %}
-
-    {# ---------- 11. Location ---------- #}
-    <section class="bb-location" id="location" aria-labelledby="bb-location-title">
-      <div class="bb-location__copy">
-        <p class="bb-label" data-bb-fade>{{ page.location_label }}</p>
-        <h2 class="bb-heading" id="bb-location-title" data-bb-lines>{{ page.location_heading }}</h2>
-        <p class="bb-section-head__text" data-bb-fade>{{ page.location_text }}</p>
-        {% if items.location %}
-          <ul class="bb-distances">
-            {% for place in items.location %}
-              <li data-bb-fade><span>{{ place.title }}</span><strong>{{ place.value }}</strong></li>
-            {% endfor %}
-          </ul>
-          <p class="bb-note">{{ page.location_note }}</p>
-        {% endif %}
-      </div>
-      <div class="bb-location__map" data-bb-clip>
-        <iframe title="Map of the Billionaire Block neighbourhood" src="{{ page.map_embed_url }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-      </div>
-    </section>
-
-    {# ---------- 12. Gallery ---------- #}
-    {% if items.gallery %}
-      <section class="bb-gallery" id="gallery" aria-labelledby="bb-gallery-title">
-        <header class="bb-section-head">
-          <p class="bb-label" data-bb-fade>{{ page.gallery_label }}</p>
-          <h2 class="bb-heading" id="bb-gallery-title" data-bb-lines>{{ page.gallery_heading }}</h2>
-        </header>
-        <ul class="bb-gallery__grid">
-          {% for photo in items.gallery %}
-            <li data-bb-fade>
-              <button type="button" class="bb-gallery__item" data-bb-lightbox="{{ forloop.counter0 }}"
-                data-full="{{ photo.image.url }}" data-caption="{{ photo.title }}" aria-label="Open image: {{ photo.title }}">
-                {% picture photo.image sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw" alt=photo.image_alt fill=False css_class="bb-gallery__image" %}
-                <span class="bb-gallery__caption">{{ photo.title }}</span>
-              </button>
-            </li>
-          {% endfor %}
-        </ul>
-      </section>
-    {% endif %}
-
-    {# ---------- 13. Specifications ---------- #}
-    {% if items.spec %}
-      <section class="bb-specs" id="specifications" aria-labelledby="bb-specs-title">
-        <header class="bb-specs__head bb-sticky">
-          <p class="bb-label" data-bb-fade>{{ page.specs_label }}</p>
-          <h2 class="bb-heading" id="bb-specs-title" data-bb-lines>{{ page.specs_heading }}</h2>
-          <p class="bb-section-head__text" data-bb-fade>{{ page.specs_intro }}</p>
-          {% if page.specs_image %}
-            <figure class="bb-side-image" data-bb-clip>
-              {% picture page.specs_image sizes="(max-width: 900px) 100vw, 35vw" alt="Marble, bronze and travertine detail, artistic impression" css_class="bb-cover" %}
-            </figure>
-          {% endif %}
-        </header>
-        <div class="bb-accordion">
-          {% for spec in items.spec %}
-            <details class="bb-accordion__item" data-bb-fade {% if forloop.first %}open{% endif %}>
-              <summary><span class="bb-index">{{ forloop.counter|pad2 }}</span>{{ spec.title }}<i aria-hidden="true"></i></summary>
-              <div class="bb-accordion__body"><p>{{ spec.text }}</p></div>
-            </details>
-          {% endfor %}
-        </div>
-      </section>
-    {% endif %}
-
-    {# ---------- 14. Developer legacy ---------- #}
-    <section class="bb-legacy" aria-labelledby="bb-legacy-title">
-      <div class="bb-legacy__copy">
-        <p class="bb-label" data-bb-fade>{{ page.legacy_label }}</p>
-        <h2 class="bb-heading" id="bb-legacy-title" data-bb-lines>{{ page.legacy_heading }}</h2>
-        <p class="bb-section-head__text" data-bb-fade>{{ page.legacy_text }}</p>
-        {% if delivered_projects %}
-          <div class="bb-legacy__delivered" data-bb-fade>
-            <p class="bb-label">Delivered landmarks</p>
-            <ul>
-              {% for project in delivered_projects %}<li><a href="{{ project.get_absolute_url }}">{{ project.name }}</a></li>{% endfor %}
-            </ul>
-          </div>
-        {% endif %}
-      </div>
-      {% if legacy_stats %}
-        <ul class="bb-legacy__stats">
-          {% for stat in legacy_stats %}
-            <li data-bb-fade>
-              <strong data-count="{{ stat.value }}">{{ stat.value }}</strong>
-              <span>{{ stat.label }}</span>
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </section>
+    {% include "projects/billionaire/story.html" %}
 
     {# ---------- 15. Private invitation form ---------- #}
     <section class="bb-invite" id="private-viewing" aria-labelledby="bb-invite-title">
@@ -704,7 +273,7 @@
       </div>
     </div>
     <div class="bb-footer__legal">
-      <p><strong>RERA:</strong> {{ page.rera_number }}</p>
+      {% if page.rera_number %}<p><strong>RERA:</strong> {{ page.rera_number }}</p>{% endif %}
       <p>{{ page.footer_disclaimer }}</p>
       <p>© {% now "Y" %} {{ site.site_name }}. All rights reserved. · <a href="/disclaimer">Disclaimer</a></p>
     </div>

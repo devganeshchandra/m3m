@@ -60,6 +60,39 @@ def validate_name(value):
     return NAME_ERROR
 
 
+# Extra checks for paid-ad landing pages, where junk leads cost money and sales time.
+JUNK_NAME_ERROR = "Please enter your real full name so our team can address you properly."
+DISPOSABLE_EMAIL_ERROR = "Please use a permanent email address so we can send you the details."
+_JUNK_NAMES = {
+    "test", "testing", "tester", "asdf", "asd", "qwerty", "abc", "abcd", "xyz", "na", "none", "null",
+    "name", "fullname", "full name", "user", "demo", "sample", "fake", "aaa", "xxx", "hello", "hi",
+}
+_DISPOSABLE_DOMAINS = {
+    "mailinator.com", "guerrillamail.com", "10minutemail.com", "tempmail.com", "temp-mail.org",
+    "yopmail.com", "trashmail.com", "getnada.com", "sharklasers.com", "dispostable.com",
+    "throwawaymail.com", "maildrop.cc", "fakeinbox.com", "mintemail.com", "emailondeck.com",
+    "example.com", "example.org", "test.com",
+}
+
+
+def validate_real_name(value):
+    """A full name that is not an obvious placeholder: no test words, not one letter repeated."""
+    name = normalize_name(value)
+    if message := validate_name(name):
+        return message
+    compact = name.lower().replace(" ", "")
+    if name.lower() in _JUNK_NAMES or compact in _JUNK_NAMES or len(set(compact)) <= 2:
+        return JUNK_NAME_ERROR
+    return ""
+
+
+def validate_lead_email(value):
+    if message := validate_email(value):
+        return message
+    domain = (value or "").strip().rsplit("@", 1)[-1].lower()
+    return DISPOSABLE_EMAIL_ERROR if domain in _DISPOSABLE_DOMAINS else ""
+
+
 def validate_email(value):
     email = (value or "").strip()
     parts = email.split("@")

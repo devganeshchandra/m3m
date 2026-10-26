@@ -1,0 +1,51 @@
+{% comment %}
+  Lead form for project landing pages. Four fields only: name, mobile, email and project type.
+  Expects: prefix (unique per form on the page), project, button (label), and optionally
+  commercial_slug (the commercial project that receives commercial leads).
+  Posts to /api/enquiries with source "landing"; junk names, disposable emails and repeat
+  submissions are filtered on the server as well as in the browser.
+{% endcomment %}
+<form class="jl-form" novalidate data-lead-form data-jl-form action="{% url 'submit_enquiry' %}" method="post"
+  data-residential-project="{{ project.slug }}" {% if commercial_slug %}data-commercial-project="{{ commercial_slug }}"{% endif %}>
+  {% include "partials/form_tracking.html" with source="landing" %}
+  <input type="hidden" name="project" value="{{ project.slug }}" data-jl-project>
+  <input type="hidden" name="message" value="Requested: Project details" data-jl-request>
+
+  <label class="jl-field">
+    <span>Full name</span>
+    <input name="name" type="text" autocomplete="name" maxlength="80" placeholder="Your full name" required
+      data-validate="realName" data-error-id="{{ prefix }}-name-error">
+    <span class="jl-field__error" id="{{ prefix }}-name-error" role="alert" hidden></span>
+  </label>
+  <label class="jl-field">
+    <span>Mobile number</span>
+    <input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="25" placeholder="10-digit mobile number" required
+      data-validate="phone" data-error-id="{{ prefix }}-phone-error">
+    <span class="jl-field__error" id="{{ prefix }}-phone-error" role="alert" hidden></span>
+  </label>
+  <label class="jl-field">
+    <span>Email</span>
+    <input name="email" type="email" autocomplete="email" maxlength="254" placeholder="name@email.com" required
+      data-validate="leadEmail" data-error-id="{{ prefix }}-email-error">
+    <span class="jl-field__error" id="{{ prefix }}-email-error" role="alert" hidden></span>
+  </label>
+  <label class="jl-field">
+    <span>Looking for</span>
+    <select name="interest" required data-validate="interest" data-error-id="{{ prefix }}-interest-error" data-jl-interest>
+      <option value="">Choose project type</option>
+      <option value="residential">Residential · 3, 4 &amp; 5 BHK</option>
+      <option value="commercial">Commercial · Retail &amp; F&amp;B</option>
+    </select>
+    <span class="jl-field__error" id="{{ prefix }}-interest-error" role="alert" hidden></span>
+  </label>
+
+  <button class="jl-button jl-button--gold jl-form__submit" type="submit">
+    <span data-jl-submit-label>{{ button }}</span>
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <p class="jl-form__status" role="status" aria-live="polite" data-form-status></p>
+  <p class="jl-form__note">
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="13" height="13"><path d="M7 11V8a5 5 0 0 1 10 0v3M6 11h12v9H6z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+    By submitting, you agree that M3M India may call, WhatsApp or email you about this project. No spam.
+  </p>
+</form>

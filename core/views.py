@@ -29,8 +29,9 @@ def home(request):
     press = PressItem.objects.filter(is_published=True).select_related("publication")
     publications = featured_publications()
     images = MediaImage.objects.filter(is_published=True)
+    page = HomePage.load()
     context = {
-        "page": HomePage.load(),
+        "page": page,
         "billionaire": BillionaireBlockPage.load(),
         "banners": HeroBanner.objects.filter(is_active=True),
         "projects": Project.objects.for_homepage(HOME_LIST_COUNT),
@@ -43,7 +44,9 @@ def home(request):
         "media_images": images[:HOME_MEDIA_COUNT],
         "insights": Insight.objects.filter(is_published=True)[:HOME_LIST_COUNT],
         # Figures shown beside each section heading, counted from the live content.
-        "projects_facts": [
+        # Company-wide figures from the admin; otherwise counted from the projects on this site.
+        "projects_facts": page.projects_fact_list
+        or [
             (projects.count(), "Addresses"),
             (projects.filter(is_residential=True).count(), "Residential"),
             (projects.filter(is_commercial=True).count(), "Commercial"),

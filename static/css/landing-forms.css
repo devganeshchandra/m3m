@@ -1,0 +1,327 @@
+/*
+ * The rotating popup forms on project landing pages (templates/projects/landing/_popup_forms.html).
+ * Three form styles (a: fields then list, b: two steps, c: large tiles) in the theme of the page
+ * they sit on: pf--jl (Jacob & Co.), pf--cl (The Cullinan), pf--tt (Trump Tower).
+ */
+
+.pf {
+  --pf-text: #1d1a16;
+  --pf-muted: #5b5248;
+  --pf-head: "Cormorant Garamond", Georgia, serif;
+  --pf-body: "Montserrat", "Manrope", Arial, sans-serif;
+  --pf-border: #d8cfc0;
+  --pf-field: #fff;
+  --pf-radius: 12px;
+  --pf-accent: #c9a96e;
+  --pf-ring: rgb(201 169 110 / 25%);
+  --pf-pick-bg: #0c0b0a;
+  --pf-pick-text: #fff;
+  --pf-pick-note: #e8d3a3;
+  --pf-btn: linear-gradient(135deg, #f1dfb4, #c9a96e 55%, #b48e4c);
+  --pf-btn-text: #1c160c;
+  --pf-btn-radius: 999px;
+  color: var(--pf-text);
+}
+
+.pf--cl {
+  --pf-text: #111a2b;
+  --pf-muted: #556178;
+  --pf-head: "Outfit", "Helvetica Neue", Arial, sans-serif;
+  --pf-body: "Manrope", "Helvetica Neue", Arial, sans-serif;
+  --pf-border: #cfd6e1;
+  --pf-radius: 0;
+  --pf-accent: #1b3a6b;
+  --pf-ring: rgb(143 184 232 / 35%);
+  --pf-pick-bg: linear-gradient(135deg, #1b3a6b, #0f2244);
+  --pf-pick-note: #8fb8e8;
+  --pf-btn: linear-gradient(120deg, #1b3a6b, #0f2244);
+  --pf-btn-text: #fff;
+  --pf-btn-radius: 0;
+}
+
+.pf--tt {
+  --pf-text: #141b29;
+  --pf-muted: #5f6676;
+  --pf-head: "Playfair Display", Georgia, serif;
+  --pf-border: #e1dccf;
+  --pf-radius: 10px;
+  --pf-accent: #d4b26a;
+  --pf-ring: rgb(212 178 106 / 25%);
+  --pf-pick-bg: #0b1220;
+  --pf-pick-note: #f3e2b4;
+  --pf-btn: linear-gradient(135deg, #f7e7bd, #d4b26a 45%, #b08a43 75%, #ecd59a);
+  --pf-btn-text: #1b1405;
+  --pf-btn-radius: 10px;
+}
+
+.pf-form {
+  display: grid;
+  gap: 12px;
+  font-family: var(--pf-body);
+  animation: pf-in 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pf-form[hidden] {
+  display: none;
+}
+
+@keyframes pf-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Fields */
+
+.pf-fields {
+  display: grid;
+  gap: 10px;
+}
+
+.pf-form--b:not(.is-picked) .pf-fields--later {
+  display: none;
+}
+
+.pf-form--b.is-picked .pf-fields--later {
+  animation: pf-in 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pf-field {
+  display: grid;
+  gap: 5px;
+}
+
+.pf-field > span:first-child {
+  color: var(--pf-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.pf-field input,
+.pf-field select {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  border: 1.5px solid var(--pf-border);
+  border-radius: var(--pf-radius);
+  color: var(--pf-text);
+  background: var(--pf-field);
+  font: inherit;
+  font-size: 15px;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.pf-field select {
+  padding-right: 36px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%236b6458' stroke-width='1.6'/%3E%3C/svg%3E");
+  background-position: right 14px center;
+  background-repeat: no-repeat;
+  background-size: 12px 8px;
+  cursor: pointer;
+}
+
+.pf-field input:focus,
+.pf-field select:focus {
+  border-color: var(--pf-accent);
+  outline: none;
+  box-shadow: 0 0 0 4px var(--pf-ring);
+}
+
+.pf-field input[aria-invalid="true"] {
+  border-color: #b42318;
+  background: #fffafa;
+}
+
+.pf-error {
+  color: #b42318;
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.pf-error[hidden] {
+  display: none;
+}
+
+/* Style b: two steps */
+
+.pf-step {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.pf-step legend,
+.pf-step__label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+  padding: 0;
+  font-family: var(--pf-head);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.pf-step legend span,
+.pf-step__label span {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--pf-pick-text);
+  background: var(--pf-pick-bg);
+  font-family: var(--pf-body);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.pf-chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 8px;
+}
+
+/* Style c: large tiles */
+
+.pf-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+/* Shared chip and tile look */
+
+.pf-chip,
+.pf-tile {
+  display: grid;
+  gap: 2px;
+  padding: 12px 8px;
+  border: 1.5px solid var(--pf-border);
+  border-radius: var(--pf-radius);
+  color: var(--pf-text);
+  background: var(--pf-field);
+  font-family: var(--pf-body);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1), border-color 250ms ease, box-shadow 250ms ease, background 250ms ease;
+}
+
+.pf-tile {
+  padding: 22px 10px;
+}
+
+.pf-chip strong,
+.pf-tile strong {
+  font-family: var(--pf-head);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.pf-tile strong {
+  font-size: 1.6rem;
+}
+
+.pf-chip small,
+.pf-tile small {
+  color: var(--pf-muted);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+}
+
+.pf-chip:hover,
+.pf-tile:hover {
+  border-color: var(--pf-accent);
+  box-shadow: 0 10px 24px rgb(0 0 0 / 8%);
+  transform: translateY(-2px);
+}
+
+.pf-chip[aria-pressed="true"],
+.pf-tile[aria-pressed="true"] {
+  border-color: transparent;
+  color: var(--pf-pick-text);
+  background: var(--pf-pick-bg);
+  box-shadow: 0 0 0 3px var(--pf-ring);
+}
+
+.pf-chip[aria-pressed="true"] small,
+.pf-tile[aria-pressed="true"] small {
+  color: var(--pf-pick-note);
+}
+
+.pf-chip:focus-visible,
+.pf-tile:focus-visible,
+.pf-submit:focus-visible {
+  outline: 3px solid var(--pf-accent);
+  outline-offset: 2px;
+}
+
+/* Submit, status and note */
+
+.pf-submit {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--pf-btn-radius);
+  color: var(--pf-btn-text);
+  background: var(--pf-btn);
+  font-family: var(--pf-body);
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 250ms ease, box-shadow 250ms ease;
+}
+
+.pf-submit:hover {
+  box-shadow: 0 14px 30px rgb(0 0 0 / 18%);
+  transform: translateY(-2px);
+}
+
+.pf-form[aria-busy="true"] .pf-submit {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.pf-status {
+  margin: 0;
+  color: #b42318;
+  font-size: 14px;
+}
+
+.pf-status:empty {
+  display: none;
+}
+
+.pf-status.is-success {
+  padding: 14px 16px;
+  border-radius: var(--pf-radius);
+  color: #12502c;
+  background: #e5f2e9;
+  font-weight: 600;
+}
+
+.pf-note {
+  margin: 0;
+  color: var(--pf-muted);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-form,
+  .pf-form--b.is-picked .pf-fields--later {
+    animation: none;
+  }
+}

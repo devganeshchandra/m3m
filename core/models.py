@@ -139,14 +139,19 @@ class HomePage(SingletonModel):
     )
 
     # Projects
-    projects_label = models.CharField(max_length=80, default="M3M projects · Noida")
-    projects_title_line_1 = models.CharField(max_length=80, default="A new view")
-    projects_title_line_2 = models.CharField(max_length=80, default="of Noida.")
+    projects_label = models.CharField(max_length=80, default="M3M projects · Delhi NCR")
+    projects_title_line_1 = models.CharField(max_length=80, default="Landmarks across")
+    projects_title_line_2 = models.CharField(max_length=80, default="Delhi NCR.")
     projects_intro = models.TextField(
         default=(
-            "Nine distinctive residences and destinations across Noida Expressway and Central Noida. "
-            "Find the address that feels like yours."
+            "66 iconic projects across Gurugram, Delhi NCR, Noida and Panipat, from delivered landmarks "
+            "to the addresses now taking shape. Find the one that feels like yours."
         )
+    )
+    projects_facts = models.TextField(
+        blank=True,
+        default="66 | Iconic projects\n4 | Cities\n2,279K+ | Sq m delivered",
+        help_text="Figures above the intro, one per line: figure | label. Leave empty to count the projects on this site.",
     )
 
     # Journey
@@ -218,9 +223,23 @@ class HomePage(SingletonModel):
     def __str__(self):
         return "Homepage text"
 
+    @property
+    def projects_fact_list(self):
+        facts = []
+        for line in self.projects_facts.splitlines():
+            value, _, label = line.partition("|")
+            if value.strip():
+                facts.append((value.strip(), label.strip()))
+        return facts
+
 
 class HeroBanner(models.Model):
     image = ResizingImageField(upload_to="banners/", help_text="Wide landscape image, at least 2000px wide.")
+    video = models.FileField(
+        upload_to="banners/",
+        blank=True,
+        help_text="Optional silent MP4 loop. Plays in place of the image, which shows while it loads.",
+    )
     alt_text = models.CharField(max_length=160, blank=True)
     order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField("Show on site", default=True)

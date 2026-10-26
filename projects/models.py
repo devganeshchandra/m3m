@@ -177,9 +177,9 @@ class BillionaireBlockPage(SingletonModel):
         upload_to="billionaire-block/", blank=True, help_text="Shown while the video loads, and on its own without a video."
     )
     hero_image_alt = models.CharField(max_length=160, default="Billionaire Block towers above the clouds, artistic impression")
-    eyebrow = models.CharField(max_length=80, default="By invitation only")
+    eyebrow = models.CharField(max_length=80, default="Sector 111 · Dwarka Expressway · Gurugram")
     title = models.CharField(max_length=60, default="Billionaire Block")
-    tagline = models.CharField(max_length=160, default="Residences beyond reach. Reserved for the few.")
+    tagline = models.CharField(max_length=160, default="A 170-acre enclave of global branded residences.")
 
     # Teaser shown on the homepage, linking to this page
     teaser_label = models.CharField(max_length=80, default="The future of M3M")
@@ -187,7 +187,7 @@ class BillionaireBlockPage(SingletonModel):
     teaser_text = models.TextField(
         default=(
             "A 170-acre enclave of globally branded residences in Sector 111, Gurugram, beginning with Signature "
-            "Residences by ELIE SAAB. Conceived for the very few, and opening by private invitation."
+            "Residences by ELIE SAAB."
         )
     )
     teaser_button = models.CharField(max_length=60, default="Explore Billionaire Block")
@@ -197,12 +197,8 @@ class BillionaireBlockPage(SingletonModel):
     about_heading = models.CharField(max_length=160, default="A 170-acre address for the world’s finest names.")
     about_text = models.TextField(
         default=(
-            "The Billionaire’s Block is a 170-acre enclave within M3M’s Smart City Delhi Airport township, in "
-            "Sector 111 on Gurugram’s Dwarka Expressway. It is planned as a carefully curated district, designed to "
-            "host a select group of globally renowned branded residences.\n\n"
-            "Rather than a single tower, it is conceived as one integrated destination, where architecture, "
-            "landscape, wellness, hospitality and resident services are planned together from the first line of the "
-            "master plan."
+            "A 170-acre enclave for global branded residences, within M3M’s Smart City Delhi Airport township "
+            "in Sector 111, on Gurugram’s Dwarka Expressway."
         ),
         help_text="Leave a blank line between paragraphs.",
     )
@@ -214,8 +210,8 @@ class BillionaireBlockPage(SingletonModel):
         blank=True,
         default=(
             "170 acres | The Billionaire’s Block enclave\n"
-            "Sector 111 | Dwarka Expressway, Gurugram\n"
-            "2026 | India Property Awards: Master Development"
+            "250 acres | Smart City Delhi Airport township\n"
+            "Sector 111 | Dwarka Expressway, Gurugram"
         ),
         help_text="One per line, as “figure | label”.",
     )
@@ -223,12 +219,8 @@ class BillionaireBlockPage(SingletonModel):
     building_heading = models.CharField(max_length=160, default="Branded residences, couture-coded.")
     building_text = models.TextField(
         default=(
-            "The first address in the enclave is Signature Residences by ELIE SAAB: 300 four-bedroom homes of "
-            "4,200 to 4,650 sq ft, with generous floor-to-ceiling heights, waterfront views and outdoor living areas "
-            "with private jacuzzis.\n\n"
-            "The interiors are a creative collaboration with designer Carlo Colombo, furnished from the ELIE SAAB "
-            "Maison collection and crafted in Italy. Concierge services, a spa, swimming pools, fitness centres and "
-            "residents’ lounges complete the everyday."
+            "First in the enclave: Signature Residences by ELIE SAAB. Four-bedroom homes with waterfront views, "
+            "wrap-around decks and private jacuzzis."
         ),
         help_text="Leave a blank line between paragraphs.",
     )
@@ -261,80 +253,77 @@ class BillionaireBlockPage(SingletonModel):
     manifesto_heading = models.CharField(max_length=160, default="Some addresses are bought. This one is earned.")
     manifesto_text = models.TextField(
         default=(
-            "A private vertical estate for the families who shape the country’s industry, capital and culture. "
-            "Few residences. Rare materials. A culture of service that never needs to be asked."
+            "Couture design, Italian craft and a 170-acre setting, brought together at one address."
         )
     )
 
     # Architecture
     architecture_label = models.CharField(max_length=80, default="Architecture & design")
-    architecture_heading = models.CharField(max_length=160, default="Sculpted by light. Composed for permanence.")
+    architecture_heading = models.CharField(max_length=160, default="ELIE SAAB. Inside and out.")
     architecture_text = models.TextField(
         default=(
-            "Ribbons of ivory stone wrap each tower like silk, opening and closing to frame the sky. Every façade "
-            "is turned to the light, so no two hours look the same.\n\n"
-            "Inside, the plan is drawn around how a family actually lives: a formal wing for receiving, a private "
-            "wing for rest, and a discreet service spine that keeps the household running unseen."
+            "Interiors created with designer Carlo Colombo and furnished from the ELIE SAAB Maison collection, "
+            "crafted in Italy. Common areas are fully furnished by ELIE SAAB."
         ),
         help_text="Leave a blank line between paragraphs.",
     )
     architecture_image = ResizingImageField(upload_to="billionaire-block/", blank=True)
-    credit_1_label = models.CharField(max_length=40, blank=True, default="Architecture")
-    credit_1_value = models.CharField(max_length=120, blank=True, default="International design studio, revealed at the private preview")
+    credit_1_label = models.CharField(max_length=40, blank=True, default="Design house")
+    credit_1_value = models.CharField(max_length=120, blank=True, default="ELIE SAAB")
     credit_2_label = models.CharField(max_length=40, blank=True, default="Interiors")
-    credit_2_value = models.CharField(max_length=120, blank=True, default="Bespoke interiors atelier")
-    credit_3_label = models.CharField(max_length=40, blank=True, default="Landscape")
-    credit_3_value = models.CharField(max_length=120, blank=True, default="Sky gardens by a landscape atelier")
+    credit_2_value = models.CharField(max_length=120, blank=True, default="Carlo Colombo")
+    credit_3_label = models.CharField(max_length=40, blank=True, default="Furniture")
+    credit_3_value = models.CharField(max_length=120, blank=True, default="ELIE SAAB Maison, crafted in Italy")
 
     # Section headings
     residences_label = models.CharField(max_length=80, default="The residences")
-    residences_heading = models.CharField(max_length=160, default="Three ways to live above it all.")
-    features_label = models.CharField(max_length=80, default="Residence features")
-    features_heading = models.CharField(max_length=160, default="Details that are never compromised.")
+    residences_heading = models.CharField(max_length=160, default="Four bedrooms. Three hundred homes.")
+    features_label = models.CharField(max_length=80, default="Amenities")
+    features_heading = models.CharField(max_length=160, default="As announced for residents.")
     features_intro = models.TextField(
-        default="Nine details define every residence. Each is specified once, and never value-engineered away."
+        default="Announced at launch. Full details will follow in the official project documents."
     )
-    club_label = models.CharField(max_length=80, default="The club")
-    club_heading = models.CharField(max_length=160, default="A private club, reserved for residents.")
+    club_label = models.CharField(max_length=80, default="Amenities")
+    club_heading = models.CharField(max_length=160, default="Announced for residents.")
     club_intro = models.TextField(
-        default="Eleven spaces for wellness, leisure and the art of hosting. Open only to residents and their guests."
+        default="Seven amenities named at launch. Images are representative."
     )
-    amenities_label = models.CharField(max_length=80, default="The amenities")
-    amenities_heading = models.CharField(max_length=160, default="A world of amenities, beyond the club.")
+    amenities_label = models.CharField(max_length=80, default="Lifestyle")
+    amenities_heading = models.CharField(max_length=160, default="Live well, indoors and out.")
     amenities_intro = models.TextField(
-        default="Indoor play, outdoor wellness and gardens for every generation, all within the enclave."
+        default="Representative imagery. The final amenity list will follow the official project documents."
     )
     amenities_indoor_heading = models.CharField(max_length=120, default="World-class indoor amenities")
     amenities_wellness_heading = models.CharField(max_length=120, default="Amenities curated for wellness")
     amenities_leisure_heading = models.CharField(max_length=120, default="Leisure spaces for all generations")
-    services_label = models.CharField(max_length=80, default="Lifestyle services")
-    services_heading = models.CharField(max_length=160, default="Hotel-grade service. At home.")
+    services_label = models.CharField(max_length=80, default="The vision")
+    services_heading = models.CharField(max_length=160, default="Built on four ideas.")
     services_intro = models.TextField(
-        default="A dedicated residence team, on call at every hour, so the household runs as smoothly as your business."
+        default="The thinking behind the Billionaire’s Block."
     )
-    security_label = models.CharField(max_length=80, default="Privacy & security")
-    security_heading = models.CharField(max_length=160, default="Privacy is the rarest luxury.")
+    security_label = models.CharField(max_length=80, default="The township")
+    security_heading = models.CharField(max_length=160, default="A city around the enclave.")
     security_text = models.TextField(
-        default="Discretion is designed in, not added on. You choose who arrives, how, and when.",
+        default="Smart City Delhi Airport: a mixed-use township of about 250 acres.",
     )
     security_image = ResizingImageField(upload_to="billionaire-block/", blank=True)
     location_label = models.CharField(max_length=80, default="Location")
-    location_heading = models.CharField(max_length=160, default="At the centre of everything that matters.")
+    location_heading = models.CharField(max_length=160, default="Sector 111, Dwarka Expressway.")
     location_text = models.TextField(
-        default="Moments from Gurugram’s business districts, its finest schools and hospitals, and the city’s golf greens."
+        default="Planned around easy access to the airport, Delhi and Gurugram’s business districts."
     )
-    location_note = models.CharField(max_length=160, default="Indicative travel times by car, outside peak hours.")
+    location_note = models.CharField(max_length=160, default="Travel times depend on the route and traffic, so none are quoted here.")
     map_embed_url = models.URLField(
         max_length=1000,
-        default="https://www.google.com/maps?q=Golf+Course+Road,+Gurugram&output=embed",
+        default="https://www.google.com/maps?q=Sector+111,+Dwarka+Expressway,+Gurugram&output=embed",
         help_text="Google Maps → Share → Embed a map → copy the src=… link.",
     )
-    gallery_label = models.CharField(max_length=80, default="Gallery")
+    gallery_label = models.CharField(max_length=80, default="Gallery · Artistic impressions")
     gallery_heading = models.CharField(max_length=160, default="A closer look.")
-    specs_label = models.CharField(max_length=80, default="Specifications")
-    specs_heading = models.CharField(max_length=160, default="Specified without compromise.")
+    specs_label = models.CharField(max_length=80, default="Before you buy")
+    specs_heading = models.CharField(max_length=160, default="Questions worth asking.")
     specs_intro = models.TextField(
-        default="Materials and systems chosen for how they feel on the first day, and how they will age over decades."
+        default="Check each against the project’s RERA disclosures and your agreement. Not legal advice."
     )
     specs_image = ResizingImageField(upload_to="billionaire-block/", blank=True)
 
@@ -343,9 +332,7 @@ class BillionaireBlockPage(SingletonModel):
     legacy_heading = models.CharField(max_length=160, default="A legacy written in landmarks.")
     legacy_text = models.TextField(
         default=(
-            "Since 2010, M3M India has built a reputation on addresses that change how a city sees itself. "
-            "Billionaire Block is the most personal expression of that journey: fewer homes, made with more care "
-            "than ever before."
+            "Since 2010, M3M India has built a reputation on addresses that change how a city sees itself."
         )
     )
 
@@ -353,19 +340,19 @@ class BillionaireBlockPage(SingletonModel):
     form_label = models.CharField(max_length=80, default="Private viewing")
     form_heading = models.CharField(max_length=120, default="Request a Private Viewing")
     form_intro = models.TextField(
-        default="A senior relationship director will arrange a private presentation at a time and place of your choosing."
+        default="Our team will share the project details and arrange a presentation at your convenience."
     )
     form_success_title = models.CharField(max_length=120, default="Your request is received.")
     form_success_text = models.TextField(
-        default="A senior relationship director will call you personally within one working day to confirm your private viewing."
+        default="Our team will call you to arrange your presentation."
     )
     form_note = models.CharField(max_length=160, default="Your details are held in strict confidence.")
     viewing_steps = models.TextField(
         blank=True,
         default=(
-            "A personal call from a senior relationship director\n"
-            "A private presentation at a time and place you choose\n"
-            "A chauffeured visit to the Billionaire’s Block"
+            "A call from our team\n"
+            "A presentation of the residences\n"
+            "A site visit, if you wish"
         ),
         help_text="“What happens next”, one step per line.",
     )
@@ -378,7 +365,9 @@ class BillionaireBlockPage(SingletonModel):
     )
 
     # Footer
-    rera_number = models.CharField(max_length=80, default="To be updated", help_text="Project RERA registration number.")
+    rera_number = models.CharField(
+        max_length=80, blank=True, help_text="Project RERA registration number. Shown in the footer once filled in."
+    )
     footer_disclaimer = models.TextField(
         default=(
             "All images are artistic impressions. Figures, specifications, amenities and services are indicative and "
@@ -386,12 +375,12 @@ class BillionaireBlockPage(SingletonModel):
         )
     )
 
-    seo_title = models.CharField(max_length=120, default="Billionaire Block by M3M | Residences by invitation only")
+    seo_title = models.CharField(max_length=120, default="M3M Billionaire Block, Sector 111 Gurugram | ELIE SAAB Residences")
     seo_description = models.CharField(
         max_length=300,
         default=(
-            "Billionaire Block by M3M: a strictly limited collection of ultra-luxury residences with a private club "
-            "and hotel-grade service. Request a private viewing."
+            "M3M Billionaire Block: a 170-acre enclave on Dwarka Expressway, Gurugram, beginning with 300 "
+            "four-bedroom Signature Residences by ELIE SAAB. Enquire now."
         ),
     )
 
@@ -470,15 +459,15 @@ class BillionaireItem(models.Model):
     class Section(models.TextChoices):
         STAT = "stat", "Key numbers"
         FEATURE = "feature", "Residence features"
-        CLUB = "club", "The club (with image)"
-        SERVICE = "service", "Lifestyle services"
-        SECURITY = "security", "Privacy & security"
+        CLUB = "club", "Amenities (with image)"
+        SERVICE = "service", "The vision"
+        SECURITY = "security", "The township"
         LOCATION = "location", "Location distances"
         GALLERY = "gallery", "Gallery (with image)"
         AMENITY_INDOOR = "amenity_indoor", "Amenities: indoor"
         AMENITY_WELLNESS = "amenity_wellness", "Amenities: wellness"
         AMENITY_LEISURE = "amenity_leisure", "Amenities: leisure"
-        SPEC = "spec", "Specifications"
+        SPEC = "spec", "Before you buy"
 
     section = models.CharField(max_length=20, choices=Section.choices)
     title = models.CharField(max_length=120, help_text="Name, label or caption.")

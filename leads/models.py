@@ -9,6 +9,7 @@ class Enquiry(models.Model):
         CONTACT = "contact", "Contact page"
         BILLIONAIRE = "billionaire", "Billionaire Block page"
         BROCHURE = "brochure", "Billionaire Block brochure"
+        LANDING = "landing", "Project landing page (ads)"
 
     class CallTime(models.TextChoices):
         MORNING = "morning", "Morning · 9 AM–12 PM"

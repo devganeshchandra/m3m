@@ -1,0 +1,85 @@
+{% comment %}
+  The three enquiry form styles for a landing page's popup, shown one at a time in rotation
+  (static/js/landing-forms.js): each opening of the popup shows the next style.
+    a — the Jacob & Co. style: name, mobile, email, then a "looking for" list
+    b — The Cullinan style: tap a residence first, then name, mobile and email
+    c — the Trump Tower style: large residence buttons, then the fields
+  Every style uses the current page's theme (pf--jl / pf--cl / pf--tt) and posts the same landing
+  lead. Expects: theme, start ("a", "b" or "c": the style shown first) and popup_units, a list of
+  (value, label, note, interest, project slug).
+{% endcomment %}
+<div class="pf pf--{{ theme }}" data-pf data-pf-start="{{ start }}">
+  {% for variant in "abc" %}
+    <form class="pf-form pf-form--{{ variant }}" novalidate data-lead-form data-pf-form data-pf-variant="{{ variant }}"
+      action="{% url 'submit_enquiry' %}" method="post" hidden>
+      {% include "partials/form_tracking.html" with source="landing" %}
+      <input type="hidden" name="project" value="{{ project.slug }}" data-pf-project>
+      <input type="hidden" name="interest" value="" data-pf-interest>
+      <input type="hidden" name="message" value="" data-pf-message>
+      <input type="hidden" name="unit" value="" data-pf-unit data-validate="choice"
+        data-required-message="Choose the residence you’re interested in." data-error-id="pf-{{ variant }}-unit-error">
+
+      {% if variant == "b" %}
+        <fieldset class="pf-step">
+          <legend><span>1</span> I’m interested in</legend>
+          <div class="pf-chips">
+            {% for value, label, note, interest, slug in popup_units %}
+              <button type="button" class="pf-chip" aria-pressed="false" data-pf-pick="{{ value }}">
+                <strong>{{ label }}</strong><small>{{ note }}</small>
+              </button>
+            {% endfor %}
+          </div>
+          <span class="pf-error" id="pf-b-unit-error" role="alert" hidden></span>
+        </fieldset>
+      {% elif variant == "c" %}
+        <div class="pf-tiles pf-tiles--{{ popup_units|length }}">
+          {% for value, label, note, interest, slug in popup_units %}
+            <button type="button" class="pf-tile" aria-pressed="false" data-pf-pick="{{ value }}">
+              <strong>{{ label }}</strong><small>{{ note }}</small>
+            </button>
+          {% endfor %}
+        </div>
+        <span class="pf-error" id="pf-c-unit-error" role="alert" hidden></span>
+      {% endif %}
+
+      <div class="pf-fields{% if variant == 'b' %} pf-fields--later{% endif %}" data-pf-fields>
+        {% if variant == "b" %}<p class="pf-step__label"><span>2</span> Where should we send it?</p>{% endif %}
+        <label class="pf-field">
+          <span{% if variant != "a" %} class="visually-hidden"{% endif %}>Full name</span>
+          <input name="name" type="text" autocomplete="name" maxlength="80" placeholder="Full name" required
+            data-validate="realName" data-error-id="pf-{{ variant }}-name-error">
+          <span class="pf-error" id="pf-{{ variant }}-name-error" role="alert" hidden></span>
+        </label>
+        <label class="pf-field">
+          <span{% if variant != "a" %} class="visually-hidden"{% endif %}>Mobile number</span>
+          <input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="25" placeholder="Mobile number" required
+            data-validate="phone" data-error-id="pf-{{ variant }}-phone-error">
+          <span class="pf-error" id="pf-{{ variant }}-phone-error" role="alert" hidden></span>
+        </label>
+        <label class="pf-field">
+          <span{% if variant != "a" %} class="visually-hidden"{% endif %}>Email</span>
+          <input name="email" type="email" autocomplete="email" maxlength="254" placeholder="Email address" required
+            data-validate="leadEmail" data-error-id="pf-{{ variant }}-email-error">
+          <span class="pf-error" id="pf-{{ variant }}-email-error" role="alert" hidden></span>
+        </label>
+        {% if variant == "a" %}
+          <label class="pf-field">
+            <span>Looking for</span>
+            <select data-pf-select>
+              <option value="">Choose residence</option>
+              {% for value, label, note, interest, slug in popup_units %}<option value="{{ value }}">{{ label }} · {{ note }}</option>{% endfor %}
+            </select>
+            <span class="pf-error" id="pf-a-unit-error" role="alert" hidden></span>
+          </label>
+        {% endif %}
+        <button class="pf-submit" type="submit">
+          <span>Send me the details</span>
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <p class="pf-status" role="status" aria-live="polite" data-form-status></p>
+      <p class="pf-note">By submitting, you agree that M3M India may call, WhatsApp or email you about this project.</p>
+    </form>
+  {% endfor %}
+</div>
+<script type="application/json" data-pf-units>{"units": [{% for value, label, note, interest, slug in popup_units %}{"value": "{{ value|escapejs }}", "label": "{{ label|escapejs }}", "interest": "{{ interest|escapejs }}", "project": "{{ slug|escapejs }}"}{% if not forloop.last %}, {% endif %}{% endfor %}]}</script>

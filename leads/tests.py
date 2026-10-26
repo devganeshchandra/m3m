@@ -136,3 +136,61 @@ class SubmitEnquiryTests(TestCase):
     def test_csrf_is_enforced(self):
         client = self.client_class(enforce_csrf_checks=True)
         self.assertEqual(client.post(self.url, {"source": "hero"}).status_code, 403)
+
+
+@override_settings(LEAD_NOTIFICATION_EMAILS=[])
+class LandingLeadTests(TestCase):
+    """The ad landing page form: name, mobile, email and project type, with junk filtering."""
+
+    url = reverse("submit_enquiry")
+
+    def setUp(self):
+        cache.clear()
+        common = dict(category="M3M Jacob & Co.", location="Sector 97", rera="R1", image="projects/x.jpg", summary="S")
+        self.residences = Project.objects.create(name="Residences", slug="res", is_residential=True, offering="3 BHK", **common)
+        self.retail = Project.objects.create(name="Retail", slug="retail", is_commercial=True, offering="Shops", **common)
+
+    def post(self, **overrides):
+        data = dict(
+            source="landing", name="Asha Verma", phone="9876543210", email="asha@gmail.com",
+            interest="residential", project="res", message="Requested: Unlock the brochure", utm_source="facebook",
+        )
+        data.update(overrides)
+        return self.client.post(self.url, data)
+
+    def test_valid_lead_is_saved_with_request_and_campaign(self):
+        response = self.post()
+        self.assertTrue(response.json()["ok"])
+        enquiry = Enquiry.objects.get()
+        self.assertEqual((enquiry.source, enquiry.interest, enquiry.project), ("landing", "residential", self.residences))
+        self.assertEqual(enquiry.message, "Requested: Unlock the brochure")
+        self.assertEqual(enquiry.utm_source, "facebook")
+
+    def test_commercial_lead_is_filed_against_the_commercial_project(self):
+        self.post(interest="commercial", project="retail")
+        self.assertEqual(Enquiry.objects.get().project, self.retail)
+
+    def test_junk_is_rejected(self):
+        for field, value in [
+            ("name", "Test"), ("name", "asdf"), ("name", "aaaa"), ("name", "12"),
+            ("email", "x@mailinator.com"), ("email", "a@example.com"), ("email", "not-an-email"),
+            ("phone", "9999999999"), ("phone", "12345"), ("interest", ""), ("interest", "villa"),
+        ]:
+            response = self.post(**{field: value})
+            self.assertEqual(response.status_code, 400, (field, value))
+            self.assertIn(field, response.json()["errors"], (field, value))
+        self.assertFalse(Enquiry.objects.exists())
+
+    def test_email_is_required(self):
+        self.assertIn("email", self.post(email="").json()["errors"])
+
+    def test_repeat_submission_updates_the_same_lead(self):
+        self.post()
+        self.post(message="Requested: Get the price list")
+        enquiry = Enquiry.objects.get()
+        self.assertIn("Unlock the brochure", enquiry.message)
+        self.assertIn("Get the price list", enquiry.message)
+
+    def test_honeypot_is_silently_dropped(self):
+        self.assertTrue(self.post(website="http://spam.example").json()["ok"])
+        self.assertFalse(Enquiry.objects.exists())

@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+{% load static %}
+{% comment %}
+  Ad landing page for M3M The Cullinan, Sector 94, Noida (used automatically for this project).
+  Theme: "the diamond" — porcelain, sapphire and platinum, sharp corners, bold Outfit headings.
+  Facts follow m3mindia.com/residential/m3m-the-cullinan and the project banner's RERA block.
+  Prices and sizes are not published: they are the lead hook, shared by the sales team.
+  Lists (units, rooms, amenities, travel times, slides) are in projects/landing_content.py.
+{% endcomment %}
+
+{% block title %}M3M The Cullinan, Sector 94 Noida | 3, 4 &amp; 5 BHK Luxury Residences{% endblock %}
+{% block description %}M3M The Cullinan, Sector 94 Noida Expressway: 3, 4 &amp; 5 BHK residences with floor-to-ceiling windows, golf course and skyline views, an infinity pool and a lavish clubhouse. Get the price list and floor plans.{% endblock %}
+{% block og_title %}M3M The Cullinan, Sector 94 Noida{% endblock %}
+{% block og_description %}3, 4 &amp; 5 BHK luxury residences on Noida Expressway. Get the price list and floor plans.{% endblock %}
+{% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/landing/cullinan/hero-aerial-sm.jpg' %}">{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/landing-nav.css' %}">
+  <link rel="stylesheet" href="{% static 'css/landing-forms.css' %}">
+  <link rel="stylesheet" href="{% static 'css/landing-fx.css' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Manrope:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="{% static 'css/landing-cullinan.css' %}">
+  <link rel="preload" as="image" href="{% static 'images/landing/cullinan/hero-aerial.jpg' %}">
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Residence",
+    "name": "{{ project.name|escapejs }}",
+    "description": "{{ project.summary|escapejs }}",
+    "url": "{{ site_url|escapejs }}{{ project.get_absolute_url|escapejs }}",
+    "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/landing/cullinan/hero-aerial-sm.jpg' %}",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "{{ project.location|escapejs }}",
+      "addressLocality": "{{ project.city|escapejs }}",
+      "addressCountry": "IN"
+    }
+  }
+</script>
+{% endblock %}
+
+{% block site_header %}
+  {% include "projects/landing/_landing_nav.html" with theme="cl" brand="The Cullinan" open_attr="data-cl-open" %}
+{% endblock %}
+
+{% block content %}
+{% with img="images/landing/cullinan/" %}
+<main class="cl" id="main-content">
+
+  {# ---------- 1. Hero: split screen, the two-step form beside the headline ---------- #}
+  <section class="cl-hero" aria-labelledby="cl-title">
+    <div class="cl-hero__panel">
+      <p class="cl-kicker cl-in">
+        <span class="cl-gem" aria-hidden="true"></span> Sector 94 · Noida Expressway
+      </p>
+      <h1 class="cl-hero__title cl-in" id="cl-title">
+        <small>M3M</small>
+        <span class="cl-hero__the">The</span> Cullinan
+      </h1>
+      <p class="cl-hero__line cl-in">Redefining luxury living. 3, 4 &amp; 5 BHK residences with golf course and skyline views.</p>
+
+      <div class="cl-hero__form cl-in" id="cl-hero-form">
+        <p class="cl-hero__form-title">Get the price list <span>&amp; floor plans</span></p>
+        {% include "projects/landing/_cullinan_form.html" with prefix="hero" button="Get price list" %}
+      </div>
+    </div>
+
+    <figure class="cl-hero__media" aria-hidden="true">
+      <img src="{% static img|add:'hero-aerial.jpg' %}" alt="" fetchpriority="high">
+      <figcaption>
+        <span>UP RERA {{ project.rera }}</span>
+        <span>Artistic impression</span>
+      </figcaption>
+    </figure>
+
+    <ul class="cl-hero__stats cl-in">
+      <li><strong>3 · 4 · 5</strong><span>BHK residences</span></li>
+      <li><strong>Infinity</strong><span>pool &amp; clubhouse</span></li>
+      <li><strong>2 min</strong><span>to Amity University*</span></li>
+    </ul>
+  </section>
+
+  {# ---------- 2. Ticker ---------- #}
+  <div class="cl-ticker" aria-hidden="true">
+    <div class="cl-ticker__track">
+      {% for _ in "12" %}
+        <span>Floor-to-ceiling windows</span><i></i>
+        <span>Golf course &amp; skyline views</span><i></i>
+        <span>Extended balconies</span><i></i>
+        <span>Infinity pool</span><i></i>
+        <span>Lavish clubhouse</span><i></i>
+        <span>Landscaped gardens</span><i></i>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# ---------- 3. Residences: the room tour ---------- #}
+  <section class="cl-tour" id="residences" aria-labelledby="cl-tour-title">
+    <header class="cl-tour__head">
+      <p class="cl-kicker">The residences</p>
+      <h2 class="cl-display" id="cl-tour-title">An emblem of <em>grace and grandeur.</em></h2>
+      <p class="cl-lead">Expansive 3, 4 and 5 BHK homes with extended balconies, spacious rooms and panoramic windows.</p>
+    </header>
+
+    <div class="cl-tour__stage" data-cl-tour>
+      <div class="cl-tour__tabs" role="tablist" aria-label="Rooms">
+        {% for file, tab, title, line in rooms %}
+          <button type="button" role="tab" id="cl-tab-{{ forloop.counter }}" aria-controls="cl-room-{{ forloop.counter }}"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" {% if not forloop.first %}tabindex="-1"{% endif %}>
+            <span>{{ forloop.counter|stringformat:"02d" }}</span>{{ tab }}
+          </button>
+        {% endfor %}
+      </div>
+      {% for file, tab, title, line in rooms %}
+        <figure class="cl-room" role="tabpanel" id="cl-room-{{ forloop.counter }}" aria-labelledby="cl-tab-{{ forloop.counter }}" {% if not forloop.first %}hidden{% endif %}>
+          <img src="{% static img|add:file|add:'.jpg' %}" alt="{{ title }}, artistic impression" loading="lazy">
+          <figcaption>
+            <strong>{{ title }}</strong>
+            <span>{{ line }}</span>
+          </figcaption>
+        </figure>
+      {% endfor %}
+    </div>
+
+    <div class="cl-configs">
+      {% for value, label, note in units %}{% if value != "retail" %}
+        <article class="cl-config cl-up">
+          <span class="cl-config__facet" aria-hidden="true"></span>
+          <h3>{{ label }}</h3>
+          <p>Size, floor plan &amp; price on request</p>
+          <button class="cl-link" type="button" data-cl-open="Get the {{ label }} floor plan &amp; price" data-cl-unit-preset="{{ value }}">Get floor plan</button>
+        </article>
+      {% endif %}{% endfor %}
+      <article class="cl-config cl-config--accent cl-up">
+        <h3>Launch price list</h3>
+        <p>Current prices and payment plans, shared by our team.</p>
+        <button class="cl-button cl-button--light" type="button" data-cl-open="Get the price list">Unlock prices</button>
+      </article>
+    </div>
+  </section>
+
+  {# ---------- 4. Why The Cullinan ---------- #}
+  <section class="cl-pillars" aria-label="Why The Cullinan">
+    <ul>
+      <li class="cl-up"><span>01</span><strong>Strategically planned</strong></li>
+      <li class="cl-up"><span>02</span><strong>Unmatched location</strong></li>
+      <li class="cl-up"><span>03</span><strong>Well connected</strong></li>
+      <li class="cl-up"><span>04</span><strong>Unparalleled luxury</strong></li>
+    </ul>
+  </section>
+
+  {# ---------- 5. Amenities: filmstrip with filters ---------- #}
+  <section class="cl-amenities" id="amenities" aria-labelledby="cl-amen-title">
+    <header class="cl-amenities__head">
+      <div>
+        <p class="cl-kicker cl-kicker--light">Premier offerings</p>
+        <h2 class="cl-display cl-display--light" id="cl-amen-title">Every day, <em>beautifully lived.</em></h2>
+      </div>
+      <div class="cl-filters" role="group" aria-label="Filter amenities" data-cl-filters>
+        <button type="button" aria-pressed="true" data-cl-filter="all">All</button>
+        {% for group in amenity_groups %}
+          <button type="button" aria-pressed="false" data-cl-filter="{{ group }}">{{ group }}</button>
+        {% endfor %}
+      </div>
+    </header>
+
+    <ul class="cl-strip" data-cl-strip>
+      {% for file, name, group in amenities %}
+        <li class="cl-strip__card" data-group="{{ group }}">
+          <img src="{% static img|add:file|add:'-sm.jpg' %}" alt="{{ name }}, artistic impression" loading="lazy">
+          <div><span>{{ group }}</span><h3>{{ name }}</h3></div>
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="cl-strip__controls">
+      <button type="button" data-cl-strip-step="-1" aria-label="Previous amenities">←</button>
+      <button type="button" data-cl-strip-step="1" aria-label="Next amenities">→</button>
+    </div>
+
+    <div class="cl-amenities__all">
+      <p>Also: active lifestyle zones, community spaces and a recreational zone.</p>
+      <button class="cl-button cl-button--light" type="button" data-cl-open="Download the brochure">Download the brochure</button>
+    </div>
+  </section>
+
+  {# ---------- 6. Commercial: The Cullinan Avenue ---------- #}
+  <section class="cl-avenue" id="commercial" aria-labelledby="cl-avenue-title">
+    <div class="cl-avenue__copy">
+      <p class="cl-kicker">Commercial · M3M The Cullinan Avenue</p>
+      <h2 class="cl-display" id="cl-avenue-title">A landmark in <em>luxury retail.</em></h2>
+      <p class="cl-lead">Luxury boutique retail, dining and lounges at Sector 94, Noida.</p>
+      <ul class="cl-avenue__tags">
+        <li>Luxury boutiques</li><li>Fine dining</li><li>Lounges</li><li>Multi-level atrium</li>
+      </ul>
+      <div class="cl-avenue__actions">
+        <button class="cl-button cl-button--solid" type="button" data-cl-open="Get retail shop details" data-cl-unit-preset="retail">Get retail details</button>
+        <button class="cl-link" type="button" data-cl-open="Get the retail price list" data-cl-unit-preset="retail">Retail price list</button>
+      </div>
+    </div>
+    <div class="cl-avenue__collage">
+      <figure class="cl-avenue__a cl-up"><img src="{% static img|add:'avenue-facade-sm.jpg' %}" alt="The Cullinan Avenue retail façade at dusk, artistic impression" loading="lazy"></figure>
+      <figure class="cl-avenue__b cl-up"><img src="{% static img|add:'avenue-skylight-sm.jpg' %}" alt="Multi-level atrium under a skylight, artistic impression" loading="lazy"></figure>
+      <figure class="cl-avenue__c cl-up"><img src="{% static img|add:'avenue-cafe-sm.jpg' %}" alt="Café and dining at the Avenue, artistic impression" loading="lazy"></figure>
+    </div>
+  </section>
+
+  {# ---------- 7. A closer look: cinematic slider ---------- #}
+  <section class="cl-look" id="gallery" aria-labelledby="cl-look-title" data-cl-slider>
+    <div class="cl-look__frame">
+      {% for file, caption in slides %}
+        <figure class="cl-look__slide{% if forloop.first %} is-active{% endif %}" {% if not forloop.first %}aria-hidden="true"{% endif %}>
+          <img src="{% static img|add:file|add:'.jpg' %}" alt="{{ caption }}, artistic impression" loading="lazy">
+        </figure>
+      {% endfor %}
+      <div class="cl-look__overlay">
+        <p class="cl-kicker cl-kicker--light">A closer look</p>
+        <h2 class="cl-look__title" id="cl-look-title" data-cl-slide-caption>{{ slides.0.1 }}</h2>
+        <div class="cl-look__nav">
+          <button type="button" data-cl-slide-step="-1" aria-label="Previous image">←</button>
+          <span data-cl-slide-count>01 / {{ slides|length|stringformat:"02d" }}</span>
+          <button type="button" data-cl-slide-step="1" aria-label="Next image">→</button>
+        </div>
+      </div>
+    </div>
+    <div class="cl-look__thumbs">
+      {% for file, caption in slides %}
+        <button type="button" data-cl-slide="{{ forloop.counter0 }}" data-caption="{{ caption }}" aria-label="Show {{ caption }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
+          <img src="{% static img|add:file|add:'-sm.jpg' %}" alt="" loading="lazy">
+        </button>
+      {% endfor %}
+    </div>
+    <p class="cl-note">All images are artistic impressions.</p>
+  </section>
+
+  {# ---------- 8. Location ---------- #}
+  <section class="cl-location" id="location" aria-labelledby="cl-loc-title">
+    <div class="cl-location__copy">
+      <p class="cl-kicker">Connectivity</p>
+      <h2 class="cl-display" id="cl-loc-title">Minutes from <em>everything you need.</em></h2>
+      <ol class="cl-times">
+        {% for minutes, place in connectivity %}
+          <li class="cl-up"><strong>{{ minutes }}<small>min</small></strong><span>{{ place }}</span></li>
+        {% endfor %}
+      </ol>
+      <p class="cl-note">*Travel times as stated by M3M India; they vary with route and traffic.</p>
+      <button class="cl-button cl-button--solid" type="button" data-cl-open="Book a site visit">Book a site visit</button>
+    </div>
+    <div class="cl-location__visuals">
+      <figure class="cl-location__map cl-up"><img src="{% static img|add:'location-map.jpg' %}" alt="Location map of M3M The Cullinan, Sector 94, Noida" loading="lazy"></figure>
+      <div class="cl-location__live cl-up">
+        <iframe title="Google map of Sector 94, Noida" src="{{ project.map_embed_url|default:'https://www.google.com/maps?q=M3M+The+Cullinan,+Sector+94,+Noida&output=embed' }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+
+  {# ---------- 9. Final call to action ---------- #}
+  <section class="cl-final" id="enquire" aria-labelledby="cl-final-title">
+    <figure class="cl-final__image" aria-hidden="true"><img src="{% static img|add:'towers-day-sm.jpg' %}" alt="" loading="lazy"></figure>
+    <div class="cl-final__card">
+      <p class="cl-kicker">Private preview</p>
+      <h2 class="cl-display" id="cl-final-title">Your Cullinan <em>awaits.</em></h2>
+      <ul class="cl-final__perks">
+        <li>Launch price list &amp; payment plans</li>
+        <li>Floor plans for 3, 4 &amp; 5 BHK</li>
+        <li>A site visit at a time that suits you</li>
+      </ul>
+      {% include "projects/landing/_cullinan_form.html" with prefix="final" button="Request a callback" %}
+    </div>
+  </section>
+
+  {# ---------- 10. Disclaimer ---------- #}
+  <section class="cl-disclaimer" aria-label="Disclaimer">
+    <p><strong>M3M The Cullinan</strong> · UP RERA {{ project.rera }} · Promoter: Lavish Buildmart Pvt. Ltd. (UPRERAPRM221722) · Details at <a href="https://www.up-rera.in/projects" target="_blank" rel="noopener">up-rera.in/projects</a></p>
+    <p>All the information and contents of this advertisement are only for general information and not a legal offering. Nothing contained herein constitutes a legal offer or forms part of any legally binding agreement or commitment. Please verify all details, including area and other relevant terms, independently with M3M India Private Limited before concluding any decision. All images are artistic impressions; travel times are indicative.</p>
+  </section>
+</main>
+
+{# ---------- Lead popup ---------- #}
+<dialog class="cl-dialog" aria-labelledby="cl-dialog-title" data-cl-dialog>
+  <button class="cl-dialog__close" type="button" aria-label="Close" data-cl-close>×</button>
+  <p class="cl-kicker">M3M The Cullinan · Sector 94</p>
+  <h2 class="cl-dialog__title" id="cl-dialog-title" data-cl-dialog-title>Get the price list</h2>
+  {% include "projects/landing/_popup_forms.html" with theme="cl" start="c" %}
+</dialog>
+
+<div class="cl-sticky">
+  <a href="tel:{{ site.phone_dial }}">Call</a>
+  <button type="button" class="cl-button cl-button--solid" data-cl-open="Get the price list">Get price list</button>
+</div>
+{% endwith %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/landing-forms.js' %}" defer></script>
+<script src="{% static 'js/landing-cullinan.js' %}" defer></script>
+<script src="{% static 'js/landing-fx.js' %}" defer></script>
+{% endblock %}

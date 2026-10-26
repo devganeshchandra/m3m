@@ -22,6 +22,22 @@
             <span class="desktop-nav__gem" aria-hidden="true"></span>
             <span class="desktop-nav__shine">{{ item.label }}</span>
           </a>
+        {% elif item.children %}
+          <div class="nav-drop" data-nav-drop>
+            <a class="desktop-nav__link nav-drop__trigger{% if item.active %} is-active{% endif %}" href="{{ item.href }}" aria-haspopup="true" aria-expanded="false"{% if item.active %} aria-current="page"{% endif %}>
+              {{ item.label }}
+              <svg aria-hidden="true" viewBox="0 0 12 8" width="10" height="7"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </a>
+            <div class="nav-drop__panel">
+              {% for child in item.children %}
+                <a class="nav-drop__item" href="{{ child.href }}">
+                  <strong>{{ child.label }}</strong>
+                  <span>{{ child.note }}</span>
+                </a>
+              {% endfor %}
+              <a class="nav-drop__all" href="{{ item.href }}">View all projects →</a>
+            </div>
+          </div>
         {% else %}
           <a class="desktop-nav__link{% if item.active %} is-active{% endif %}" href="{{ item.href }}"{% if item.active %} aria-current="page"{% endif %}>{{ item.label }}</a>
         {% endif %}
