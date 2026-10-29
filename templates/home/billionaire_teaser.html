@@ -11,20 +11,26 @@
             <source src="{{ bb.hero_video.url }}" type="video/mp4">
           </video>
         {% else %}
-          {% picture bb.hero_image sizes="(max-width: 900px) 100vw, 50vw" alt=bb.hero_image_alt css_class="bbt__video" %}
+          {% picture bb.hero_image sizes="(max-width: 1000px) 100vw, 58vw" alt=bb.hero_image_alt css_class="bbt__video" %}
         {% endif %}
         <span class="bbt__caption">Artistic impression</span>
       </div>
       {% if bb.about_image %}
         <figure class="bbt__thumb bbt__thumb--one">
-          {% picture bb.about_image sizes="240px" alt="Aerial view of the enclave, artistic impression" css_class="bbt__cover" %}
+          {% picture bb.about_image sizes="(max-width: 600px) 40vw, 300px" alt="Aerial view of the enclave, artistic impression" css_class="bbt__cover" %}
         </figure>
       {% endif %}
       {% if bb.building_image %}
         <figure class="bbt__thumb bbt__thumb--two">
-          {% picture bb.building_image sizes="240px" alt="The residential towers by day, artistic impression" css_class="bbt__cover" %}
+          {% picture bb.building_image sizes="(max-width: 600px) 36vw, 240px" alt="The residential towers by day, artistic impression" css_class="bbt__cover" %}
         </figure>
       {% endif %}
+      {% if bb.building_image_2 %}
+        <figure class="bbt__thumb bbt__thumb--three">
+          {% picture bb.building_image_2 sizes="200px" alt="A residence interior, artistic impression" css_class="bbt__cover" %}
+        </figure>
+      {% endif %}
+      <span class="bbt__frame" aria-hidden="true"></span>
       <svg class="bbt__seal" viewBox="0 0 120 120" aria-hidden="true">
         <defs><path id="bbt-circle" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1 -92 0"/></defs>
         <circle cx="60" cy="60" r="58" />

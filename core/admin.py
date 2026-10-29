@@ -131,6 +131,7 @@ class InnerPageAdmin(ModelAdmin):
     list_display = ["__str__", "title", "updated_at"]
 
     HERO = ("Banner", {"fields": ["banner", "banner_alt", "eyebrow", "title", "title_emphasis", "intro"]})
+    FORM = ("Form beside the banner", {"fields": ["form_title", "form_intro"]})
     INTRO = ("Introduction section", {"fields": ["intro_label", "intro_heading", "intro_text"]})
     SEO = ("Search engines", {"fields": ["seo_title", "seo_description"], "classes": ["collapse"]})
     EXTRA = {
@@ -144,11 +145,15 @@ class InnerPageAdmin(ModelAdmin):
             )
         ],
         InnerPage.Key.JOURNEY: [("Quotation", {"fields": ["quote_text", "quote_attribution"]})],
+        InnerPage.Key.CONTACT: [
+            ("Beside the form", {"fields": ["next_steps", ("info_image", "info_image_alt")]}),
+            ("Beside the questions", {"fields": [("faq_image", "faq_image_alt")]}),
+        ],
     }
 
     def get_fieldsets(self, request, obj=None):
         extra = self.EXTRA.get(obj.key, []) if obj else []
-        return [self.HERO, self.INTRO, *extra, self.SEO]
+        return [self.HERO, self.FORM, self.INTRO, *extra, self.SEO]
 
     def has_add_permission(self, request):
         return False

@@ -94,11 +94,11 @@ PROJECTS = [
         "name": "Smartworld Noida Residential",
         "category": "Smartworld Noida",
         "interests": ["residential"],
-        "offering": "4 BHK Residence · 4,500 sq. ft.",
+        "offering": "4 BHK Residence · 4,500 sq ft",
         "location": "Sector 98, Noida Expressway",
         "rera": "UPRERAPRJ300532/12/2025",
         "image": "projects_main/m3m_smart_world_noida_residence.webp",
-        "summary": "4 BHK residences, with a stated area of 4,500 sq. ft., at Sector 98, Noida Expressway.",
+        "summary": "4 BHK residences, with a stated area of 4,500 sq ft, at Sector 98, Noida Expressway.",
     },
     {
         "slug": "smartworld-noida-commercial",
@@ -158,7 +158,7 @@ PRESS = [
         "title": "M3M bags Rs 1,839 crore mega Noida land deal, pips DLF",
         "publication": "Moneycontrol",
         "published_on": datetime.date(2026, 9, 8),
-        "summary": "Moneycontrol reports that M3M India emerged as the highest bidder for a 12.5-acre land parcel in Noida’s Sector 108, at Rs 1,839 crore, more than twice the Noida Authority’s initial price.",
+        "summary": "Moneycontrol reports that M3M India emerged as the highest bidder for a 12.5-acre land parcel in Noida’s Sector 108, at ₹1,839 crore, more than twice the Noida Authority’s initial price.",
         "article_url": "https://www.moneycontrol.com/news/business/real-estate/dlf-loses-rs-1-839-crore-mega-noida-land-deal-to-m3m-14025528.html",
     },
     {

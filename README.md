@@ -103,15 +103,30 @@ Log in at `/admin/`. The left menu is grouped as follows:
 - **Menu pages (banners & text)**: the banner image, title, intro and SEO
   text of Projects, Our Journey, Media, Insights and Contact. Replace a
   banner by uploading a new image (landscape, at least 1600px wide).
-- **Billionaire Block page** and **Billionaire Block content**: the standalone
-  landing page at `/billionaire-block` (its own navigation and footer). The page
-  form holds the hero video and image, headings, texts, brochure PDF, RERA number
-  and the three residence types (tab at the top). *Content* holds every list on
-  the page — key numbers, features, club spaces, services, security, distances,
-  gallery and specifications — filter by *Section*. Viewing requests arrive with
-  the source *Billionaire Block page*, brochure downloads as *Billionaire Block
-  brochure*. Images and the hero video are AI-generated artistic impressions, and
-  the figures are placeholders: confirm them before going live.
+- **Ad landing pages (all content)**: the four pages with their own design,
+  Jacob & Co. Residences, The Cullinan, Trump Tower Noida and Billionaire
+  Block. Open a page and use the tabs at the top:
+  - *Texts*: every heading, paragraph, button label and note, in page order.
+    Put `*stars*` around words to show them in italics (the gold words in the
+    headings). `{rera}` is replaced by the project's RERA number.
+  - *Images*: section backgrounds and other single pictures. Upload a new one
+    to replace it.
+  - *Lists*: slideshows, amenities, rooms, questions, travel times, menu links,
+    the residence choices in the forms… Add, remove, reorder (*Order*) or hide
+    (*Show on site*) items. *How each list uses its fields* (at the bottom of
+    the page) says what Title, Value, Group, Link etc. mean in each list.
+  - *Search engines & sharing*: the Google title and description and the
+    WhatsApp/Facebook preview.
+
+  **Ad landing page lists** shows the same list items across all pages, with
+  filters by page and list.
+- **Billionaire Block page**: the hero video and image, title and tagline, the
+  homepage teaser, the private viewing form texts, brochure PDF, RERA number,
+  footer disclaimer and SEO of `/billionaire-block`. Everything else on that
+  page is under *Ad landing pages → Billionaire Block*. Viewing requests arrive
+  with the source *Billionaire Block page*, brochure downloads as *Billionaire
+  Block brochure*. Images and the hero video are AI-generated artistic
+  impressions: confirm the figures before going live.
 - **Projects → Collection**: puts a project in *Now Presenting*, *On the
   Horizon* or *Delivered Landmarks* on the Projects page. **Show on
   homepage** picks the 3 projects shown on the homepage.
@@ -143,9 +158,25 @@ with UTM tags, e.g.
 `/projects/m3m-trump-tower-noida?utm_source=google&utm_campaign=launch`.
 Enquiries from that visit carry the campaign and project automatically.
 
-For a landing page with a completely different design, add a new template,
-then a view and URL, or a "template" choice field on `Project`. The models,
-the enquiry popup and the lead capture can all be reused as they are.
+Four pages have their own design: Jacob & Co. Residences, The Cullinan, Trump
+Tower Noida and Billionaire Block. Their content is not in the templates but in
+the admin (**Ad landing pages**). Each page's text slots, image slots and lists,
+with their starting content, are described in `projects/landing_pages/<page>.py`;
+`projects/landing.py` creates the rows during `migrate` and never overwrites
+what the content team has edited.
+
+To give another project its own design:
+
+1. Add `templates/projects/landing/<project-slug>.html` and read its content
+   from `t.<key>` (texts, `|em` for *italics*), `imgs.<key>` (images, `|src:<width>`)
+   and `lists.<key>` (lists).
+2. Add `projects/landing_pages/<name>.py` describing those slots, and list it in
+   `PAGES` in `projects/landing.py`.
+3. Add a migration that runs `landing.seed(apps)` (copy
+   `projects/migrations/0018_landing_pages_content.py`).
+
+The project then uses its new page automatically. The models, the enquiry popup
+and the lead capture are reused as they are.
 
 ## Put it online on an Ubuntu server
 

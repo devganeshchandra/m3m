@@ -1,18 +1,17 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static landing_tags %}
 {% comment %}
   Ad landing page for M3M The Cullinan, Sector 94, Noida (used automatically for this project).
   Theme: "the diamond" — porcelain, sapphire and platinum, sharp corners, bold Outfit headings.
-  Facts follow m3mindia.com/residential/m3m-the-cullinan and the project banner's RERA block.
-  Prices and sizes are not published: they are the lead hook, shared by the sales team.
-  Lists (units, rooms, amenities, travel times, slides) are in projects/landing_content.py.
+  Every text, image and list comes from the admin (Landing pages → M3M The Cullinan); the slots
+  and their starting content are in projects/landing_pages/cullinan.py.
 {% endcomment %}
 
-{% block title %}M3M The Cullinan, Sector 94 Noida | 3, 4 &amp; 5 BHK Luxury Residences{% endblock %}
-{% block description %}M3M The Cullinan, Sector 94 Noida Expressway: 3, 4 &amp; 5 BHK residences with floor-to-ceiling windows, golf course and skyline views, an infinity pool and a lavish clubhouse. Get the price list and floor plans.{% endblock %}
-{% block og_title %}M3M The Cullinan, Sector 94 Noida{% endblock %}
-{% block og_description %}3, 4 &amp; 5 BHK luxury residences on Noida Expressway. Get the price list and floor plans.{% endblock %}
-{% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/landing/cullinan/hero-aerial-sm.jpg' %}">{% endblock %}
+{% block title %}{{ landing.seo_title }}{% endblock %}
+{% block description %}{{ landing.seo_description }}{% endblock %}
+{% block og_title %}{{ landing.share_title }}{% endblock %}
+{% block og_description %}{{ landing.share_description }}{% endblock %}
+{% block og_image %}{% if landing.share_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ landing.share_image|src:1200 }}">{% endif %}{% endblock %}
 
 {% block head %}
   <link rel="stylesheet" href="{% static 'css/landing-nav.css' %}">
@@ -22,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Manrope:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="{% static 'css/landing-cullinan.css' %}">
-  <link rel="preload" as="image" href="{% static 'images/landing/cullinan/hero-aerial.jpg' %}">
+  {% if imgs.hero_image.image %}<link rel="preload" as="image" href="{{ imgs.hero_image.image|src:1920 }}">{% endif %}
 {% endblock %}
 
 {% block structured_data %}
@@ -33,7 +32,7 @@
     "name": "{{ project.name|escapejs }}",
     "description": "{{ project.summary|escapejs }}",
     "url": "{{ site_url|escapejs }}{{ project.get_absolute_url|escapejs }}",
-    "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/landing/cullinan/hero-aerial-sm.jpg' %}",
+    {% if landing.share_image %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ landing.share_image|src:1200|escapejs }}",{% endif %}
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "{{ project.location|escapejs }}",
@@ -45,43 +44,42 @@
 {% endblock %}
 
 {% block site_header %}
-  {% include "projects/landing/_landing_nav.html" with theme="cl" brand="The Cullinan" open_attr="data-cl-open" %}
+  {% include "projects/landing/_landing_nav.html" with theme="cl" open_attr="data-cl-open" %}
 {% endblock %}
 
 {% block content %}
-{% with img="images/landing/cullinan/" %}
 <main class="cl" id="main-content">
 
   {# ---------- 1. Hero: split screen, the two-step form beside the headline ---------- #}
   <section class="cl-hero" aria-labelledby="cl-title">
     <div class="cl-hero__panel">
       <p class="cl-kicker cl-in">
-        <span class="cl-gem" aria-hidden="true"></span> Sector 94 · Noida Expressway
+        <span class="cl-gem" aria-hidden="true"></span> {{ t.hero_kicker }}
       </p>
       <h1 class="cl-hero__title cl-in" id="cl-title">
-        <small>M3M</small>
-        <span class="cl-hero__the">The</span> Cullinan
+        <small>{{ t.hero_title_small }}</small>
+        <span class="cl-hero__the">{{ t.hero_title_the }}</span> {{ t.hero_title }}
       </h1>
-      <p class="cl-hero__line cl-in">Redefining luxury living. 3, 4 &amp; 5 BHK residences with golf course and skyline views.</p>
+      <p class="cl-hero__line cl-in">{{ t.hero_line|em }}</p>
 
       <div class="cl-hero__form cl-in" id="cl-hero-form">
-        <p class="cl-hero__form-title">Get the price list <span>&amp; floor plans</span></p>
-        {% include "projects/landing/_cullinan_form.html" with prefix="hero" button="Get price list" %}
+        <p class="cl-hero__form-title">{{ t.hero_form_title }} <span>{{ t.hero_form_title_more }}</span></p>
+        {% include "projects/landing/_cullinan_form.html" with prefix="hero" button=t.hero_form_button %}
       </div>
     </div>
 
     <figure class="cl-hero__media" aria-hidden="true">
-      <img src="{% static img|add:'hero-aerial.jpg' %}" alt="" fetchpriority="high">
+      {% if imgs.hero_image.image %}<img src="{{ imgs.hero_image.image|src:1920 }}" alt="" fetchpriority="high">{% endif %}
       <figcaption>
-        <span>UP RERA {{ project.rera }}</span>
-        <span>Artistic impression</span>
+        <span>{{ t.hero_caption_rera }}</span>
+        <span>{{ t.hero_caption }}</span>
       </figcaption>
     </figure>
 
     <ul class="cl-hero__stats cl-in">
-      <li><strong>3 · 4 · 5</strong><span>BHK residences</span></li>
-      <li><strong>Infinity</strong><span>pool &amp; clubhouse</span></li>
-      <li><strong>2 min</strong><span>to Amity University*</span></li>
+      {% for stat in lists.hero_stats %}
+        <li><strong>{{ stat.value }}</strong><span>{{ stat.title }}</span></li>
+      {% endfor %}
     </ul>
   </section>
 
@@ -89,12 +87,9 @@
   <div class="cl-ticker" aria-hidden="true">
     <div class="cl-ticker__track">
       {% for _ in "12" %}
-        <span>Floor-to-ceiling windows</span><i></i>
-        <span>Golf course &amp; skyline views</span><i></i>
-        <span>Extended balconies</span><i></i>
-        <span>Infinity pool</span><i></i>
-        <span>Lavish clubhouse</span><i></i>
-        <span>Landscaped gardens</span><i></i>
+        {% for item in lists.ticker %}
+          <span>{{ item.title }}</span><i></i>
+        {% endfor %}
       {% endfor %}
     </div>
   </div>
@@ -102,44 +97,44 @@
   {# ---------- 3. Residences: the room tour ---------- #}
   <section class="cl-tour" id="residences" aria-labelledby="cl-tour-title">
     <header class="cl-tour__head">
-      <p class="cl-kicker">The residences</p>
-      <h2 class="cl-display" id="cl-tour-title">An emblem of <em>grace and grandeur.</em></h2>
-      <p class="cl-lead">Expansive 3, 4 and 5 BHK homes with extended balconies, spacious rooms and panoramic windows.</p>
+      <p class="cl-kicker">{{ t.tour_kicker }}</p>
+      <h2 class="cl-display" id="cl-tour-title">{{ t.tour_title|em }}</h2>
+      <p class="cl-lead">{{ t.tour_lead|em }}</p>
     </header>
 
     <div class="cl-tour__stage" data-cl-tour>
       <div class="cl-tour__tabs" role="tablist" aria-label="Rooms">
-        {% for file, tab, title, line in rooms %}
+        {% for room in lists.rooms %}
           <button type="button" role="tab" id="cl-tab-{{ forloop.counter }}" aria-controls="cl-room-{{ forloop.counter }}"
             aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" {% if not forloop.first %}tabindex="-1"{% endif %}>
-            <span>{{ forloop.counter|stringformat:"02d" }}</span>{{ tab }}
+            <span>{{ forloop.counter|stringformat:"02d" }}</span>{{ room.subtitle }}
           </button>
         {% endfor %}
       </div>
-      {% for file, tab, title, line in rooms %}
+      {% for room in lists.rooms %}
         <figure class="cl-room" role="tabpanel" id="cl-room-{{ forloop.counter }}" aria-labelledby="cl-tab-{{ forloop.counter }}" {% if not forloop.first %}hidden{% endif %}>
-          <img src="{% static img|add:file|add:'.jpg' %}" alt="{{ title }}, artistic impression" loading="lazy">
+          <img src="{{ room.image|src:1920 }}" alt="{{ room.image_alt }}" loading="lazy">
           <figcaption>
-            <strong>{{ title }}</strong>
-            <span>{{ line }}</span>
+            <strong>{{ room.title }}</strong>
+            <span>{{ room.text }}</span>
           </figcaption>
         </figure>
       {% endfor %}
     </div>
 
     <div class="cl-configs">
-      {% for value, label, note in units %}{% if value != "retail" %}
+      {% for unit_choice in lists.units %}{% if unit_choice.group != "commercial" %}
         <article class="cl-config cl-up">
           <span class="cl-config__facet" aria-hidden="true"></span>
-          <h3>{{ label }}</h3>
-          <p>Size, floor plan &amp; price on request</p>
-          <button class="cl-link" type="button" data-cl-open="Get the {{ label }} floor plan &amp; price" data-cl-unit-preset="{{ value }}">Get floor plan</button>
+          <h3>{{ unit_choice.title }}</h3>
+          <p>{{ t.config_text }}</p>
+          <button class="cl-link" type="button" data-cl-open="{{ t.config_popup|unit:unit_choice.title }}" data-cl-unit-preset="{{ unit_choice.value }}">{{ t.config_button }}</button>
         </article>
       {% endif %}{% endfor %}
       <article class="cl-config cl-config--accent cl-up">
-        <h3>Launch price list</h3>
-        <p>Current prices and payment plans, shared by our team.</p>
-        <button class="cl-button cl-button--light" type="button" data-cl-open="Get the price list">Unlock prices</button>
+        <h3>{{ t.price_title }}</h3>
+        <p>{{ t.price_text }}</p>
+        <button class="cl-button cl-button--light" type="button" data-cl-open="{{ t.price_popup }}">{{ t.price_button }}</button>
       </article>
     </div>
   </section>
@@ -147,10 +142,9 @@
   {# ---------- 4. Why The Cullinan ---------- #}
   <section class="cl-pillars" aria-label="Why The Cullinan">
     <ul>
-      <li class="cl-up"><span>01</span><strong>Strategically planned</strong></li>
-      <li class="cl-up"><span>02</span><strong>Unmatched location</strong></li>
-      <li class="cl-up"><span>03</span><strong>Well connected</strong></li>
-      <li class="cl-up"><span>04</span><strong>Unparalleled luxury</strong></li>
+      {% for pillar in lists.pillars %}
+        <li class="cl-up"><span>{{ forloop.counter|stringformat:"02d" }}</span><strong>{{ pillar.title }}</strong></li>
+      {% endfor %}
     </ul>
   </section>
 
@@ -158,22 +152,23 @@
   <section class="cl-amenities" id="amenities" aria-labelledby="cl-amen-title">
     <header class="cl-amenities__head">
       <div>
-        <p class="cl-kicker cl-kicker--light">Premier offerings</p>
-        <h2 class="cl-display cl-display--light" id="cl-amen-title">Every day, <em>beautifully lived.</em></h2>
+        <p class="cl-kicker cl-kicker--light">{{ t.amen_kicker }}</p>
+        <h2 class="cl-display cl-display--light" id="cl-amen-title">{{ t.amen_title|em }}</h2>
       </div>
       <div class="cl-filters" role="group" aria-label="Filter amenities" data-cl-filters>
-        <button type="button" aria-pressed="true" data-cl-filter="all">All</button>
+        <button type="button" aria-pressed="true" data-cl-filter="all">{{ t.amen_all }}</button>
+        {% regroup lists.amenities by group as amenity_groups %}
         {% for group in amenity_groups %}
-          <button type="button" aria-pressed="false" data-cl-filter="{{ group }}">{{ group }}</button>
+          <button type="button" aria-pressed="false" data-cl-filter="{{ group.grouper }}">{{ group.grouper }}</button>
         {% endfor %}
       </div>
     </header>
 
     <ul class="cl-strip" data-cl-strip>
-      {% for file, name, group in amenities %}
-        <li class="cl-strip__card" data-group="{{ group }}">
-          <img src="{% static img|add:file|add:'-sm.jpg' %}" alt="{{ name }}, artistic impression" loading="lazy">
-          <div><span>{{ group }}</span><h3>{{ name }}</h3></div>
+      {% for amenity in lists.amenities %}
+        <li class="cl-strip__card" data-group="{{ amenity.group }}">
+          <img src="{{ amenity.image|src:828 }}" alt="{{ amenity.image_alt }}" loading="lazy">
+          <div><span>{{ amenity.group }}</span><h3>{{ amenity.title }}</h3></div>
         </li>
       {% endfor %}
     </ul>
@@ -183,116 +178,113 @@
     </div>
 
     <div class="cl-amenities__all">
-      <p>Also: active lifestyle zones, community spaces and a recreational zone.</p>
-      <button class="cl-button cl-button--light" type="button" data-cl-open="Download the brochure">Download the brochure</button>
+      <p>{{ t.amen_more }}</p>
+      <button class="cl-button cl-button--light" type="button" data-cl-open="{{ t.amen_popup }}">{{ t.amen_button }}</button>
     </div>
   </section>
 
   {# ---------- 6. Commercial: The Cullinan Avenue ---------- #}
   <section class="cl-avenue" id="commercial" aria-labelledby="cl-avenue-title">
     <div class="cl-avenue__copy">
-      <p class="cl-kicker">Commercial · M3M The Cullinan Avenue</p>
-      <h2 class="cl-display" id="cl-avenue-title">A landmark in <em>luxury retail.</em></h2>
-      <p class="cl-lead">Luxury boutique retail, dining and lounges at Sector 94, Noida.</p>
+      <p class="cl-kicker">{{ t.avenue_kicker }}</p>
+      <h2 class="cl-display" id="cl-avenue-title">{{ t.avenue_title|em }}</h2>
+      <p class="cl-lead">{{ t.avenue_lead|em }}</p>
       <ul class="cl-avenue__tags">
-        <li>Luxury boutiques</li><li>Fine dining</li><li>Lounges</li><li>Multi-level atrium</li>
+        {% for tag in lists.avenue_tags %}<li>{{ tag.title }}</li>{% endfor %}
       </ul>
       <div class="cl-avenue__actions">
-        <button class="cl-button cl-button--solid" type="button" data-cl-open="Get retail shop details" data-cl-unit-preset="retail">Get retail details</button>
-        <button class="cl-link" type="button" data-cl-open="Get the retail price list" data-cl-unit-preset="retail">Retail price list</button>
+        <button class="cl-button cl-button--solid" type="button" data-cl-open="{{ t.avenue_popup }}" data-cl-unit-preset="retail">{{ t.avenue_button }}</button>
+        <button class="cl-link" type="button" data-cl-open="{{ t.avenue_link_popup }}" data-cl-unit-preset="retail">{{ t.avenue_link }}</button>
       </div>
     </div>
     <div class="cl-avenue__collage">
-      <figure class="cl-avenue__a cl-up"><img src="{% static img|add:'avenue-facade-sm.jpg' %}" alt="The Cullinan Avenue retail façade at dusk, artistic impression" loading="lazy"></figure>
-      <figure class="cl-avenue__b cl-up"><img src="{% static img|add:'avenue-skylight-sm.jpg' %}" alt="Multi-level atrium under a skylight, artistic impression" loading="lazy"></figure>
-      <figure class="cl-avenue__c cl-up"><img src="{% static img|add:'avenue-cafe-sm.jpg' %}" alt="Café and dining at the Avenue, artistic impression" loading="lazy"></figure>
+      {% if imgs.avenue_a.image %}<figure class="cl-avenue__a cl-up"><img src="{{ imgs.avenue_a.image|src:828 }}" alt="{{ imgs.avenue_a.alt }}" loading="lazy"></figure>{% endif %}
+      {% if imgs.avenue_b.image %}<figure class="cl-avenue__b cl-up"><img src="{{ imgs.avenue_b.image|src:828 }}" alt="{{ imgs.avenue_b.alt }}" loading="lazy"></figure>{% endif %}
+      {% if imgs.avenue_c.image %}<figure class="cl-avenue__c cl-up"><img src="{{ imgs.avenue_c.image|src:828 }}" alt="{{ imgs.avenue_c.alt }}" loading="lazy"></figure>{% endif %}
     </div>
   </section>
 
   {# ---------- 7. A closer look: cinematic slider ---------- #}
   <section class="cl-look" id="gallery" aria-labelledby="cl-look-title" data-cl-slider>
     <div class="cl-look__frame">
-      {% for file, caption in slides %}
+      {% for slide in lists.slides %}
         <figure class="cl-look__slide{% if forloop.first %} is-active{% endif %}" {% if not forloop.first %}aria-hidden="true"{% endif %}>
-          <img src="{% static img|add:file|add:'.jpg' %}" alt="{{ caption }}, artistic impression" loading="lazy">
+          <img src="{{ slide.image|src:1920 }}" alt="{{ slide.image_alt }}" loading="lazy">
         </figure>
       {% endfor %}
       <div class="cl-look__overlay">
-        <p class="cl-kicker cl-kicker--light">A closer look</p>
-        <h2 class="cl-look__title" id="cl-look-title" data-cl-slide-caption>{{ slides.0.1 }}</h2>
+        <p class="cl-kicker cl-kicker--light">{{ t.look_kicker }}</p>
+        <h2 class="cl-look__title" id="cl-look-title" data-cl-slide-caption>{{ lists.slides.0.title }}</h2>
         <div class="cl-look__nav">
           <button type="button" data-cl-slide-step="-1" aria-label="Previous image">←</button>
-          <span data-cl-slide-count>01 / {{ slides|length|stringformat:"02d" }}</span>
+          <span data-cl-slide-count>01 / {{ lists.slides|length|stringformat:"02d" }}</span>
           <button type="button" data-cl-slide-step="1" aria-label="Next image">→</button>
         </div>
       </div>
     </div>
     <div class="cl-look__thumbs">
-      {% for file, caption in slides %}
-        <button type="button" data-cl-slide="{{ forloop.counter0 }}" data-caption="{{ caption }}" aria-label="Show {{ caption }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
-          <img src="{% static img|add:file|add:'-sm.jpg' %}" alt="" loading="lazy">
+      {% for slide in lists.slides %}
+        <button type="button" data-cl-slide="{{ forloop.counter0 }}" data-caption="{{ slide.title }}" aria-label="Show {{ slide.title }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
+          <img src="{{ slide.image|src:480 }}" alt="" loading="lazy">
         </button>
       {% endfor %}
     </div>
-    <p class="cl-note">All images are artistic impressions.</p>
+    {% if t.look_note %}<p class="cl-note">{{ t.look_note }}</p>{% endif %}
   </section>
 
   {# ---------- 8. Location ---------- #}
   <section class="cl-location" id="location" aria-labelledby="cl-loc-title">
     <div class="cl-location__copy">
-      <p class="cl-kicker">Connectivity</p>
-      <h2 class="cl-display" id="cl-loc-title">Minutes from <em>everything you need.</em></h2>
+      <p class="cl-kicker">{{ t.loc_kicker }}</p>
+      <h2 class="cl-display" id="cl-loc-title">{{ t.loc_title|em }}</h2>
       <ol class="cl-times">
-        {% for minutes, place in connectivity %}
-          <li class="cl-up"><strong>{{ minutes }}<small>min</small></strong><span>{{ place }}</span></li>
+        {% for place in lists.connectivity %}
+          <li class="cl-up"><strong>{{ place.value }}<small>{{ t.loc_unit }}</small></strong><span>{{ place.title }}</span></li>
         {% endfor %}
       </ol>
-      <p class="cl-note">*Travel times as stated by M3M India; they vary with route and traffic.</p>
-      <button class="cl-button cl-button--solid" type="button" data-cl-open="Book a site visit">Book a site visit</button>
+      {% if t.loc_note %}<p class="cl-note">{{ t.loc_note }}</p>{% endif %}
+      <button class="cl-button cl-button--solid" type="button" data-cl-open="{{ t.loc_popup }}">{{ t.loc_button }}</button>
     </div>
     <div class="cl-location__visuals">
-      <figure class="cl-location__map cl-up"><img src="{% static img|add:'location-map.jpg' %}" alt="Location map of M3M The Cullinan, Sector 94, Noida" loading="lazy"></figure>
+      {% if imgs.location_map.image %}<figure class="cl-location__map cl-up"><img src="{{ imgs.location_map.image|src:1200 }}" alt="{{ imgs.location_map.alt }}" loading="lazy"></figure>{% endif %}
       <div class="cl-location__live cl-up">
-        <iframe title="Google map of Sector 94, Noida" src="{{ project.map_embed_url|default:'https://www.google.com/maps?q=M3M+The+Cullinan,+Sector+94,+Noida&output=embed' }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        <iframe title="{{ t.loc_map_title }}" src="{{ project.map_embed_url|default:t.loc_map_url }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
       </div>
     </div>
   </section>
 
   {# ---------- 9. Final call to action ---------- #}
   <section class="cl-final" id="enquire" aria-labelledby="cl-final-title">
-    <figure class="cl-final__image" aria-hidden="true"><img src="{% static img|add:'towers-day-sm.jpg' %}" alt="" loading="lazy"></figure>
+    <figure class="cl-final__image" aria-hidden="true">{% if imgs.final_image.image %}<img src="{{ imgs.final_image.image|src:828 }}" alt="" loading="lazy">{% endif %}</figure>
     <div class="cl-final__card">
-      <p class="cl-kicker">Private preview</p>
-      <h2 class="cl-display" id="cl-final-title">Your Cullinan <em>awaits.</em></h2>
+      <p class="cl-kicker">{{ t.final_kicker }}</p>
+      <h2 class="cl-display" id="cl-final-title">{{ t.final_title|em }}</h2>
       <ul class="cl-final__perks">
-        <li>Launch price list &amp; payment plans</li>
-        <li>Floor plans for 3, 4 &amp; 5 BHK</li>
-        <li>A site visit at a time that suits you</li>
+        {% for perk in lists.perks %}<li>{{ perk.title }}</li>{% endfor %}
       </ul>
-      {% include "projects/landing/_cullinan_form.html" with prefix="final" button="Request a callback" %}
+      {% include "projects/landing/_cullinan_form.html" with prefix="final" button=t.final_button %}
     </div>
   </section>
 
   {# ---------- 10. Disclaimer ---------- #}
   <section class="cl-disclaimer" aria-label="Disclaimer">
-    <p><strong>M3M The Cullinan</strong> · UP RERA {{ project.rera }} · Promoter: Lavish Buildmart Pvt. Ltd. (UPRERAPRM221722) · Details at <a href="https://www.up-rera.in/projects" target="_blank" rel="noopener">up-rera.in/projects</a></p>
-    <p>All the information and contents of this advertisement are only for general information and not a legal offering. Nothing contained herein constitutes a legal offer or forms part of any legally binding agreement or commitment. Please verify all details, including area and other relevant terms, independently with M3M India Private Limited before concluding any decision. All images are artistic impressions; travel times are indicative.</p>
+    <p><strong>{{ t.legal_name }}</strong> · {{ t.legal_rera }} <a href="{{ t.legal_link_url }}" target="_blank" rel="noopener">{{ t.legal_link_label }}</a></p>
+    <p>{{ t.legal_text }}</p>
   </section>
 </main>
 
 {# ---------- Lead popup ---------- #}
 <dialog class="cl-dialog" aria-labelledby="cl-dialog-title" data-cl-dialog>
   <button class="cl-dialog__close" type="button" aria-label="Close" data-cl-close>×</button>
-  <p class="cl-kicker">M3M The Cullinan · Sector 94</p>
-  <h2 class="cl-dialog__title" id="cl-dialog-title" data-cl-dialog-title>Get the price list</h2>
+  <p class="cl-kicker">{{ t.dialog_kicker }}</p>
+  <h2 class="cl-dialog__title" id="cl-dialog-title" data-cl-dialog-title>{{ t.dialog_title }}</h2>
   {% include "projects/landing/_popup_forms.html" with theme="cl" start="c" %}
 </dialog>
 
 <div class="cl-sticky">
-  <a href="tel:{{ site.phone_dial }}">Call</a>
-  <button type="button" class="cl-button cl-button--solid" data-cl-open="Get the price list">Get price list</button>
+  <a href="tel:{{ site.phone_dial }}">{{ t.sticky_call }}</a>
+  <button type="button" class="cl-button cl-button--solid" data-cl-open="{{ t.sticky_popup }}">{{ t.sticky_button }}</button>
 </div>
-{% endwith %}
 {% endblock %}
 
 {% block scripts %}

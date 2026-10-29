@@ -38,11 +38,9 @@
     <div class="site-footer__bottom">
       <span>© {% now "Y" %} {{ site.site_name }}. All rights reserved.</span>
       <div>
-        <a href="/privacy">Privacy</a>
-        <a href="/disclaimer">Disclaimer</a>
-        <a href="/compliance">Compliance</a>
+        {% for page in legal_pages %}<a href="/{{ page.slug }}">{{ page.title }}</a>{% endfor %}
       </div>
-      <span>{{ site.footer_note }}</span>
+      {% if site.footer_note %}<span>{{ site.footer_note }}</span>{% endif %}
     </div>
   </div>
 </footer>

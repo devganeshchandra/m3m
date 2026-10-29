@@ -4,7 +4,7 @@
   {% if facts %}
     <ul class="section-intro__facts">
       {% for value, label in facts %}
-        <li><strong>{{ value }}</strong><span>{{ label }}</span></li>
+        <li><strong data-count-up>{{ value }}</strong><span>{{ label }}</span></li>
       {% endfor %}
     </ul>
   {% endif %}

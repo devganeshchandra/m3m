@@ -17,18 +17,18 @@
 
   /* ---------- Two-step form ---------- */
 
-  var UNIT_LABELS = { "3bhk": "3 BHK", "4bhk": "4 BHK", "5bhk": "5 BHK", retail: "Retail shop" };
-
-  // The unit choice sets the project type, the project the lead is filed against (retail goes
-  // to The Cullinan Avenue) and the note the sales team reads, then opens step 2.
-  function applyUnit(form, value) {
+  // The unit choice sets the project type, the project the lead is filed against (commercial
+  // choices go to The Cullinan Avenue) and the note the sales team reads, then opens step 2.
+  // Each choice carries its label and project type (data-label, data-interest) from the admin.
+  function applyUnit(form, radio) {
     var interest = $("[data-cl-interest]", form);
     var project = $("[data-cl-project]", form);
     var message = $("[data-cl-message]", form);
-    var commercial = value === "retail";
+    var value = radio.value;
+    var commercial = radio.dataset.interest === "commercial";
     interest.value = value ? (commercial ? "commercial" : "residential") : "";
     project.value = commercial ? form.dataset.commercialProject : form.dataset.residentialProject;
-    message.value = [message.dataset.request, value ? "Interested in: " + UNIT_LABELS[value] : ""]
+    message.value = [message.dataset.request, value ? "Interested in: " + radio.dataset.label : ""]
       .filter(Boolean)
       .join("\n");
     if (value) {
@@ -44,7 +44,7 @@
       message.value = message.dataset.request;
       $all("[data-cl-unit]", form).forEach(function (radio) {
         radio.addEventListener("change", function () {
-          applyUnit(form, radio.value);
+          applyUnit(form, radio);
           var first = $("[data-cl-step-two] input", form);
           if (first && !form.closest("dialog")) first.focus({ preventScroll: true });
         });

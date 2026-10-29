@@ -10,7 +10,6 @@
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   // Set once the visitor has sent their details: the automatic offers then stop.
   var SENT_KEY = "trump-lead-sent";
-  var UNIT_LABELS = { "4bhk": "4 BHK", "5bhk": "5 BHK" };
 
   function $(selector, scope) {
     return (scope || document).querySelector(selector);
@@ -83,11 +82,14 @@
   function setUnit(form, value) {
     var unit = $("[data-tt-unit]", form);
     var message = $("[data-tt-message]", form);
+    var label = "";
     unit.value = value || "";
     $all("[data-tt-unit-choice]", form).forEach(function (button) {
-      button.setAttribute("aria-pressed", button.dataset.ttUnitChoice === value ? "true" : "false");
+      var chosen = button.dataset.ttUnitChoice === value;
+      button.setAttribute("aria-pressed", chosen ? "true" : "false");
+      if (chosen) label = button.dataset.label;
     });
-    message.value = [message.dataset.request, value ? "Interested in: " + UNIT_LABELS[value] : ""]
+    message.value = [message.dataset.request, value ? "Interested in: " + label : ""]
       .filter(Boolean)
       .join("\n");
     if (value) {

@@ -95,6 +95,7 @@ No longer used: Node.js, Next.js, React, Framer Motion and the Tailwind build.
 | `Page` | Privacy / Disclaimer / Compliance text |
 | `Project` | Name, slug, category, residential/commercial, offering, location, city, RERA, image, summary, landing-page text, brochure, map, SEO, order, visible |
 | `ProjectHighlight`, `ProjectConfiguration`, `ProjectImage` | Landing-page sections per project |
+| `LandingPage`, `LandingText`, `LandingImage`, `LandingItem` | Content of the custom ad landing pages (Jacob & Co., The Cullinan, Trump Tower, Billionaire Block): every text, fixed image and list, plus SEO |
 | `JourneyPrinciple`, `JourneyStat`, `Milestone` | "Our Journey" values, numbers and timeline |
 | `PressItem`, `MediaImage`, `Video` | Press coverage, gallery (with categories), YouTube films |
 | `Insight` | Articles: category, summary, body with sub-headings, author, date |

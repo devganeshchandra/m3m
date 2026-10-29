@@ -99,6 +99,23 @@ class SubmitEnquiryTests(TestCase):
         self.assertTrue(response.json()["ok"])
         self.assertEqual(Enquiry.objects.get().residency, "nri")
 
+    def test_projects_page_form_needs_an_interest(self):
+        response = self.post(source="projects", name="Asha Verma", phone="9876543210", email="a@example.com")
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(set(response.json()["errors"]), {"interest"})
+
+    def test_projects_page_form(self):
+        response = self.post(
+            source="projects", interest="commercial", name="Asha Verma", phone="9876543210", email="a@example.com",
+        )
+        self.assertTrue(response.json()["ok"])
+        self.assertEqual(Enquiry.objects.get().interest, "commercial")
+
+    def test_every_banner_form_needs_an_interest_but_no_consent(self):
+        for source in Enquiry.BANNER_FORMS:
+            response = self.post(source=source, name="Asha Verma", phone="9876543210", email="a@example.com")
+            self.assertEqual(set(response.json()["errors"]), {"interest"}, source)
+
     def test_invalid_submission_returns_field_errors(self):
         response = self.post(source="popup", name="A", phone="1", email="x")
         self.assertEqual(response.status_code, 400)

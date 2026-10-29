@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from core.models import SiteSettings
+from core.models import Page, SiteSettings
 from projects.models import Project
 
 # The Projects dropdown: projects with their own ad landing page, shown while published.
@@ -41,5 +41,7 @@ def site(request):
     return {
         "site": SiteSettings.load(),
         "navigation": navigation,
+        # Footer links to the legal pages, only once each is published.
+        "legal_pages": Page.objects.filter(is_published=True).order_by("slug"),
         "site_url": settings.SITE_URL,
     }

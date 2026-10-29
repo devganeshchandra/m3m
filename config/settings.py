@@ -225,8 +225,9 @@ UNFOLD = {
                 "title": "Projects",
                 "items": [
                     {"title": "Projects & landing pages", "icon": "apartment", "link": reverse_lazy("admin:projects_project_changelist")},
+                    {"title": "Ad landing pages (all content)", "icon": "campaign", "link": reverse_lazy("admin:projects_landingpage_changelist")},
+                    {"title": "Ad landing page lists", "icon": "format_list_bulleted", "link": reverse_lazy("admin:projects_landingitem_changelist")},
                     {"title": "Billionaire Block page", "icon": "diamond", "link": reverse_lazy("admin:projects_billionaireblockpage_changelist")},
-                    {"title": "Billionaire Block content", "icon": "list", "link": reverse_lazy("admin:projects_billionaireitem_changelist")},
                 ],
             },
             {

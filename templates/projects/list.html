@@ -1,4 +1,5 @@
 {% extends "inner_base.html" %}
+{% load site_tags %}
 
 {% block hero_stats %}
 <dl class="inner-hero__stats">
@@ -15,6 +16,24 @@
     <div>
       <p class="ip-label"><span aria-hidden="true"></span>{{ inner.intro_label }}</p>
       <h2 class="ip-heading" id="projects-intro-title">{{ inner.intro_heading }}</h2>
+      {# One picture card per collection, each jumping to its section below. #}
+      <ul class="collection-teasers">
+        {% for collection in collections %}
+          {% with cover=collection.projects.0 %}
+            <li>
+              <a class="collection-teaser" href="#{{ collection.key }}">
+                {% if cover %}{% picture cover.image sizes="(max-width: 700px) 46vw, 220px" css_class="collection-teaser__image" %}{% endif %}
+                <span class="collection-teaser__index" aria-hidden="true">{{ collection.index|stringformat:"02d" }}</span>
+                <span class="collection-teaser__copy">
+                  <strong>{{ collection.name }}</strong>
+                  <span>{{ collection.subtitle }}</span>
+                  <em>{{ collection.projects|length }} address{{ collection.projects|length|pluralize:"es" }}</em>
+                </span>
+              </a>
+            </li>
+          {% endwith %}
+        {% endfor %}
+      </ul>
     </div>
     <div class="ip-intro__text">
       {{ inner.intro_text|linebreaks }}

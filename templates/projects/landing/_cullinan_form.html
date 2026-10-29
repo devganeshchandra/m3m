@@ -2,23 +2,24 @@
   Two-step lead form for the Cullinan landing page.
   Step 1: one tap on the unit type (3 / 4 / 5 BHK or a retail shop), which sets the project type.
   Step 2: full name, mobile and email. Same validation and junk filtering as every landing form.
-  Expects: prefix (unique per form), project, button (label).
+  Expects: prefix (unique per form), project, button (label). Choices (lists.units), headings, note
+  and the project that receives retail leads (t.form_*) come from the page's landing content.
 {% endcomment %}
 <form class="cl-form" novalidate data-lead-form data-cl-form action="{% url 'submit_enquiry' %}" method="post"
-  data-residential-project="{{ project.slug }}" data-commercial-project="m3m-the-cullinan-avenue">
+  data-residential-project="{{ project.slug }}" data-commercial-project="{{ t.form_commercial_project }}">
   {% include "partials/form_tracking.html" with source="landing" %}
   <input type="hidden" name="project" value="{{ project.slug }}" data-cl-project>
   <input type="hidden" name="message" value="" data-cl-message data-request="Requested: Project details">
   <input type="hidden" name="interest" value="" data-validate="interest" data-error-id="{{ prefix }}-interest-error" data-cl-interest>
 
   <fieldset class="cl-form__step cl-form__step--one">
-    <legend><span>1</span> I’m interested in</legend>
+    <legend><span>1</span> {{ t.form_step_one }}</legend>
     <div class="cl-units">
-      {% for value, label, note in units %}
+      {% for choice in lists.units %}
         <label class="cl-unit">
-          <input type="radio" name="unit" value="{{ value }}" data-cl-unit>
-          <strong>{{ label }}</strong>
-          <small>{{ note }}</small>
+          <input type="radio" name="unit" value="{{ choice.value }}" data-label="{{ choice.title }}" data-interest="{{ choice.group|default:'residential' }}" data-cl-unit>
+          <strong>{{ choice.title }}</strong>
+          <small>{{ choice.subtitle }}</small>
         </label>
       {% endfor %}
     </div>
@@ -26,7 +27,7 @@
   </fieldset>
 
   <fieldset class="cl-form__step cl-form__step--two" data-cl-step-two>
-    <legend><span>2</span> Where should we send it?</legend>
+    <legend><span>2</span> {{ t.form_step_two }}</legend>
     <label class="cl-field">
       <span class="visually-hidden">Full name</span>
       <input name="name" type="text" autocomplete="name" maxlength="80" placeholder="Full name" required
@@ -52,5 +53,5 @@
   </fieldset>
 
   <p class="cl-form__status" role="status" aria-live="polite" data-form-status></p>
-  <p class="cl-form__note">By submitting, you agree that M3M India may call, WhatsApp or email you about this project.</p>
+  <p class="cl-form__note">{{ t.form_note }}</p>
 </form>

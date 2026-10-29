@@ -40,6 +40,8 @@ MEDIA_CATEGORIES = {
 INNER_PAGES = [
     {
         "key": "projects",
+        "form_title": "More information about M3M projects",
+        "form_intro": "Tell us what you’re looking for and our team will call you with the details.",
         "banner": "dark_banners/b3.jpeg",
         "banner_alt": "Artistic impression of an M3M township at dusk",
         "eyebrow": "The M3M portfolio",
@@ -60,7 +62,7 @@ INNER_PAGES = [
             "today and the launches still to come, or filter by residential and commercial spaces."
         ),
         "delivered_text": (
-            "Completed, handed over and already part of the city's rhythm. These addresses show how an "
+            "Completed, handed over and already part of the city’s rhythm. These addresses show how an "
             "M3M project lives long after the launch."
         ),
         "current_text": (
@@ -79,6 +81,8 @@ INNER_PAGES = [
     },
     {
         "key": "journey",
+        "form_title": "Be part of the M3M story",
+        "form_intro": "Tell us what you’re looking for and our team will call you with the addresses that fit.",
         "banner": "dark_banners/b1.jpeg",
         "banner_alt": "Artistic impression of an M3M development rising from its plans",
         "eyebrow": "Our Journey",
@@ -109,6 +113,8 @@ INNER_PAGES = [
     },
     {
         "key": "media",
+        "form_title": "Read about a project you like?",
+        "form_intro": "Tell us what caught your eye and our team will call you with the latest details.",
         "banner": "media/m7.jpeg",
         "banner_alt": "Artistic impression of an indoor pool at an M3M residence",
         "eyebrow": "Media centre",
@@ -130,8 +136,10 @@ INNER_PAGES = [
     },
     {
         "key": "insights",
+        "form_title": "Turn insight into an address",
+        "form_intro": "Tell us what you’re looking for and our team will call you with advice that fits.",
         "banner": "media/m8.jpeg",
-        "banner_alt": "Artistic impression of a residents' lounge at dusk",
+        "banner_alt": "Artistic impression of a residents’ lounge at dusk",
         "eyebrow": "Ideas & perspectives",
         "title": "Insights",
         "title_emphasis": "from M3M.",
@@ -149,6 +157,8 @@ INNER_PAGES = [
     },
     {
         "key": "contact",
+        "form_title": "Prefer a quick call back?",
+        "form_intro": "Leave your details and our team will call you to talk it through.",
         "banner": "media/m4.jpeg",
         "banner_alt": "Artistic impression of the arrival at an M3M development",
         "eyebrow": "We’re here to help",
@@ -166,7 +176,7 @@ INNER_PAGES = [
         ),
         "seo_title": "Contact Us | M3M India",
         "seo_description": (
-            "Contact M3M India: call toll-free 1800 123 3333, WhatsApp our team, or request a call back. "
+            "Contact M3M India: call toll-free 1800 123 3333, WhatsApp our team, or request a callback. "
             "Corporate office at M3M International Financial Center, Gurugram."
         ),
     },
@@ -210,8 +220,7 @@ FAQS = [
     ),
     (
         "I live outside India. Can I still enquire?",
-        "Of course. Enter your number with its country code (for example +44 or +971) and choose “Overseas "
-        "(NRI)” where asked. We can also continue the conversation on WhatsApp.",
+        "Of course. Enter your number with its country code (for example +44 or +971) We can also continue the conversation on WhatsApp.",
     ),
     (
         "Where can I check a project’s RERA registration?",

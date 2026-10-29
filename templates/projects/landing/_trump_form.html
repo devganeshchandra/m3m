@@ -10,12 +10,12 @@
   <input type="hidden" name="interest" value="residential">
   <input type="hidden" name="message" value="" data-tt-message data-request="Requested: Price list & floor plans">
   <input type="hidden" name="unit" value="" data-tt-unit data-validate="choice"
-    data-required-message="Choose 4 BHK or 5 BHK." data-error-id="{{ prefix }}-unit-error">
+    data-required-message="{{ t.form_unit_error }}" data-error-id="{{ prefix }}-unit-error">
 
   <div class="tt-units" role="group" aria-label="Residence">
-    {% for value, label in residences %}
-      <button type="button" class="tt-unit" aria-pressed="false" data-tt-unit-choice="{{ value }}">
-        <strong>{{ label }}</strong><span>Residence</span>
+    {% for residence in lists.residences %}
+      <button type="button" class="tt-unit" aria-pressed="false" data-tt-unit-choice="{{ residence.value }}" data-label="{{ residence.title }}">
+        <strong>{{ residence.title }}</strong><span>{{ t.form_unit_note }}</span>
       </button>
     {% endfor %}
   </div>
@@ -46,6 +46,6 @@
   <p class="tt-form__status" role="status" aria-live="polite" data-form-status></p>
   <p class="tt-form__note">
     <svg aria-hidden="true" viewBox="0 0 24 24" width="13" height="13"><path d="M7 11V8a5 5 0 0 1 10 0v3M6 11h12v9H6z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-    Your details are safe. M3M India may call, WhatsApp or email you about this project.
+    {{ t.form_note }}
   </p>
 </form>

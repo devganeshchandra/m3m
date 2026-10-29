@@ -4,7 +4,7 @@ from django.views.decorators.http import require_GET
 
 from core.models import InnerPage, SiteSettings
 from core.views import inner_page
-from projects import billionaire_story, landing_content
+from projects import landing
 from projects.models import BillionaireBlockPage, Project
 
 
@@ -48,17 +48,24 @@ def project_detail(request, slug):
         Project.objects.published().prefetch_related("highlights", "configurations", "gallery"), slug=slug
     )
     related = Project.objects.published().filter(status=project.status).exclude(pk=project.pk)[:3]
-    # A project with its own ad landing page (templates/projects/landing/<slug>.html) uses it.
-    templates = [f"projects/landing/{project.slug}.html", "projects/detail.html"]
-    return render(request, templates, {"project": project, "related": related, **landing_content.context_for(slug)})
+    context = {"project": project, "related": related}
+    templates = ["projects/detail.html"]
+    # A project with its own ad landing page (templates/projects/landing/<slug>.html, content in the
+    # admin under “Landing pages”) uses it.
+    landing_context = landing.context(project.slug, rera=project.rera)
+    if landing_context:
+        context.update(landing_context)
+        templates.insert(0, f"projects/landing/{project.slug}.html")
+    return render(request, templates, context)
 
 
 @require_GET
 def billionaire_block(request):
-    # The story sections come from projects/billionaire_story.py; the hero, form and footer from the admin.
+    # Hero media, form and footer texts are on “Billionaire Block page”; everything else is the
+    # “Billionaire Block” landing page (projects/landing_pages/billionaire.py).
     page = BillionaireBlockPage.load()
     context = {
-        **billionaire_story.context(),
+        **(landing.context("billionaire-block", rera=page.rera_number) or {}),
         "page": page,
         "site": SiteSettings.load(),
         "residences": page.residences.filter(is_published=True),

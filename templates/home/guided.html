@@ -68,7 +68,7 @@
                 data-location="{{ project.location }}" data-offering="{{ project.offering }}"
                 data-url="{{ project.get_absolute_url }}" data-interests="{{ project.interests|join:' ' }}">
               <span class="finder-project__image">
-                {% picture project.image sizes="96px" %}
+                {% picture project.image sizes="(max-width: 700px) 46vw, 300px" %}
               </span>
               <span class="finder-project__copy">
                 <strong>{{ project.name }}</strong>

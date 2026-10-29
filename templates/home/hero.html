@@ -26,6 +26,7 @@
     {% endif %}
   </div>
   <div class="phase-one-hero__veil" aria-hidden="true"></div>
+  <canvas class="hero-sparkles" aria-hidden="true" data-hero-sparkles></canvas>
   <div class="phase-one-hero__content">
     <div class="phase-one-hero__copy">
       <p class="eyebrow phase-one-hero__eyebrow">
@@ -34,10 +35,13 @@
         <span>{{ page.hero_eyebrow }}</span>
       </p>
       <h1 class="visually-hidden" id="hero-title">{{ site.site_name }} | {{ page.hero_eyebrow }}</h1>
-      <p class="phase-one-hero__headline">
-        {{ page.hero_headline_line_1 }}
+      <p class="phase-one-hero__headline" data-hero-headline>
+        <span class="hero-line hero-line--one" data-hero-line>{{ page.hero_headline_line_1 }}</span>
         <br>
-        <span>{{ page.hero_headline_line_2 }}</span>
+        <span class="hero-line hero-line--two" data-hero-line>{{ page.hero_headline_line_2 }}</span>
+        <svg class="hero-flourish" viewBox="0 0 420 28" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <path d="M4 18 C 90 4, 180 4, 260 14 S 380 26, 416 8" pathLength="1"/>
+        </svg>
       </p>
       <p class="phase-one-hero__intro">{{ page.hero_intro }}</p>
       <a class="text-link" href="/#projects">
@@ -46,9 +50,12 @@
       </a>
     </div>
 
-    <aside class="hero-enquiry" aria-labelledby="hero-enquiry-title">
+    <aside class="hero-enquiry" aria-labelledby="hero-enquiry-title" data-quiver-box>
       <p class="hero-enquiry__eyebrow">A more personal conversation</p>
-      <h2 class="hero-enquiry__title" id="hero-enquiry-title">{{ page.hero_form_title }}</h2>
+      <h2 class="hero-enquiry__title" id="hero-enquiry-title" data-quiver-title>{{ page.hero_form_title }}</h2>
+      <svg class="quiver-string" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <path d="M2 6 Q 100 6 198 6"/>
+      </svg>
       <p class="hero-enquiry__intro">{{ page.hero_form_intro }}</p>
 
       <form class="hero-enquiry__form" novalidate data-lead-form action="{% url 'submit_enquiry' %}" method="post">
@@ -86,8 +93,9 @@
         </label>
 
         <div aria-live="polite" class="hero-enquiry__status" role="status" data-form-status></div>
-        <button class="hero-enquiry__submit" type="submit">
-          Request a private call / virtual tour <span aria-hidden="true">→</span>
+        <button class="hero-enquiry__submit" type="submit" data-fancy-button>
+          <span class="submit-label">Request a private call / virtual tour</span>
+          <span class="submit-arrow" aria-hidden="true">→</span>
         </button>
       </form>
       <p class="hero-enquiry__note">Your details are used only to respond to this enquiry.</p>

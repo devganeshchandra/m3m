@@ -12,7 +12,7 @@ from PIL import Image
 from content.models import Insight, Video
 from core.models import HeroBanner, HomePage, InnerPage, Page, SiteSettings
 from leads.models import Enquiry
-from projects.models import BillionaireBlockPage, Project
+from projects.models import BillionaireBlockPage, LandingItem, LandingPage, LandingText, Project
 
 MEDIA_ROOT = tempfile.mkdtemp()
 
@@ -41,7 +41,7 @@ class SiteTests(TestCase):
         self.assertContains(response, 'class="project-card"', count=3)
         self.assertContains(response, "Explore all 9 projects")
         # Live figures beside the section headings, the journey card and the single-screen finder.
-        self.assertContains(response, "<strong>66</strong><span>Iconic projects</span>", html=False)
+        self.assertContains(response, "<strong data-count-up>66</strong><span>Iconic projects</span>", html=False)
         self.assertContains(response, "Landmarks across")
         self.assertContains(response, "M3M India at a glance")
         self.assertContains(response, "Projects delivered")
@@ -58,7 +58,7 @@ class SiteTests(TestCase):
         page = HomePage.load()
         page.projects_facts = ""
         page.save()
-        self.assertContains(self.client.get("/"), "<strong>9</strong><span>Addresses</span>", html=False)
+        self.assertContains(self.client.get("/"), "<strong data-count-up>9</strong><span>Addresses</span>", html=False)
 
     def test_contact_settings_are_used_everywhere(self):
         settings = SiteSettings.load()
@@ -112,6 +112,11 @@ class SiteTests(TestCase):
             "/admin/core/homepage/1/change/",
             "/admin/projects/billionaireblockpage/1/change/",
             "/admin/projects/billionaireitem/",
+            "/admin/projects/landingpage/",
+            "/admin/projects/landingitem/",
+            "/admin/projects/landingitem/add/",
+            f"/admin/projects/landingitem/{LandingItem.objects.first().pk}/change/",
+            *(f"/admin/projects/landingpage/{page.pk}/change/" for page in LandingPage.objects.all()),
             "/admin/core/sitesettings/1/change/",
             "/admin/core/herobanner/",
             "/admin/core/page/",
@@ -139,7 +144,7 @@ class SiteTests(TestCase):
         # The research story, in order, from the plan to the sources.
         html = response.content.decode()
         order = [
-            "What exactly is", "M3M Residences", "A clearly defined", "What type of society is",
+            "What exactly is", "Signature Residences <em>by ELIE SAAB", "A clearly defined", "What type of society is",
             "What amenities are they", "What type of towers, blocks and", "broader", "Location &amp;",
             "Launch timeline, investment", "Sources for",
         ]
@@ -257,6 +262,30 @@ class SiteTests(TestCase):
         page.save()
         self.assertContains(self.client.get("/billionaire-block"), "A new horizon.")
 
+    def test_landing_pages_are_edited_in_the_admin(self):
+        self.assertEqual(
+            set(LandingPage.objects.values_list("slug", flat=True)),
+            {"m3m-jacob-co-residences", "m3m-the-cullinan-residential", "m3m-trump-tower-noida", "billionaire-block"},
+        )
+        for page in LandingPage.objects.all():
+            self.assertTrue(page.texts.exists(), page)
+            self.assertTrue(page.items.exists(), page)
+        trump = LandingPage.objects.get(slug="m3m-trump-tower-noida")
+        LandingText.objects.filter(page=trump, key="res_title").update(value="Homes with a *new name.*")
+        trump.items.filter(list_key="faq").update(is_published=False)
+        trump.items.create(list_key="faq", title="Is parking included?", text="Yes, RERA {rera}.")
+        response = self.client.get("/projects/m3m-trump-tower-noida")
+        self.assertContains(response, "Homes with a <em>new name.</em>", html=False)
+        self.assertContains(response, "Is parking included?")
+        self.assertContains(response, f"Yes, RERA {Project.objects.get(slug='m3m-trump-tower-noida').rera}.")
+        self.assertNotContains(response, "Which residences are available?")
+
+    def test_project_without_landing_content_uses_the_standard_page(self):
+        LandingPage.objects.filter(slug="m3m-trump-tower-noida").delete()
+        response = self.client.get("/projects/m3m-trump-tower-noida")
+        self.assertTemplateUsed(response, "projects/detail.html")
+        self.assertTemplateNotUsed(response, "projects/landing/m3m-trump-tower-noida.html")
+
     def test_large_upload_is_downsized(self):
         admin = User.objects.create_superuser("admin", "a@example.com", "pass")
         self.client.force_login(admin)
@@ -285,6 +314,12 @@ class MenuPageTests(TestCase):
             self.assertContains(response, page.title)
             self.assertContains(response, 'class="inner-hero"')
             self.assertContains(response, 'aria-current="page"')
+            self.assertContains(response, page.form_title)
+            self.assertContains(response, f'name="source" value="{page.form_source}"')
+
+    def test_banner_form_hides_without_a_title(self):
+        InnerPage.objects.filter(key="media").update(form_title="")
+        self.assertNotContains(self.client.get("/media-centre"), "inner-hero__aside")
 
     def test_projects_page_groups_collections(self):
         response = self.client.get("/projects")

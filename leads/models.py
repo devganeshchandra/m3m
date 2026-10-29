@@ -10,6 +10,14 @@ class Enquiry(models.Model):
         BILLIONAIRE = "billionaire", "Billionaire Block page"
         BROCHURE = "brochure", "Billionaire Block brochure"
         LANDING = "landing", "Project landing page (ads)"
+        PROJECTS = "projects", "Projects page form"
+        JOURNEY = "journey", "Our Journey page form"
+        MEDIA = "media", "Media page form"
+        INSIGHTS = "insights", "Insights page form"
+        CONTACT_BANNER = "contact_banner", "Contact page banner form"
+
+    # The short forms on the menu-page banners: interest, name, mobile and email.
+    BANNER_FORMS = {Source.PROJECTS, Source.JOURNEY, Source.MEDIA, Source.INSIGHTS, Source.CONTACT_BANNER}
 
     class CallTime(models.TextChoices):
         MORNING = "morning", "Morning · 9 AM–12 PM"

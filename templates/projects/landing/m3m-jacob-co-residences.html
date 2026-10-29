@@ -1,17 +1,16 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static landing_tags %}
 {% comment %}
   Ad landing page for M3M Jacob & Co. Residences, Sector 97, Noida (used automatically for this project).
-  Facts follow m3mindia.com/residential/m3m-jacob-co and the project record in the admin. Prices and
-  sizes are not published: they are the lead hook, shared by the sales team. Images are official
-  M3M artistic impressions, enhanced, in static/images/landing/jacob-co/.
+  Every text, image and list comes from the admin (Landing pages → M3M Jacob & Co. Residences); the
+  slots and their starting content are in projects/landing_pages/jacob.py.
 {% endcomment %}
 
-{% block title %}M3M Jacob &amp; Co. Residences, Sector 97 Noida | 3, 4 &amp; 5 BHK Branded Residences{% endblock %}
-{% block description %}M3M Jacob &amp; Co. Residences on Noida Expressway, Sector 97: branded 3, 4 &amp; 5 BHK residences with sky lounges, a temperature-controlled pool and concierge services. Unlock the brochure and price list.{% endblock %}
-{% block og_title %}M3M Jacob &amp; Co. Residences, Sector 97 Noida{% endblock %}
-{% block og_description %}Branded 3, 4 &amp; 5 BHK residences on Noida Expressway. Unlock the brochure and price list.{% endblock %}
-{% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/landing/jacob-co/crown-lounge-1200.jpg' %}">{% endblock %}
+{% block title %}{{ landing.seo_title }}{% endblock %}
+{% block description %}{{ landing.seo_description }}{% endblock %}
+{% block og_title %}{{ landing.share_title }}{% endblock %}
+{% block og_description %}{{ landing.share_description }}{% endblock %}
+{% block og_image %}{% if landing.share_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ landing.share_image|src:1200 }}">{% endif %}{% endblock %}
 
 {% block head %}
   <link rel="stylesheet" href="{% static 'css/landing-nav.css' %}">
@@ -21,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap">
   <link rel="stylesheet" href="{% static 'css/landing.css' %}">
-  <link rel="preload" as="image" href="{% static 'images/landing/jacob-co/crown-lounge.jpg' %}">
+  {% with first=lists.slides.0 %}{% if first.image %}<link rel="preload" as="image" href="{{ first.image|src:1920 }}">{% endif %}{% endwith %}
 {% endblock %}
 
 {% block structured_data %}
@@ -32,7 +31,7 @@
     "name": "{{ project.name|escapejs }}",
     "description": "{{ project.summary|escapejs }}",
     "url": "{{ site_url|escapejs }}{{ project.get_absolute_url|escapejs }}",
-    "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/landing/jacob-co/crown-lounge-1200.jpg' %}",
+    {% if landing.share_image %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ landing.share_image|src:1200|escapejs }}",{% endif %}
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "{{ project.location|escapejs }}",
@@ -44,134 +43,121 @@
 {% endblock %}
 
 {% block site_header %}
-  {% include "projects/landing/_landing_nav.html" with theme="jl" brand="Jacob & Co. Residences" open_attr="data-jl-open" %}
+  {% include "projects/landing/_landing_nav.html" with theme="jl" open_attr="data-jl-open" %}
 {% endblock %}
 
 {% block content %}
-{% with img="images/landing/jacob-co/" commercial_slug="m3m-jacob-jewel-crest-noida" %}
+{% with commercial_slug=t.commercial_slug %}
 <main class="jl" id="main-content">
 
   {# ---------- 1. Hero: animated banner with the lead form ---------- #}
   <section class="jl-hero" aria-labelledby="jl-title">
     <div class="jl-hero__slides" aria-hidden="true">
-      <img class="jl-hero__slide is-active" src="{% static img|add:'crown-lounge.jpg' %}" alt="" fetchpriority="high">
-      <img class="jl-hero__slide" src="{% static img|add:'towers-podium.jpg' %}" alt="" loading="lazy">
-      <img class="jl-hero__slide" src="{% static img|add:'lagoon-pool.jpg' %}" alt="" loading="lazy">
+      {% for slide in lists.slides %}
+        <img class="jl-hero__slide{% if forloop.first %} is-active{% endif %}" src="{{ slide.image|src:1920 }}" alt="" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+      {% endfor %}
     </div>
     <div class="jl-hero__shade" aria-hidden="true"></div>
 
     <div class="jl-hero__inner">
       <div class="jl-hero__copy">
         <p class="jl-hero__eyebrow jl-rise">
-          <span class="jl-dot" aria-hidden="true"></span> Now launched · Sector 97, Noida Expressway
+          <span class="jl-dot" aria-hidden="true"></span> {{ t.hero_eyebrow }}
         </p>
         <h1 class="jl-hero__title jl-rise" id="jl-title">
-          <span>M3M</span> Jacob &amp; Co.
-          <em>Residences</em>
+          <span>{{ t.hero_title_small }}</span> {{ t.hero_title }}
+          <em>{{ t.hero_title_em }}</em>
         </h1>
-        <p class="jl-hero__tagline jl-rise">Inspired by the impossible. The artistry of Jacob &amp; Co., in architectural form.</p>
+        <p class="jl-hero__tagline jl-rise">{{ t.hero_tagline|em }}</p>
         <ul class="jl-hero__chips jl-rise">
-          <li>3, 4 &amp; 5 BHK</li>
-          <li>Branded residences</li>
-          <li>Sky lounges</li>
-          <li>Concierge &amp; butler</li>
+          {% for chip in lists.hero_chips %}<li>{{ chip.title }}</li>{% endfor %}
         </ul>
         <div class="jl-hero__actions jl-rise">
-          <button class="jl-button jl-button--gold jl-button--shine" type="button" data-jl-open="Unlock the brochure">
+          <button class="jl-button jl-button--gold jl-button--shine" type="button" data-jl-open="{{ t.hero_popup }}">
             <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path d="M7 11V8a5 5 0 0 1 9.6-2M6 11h12v9H6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            Unlock the brochure
+            {{ t.hero_button }}
           </button>
-          <button class="jl-button jl-button--ghost" type="button" data-jl-open="Get the price list">Get the price list</button>
+          <button class="jl-button jl-button--ghost" type="button" data-jl-open="{{ t.hero_popup_2 }}">{{ t.hero_button_2 }}</button>
         </div>
-        <p class="jl-hero__rera jl-rise">UP RERA: {{ project.rera }}</p>
+        <p class="jl-hero__rera jl-rise">{{ t.hero_rera }}</p>
       </div>
 
       <aside class="jl-hero__card jl-rise" aria-labelledby="jl-hero-form-title">
-        <p class="jl-card__eyebrow">Limited launch inventory</p>
-        <h2 class="jl-card__title" id="jl-hero-form-title">Get the brochure &amp; price list</h2>
-        {% include "projects/landing/_lead_form.html" with prefix="hero" button="Unlock now" %}
+        <p class="jl-card__eyebrow">{{ t.card_eyebrow }}</p>
+        <h2 class="jl-card__title" id="jl-hero-form-title">{{ t.card_title|em }}</h2>
+        {% include "projects/landing/_lead_form.html" with prefix="hero" button=t.card_button %}
       </aside>
     </div>
 
-    <ol class="jl-hero__dots" aria-hidden="true"><li class="is-active"></li><li></li><li></li></ol>
+    <ol class="jl-hero__dots" aria-hidden="true">{% for slide in lists.slides %}<li{% if forloop.first %} class="is-active"{% endif %}></li>{% endfor %}</ol>
     <a class="jl-hero__scroll" href="#residences" aria-label="Scroll to the residences"><span></span></a>
   </section>
 
   {# ---------- 2. Trust strip ---------- #}
   <section class="jl-trust" aria-label="Project at a glance">
     <dl>
-      <div><dt>Developer</dt><dd>M3M India</dd></div>
-      <div><dt>Residences</dt><dd>3, 4 &amp; 5 BHK</dd></div>
-      <div><dt>Towers</dt><dd>1, 2 &amp; 3</dd></div>
-      <div><dt>Location</dt><dd>Sector 97, Noida</dd></div>
-      <div><dt>UP RERA</dt><dd>{{ project.rera }}</dd></div>
+      {% for fact in lists.trust %}<div><dt>{{ fact.title }}</dt><dd>{{ fact.text }}</dd></div>{% endfor %}
     </dl>
   </section>
 
   {# ---------- 3. Residences ---------- #}
   <section class="jl-residences" id="residences" aria-labelledby="jl-res-title">
     <div class="jl-residences__intro">
-      <p class="jl-eyebrow">The residences</p>
-      <h2 class="jl-display" id="jl-res-title">An icon <em>in the making.</em></h2>
-      <p class="jl-lead">Calm over chaos. Views over walls. Homes where your legacy resides.</p>
+      <p class="jl-eyebrow">{{ t.res_eyebrow }}</p>
+      <h2 class="jl-display" id="jl-res-title">{{ t.res_title|em }}</h2>
+      <p class="jl-lead">{{ t.res_lead|em }}</p>
     </div>
 
     <div class="jl-residences__media">
-      <figure class="jl-residences__main jl-reveal">
-        <img src="{% static img|add:'residence-balcony.jpg' %}" alt="Living room opening to a private balcony over green views, artistic impression" loading="lazy">
-      </figure>
-      <figure class="jl-residences__side jl-reveal">
-        <img src="{% static img|add:'balcony-golf-view-1200.jpg' %}" alt="Private balcony overlooking a golf course, artistic impression" loading="lazy">
-      </figure>
+      {% if imgs.res_main.image %}
+        <figure class="jl-residences__main jl-reveal">
+          <img src="{{ imgs.res_main.image|src:1920 }}" alt="{{ imgs.res_main.alt }}" loading="lazy">
+        </figure>
+      {% endif %}
+      {% if imgs.res_side.image %}
+        <figure class="jl-residences__side jl-reveal">
+          <img src="{{ imgs.res_side.image|src:1200 }}" alt="{{ imgs.res_side.alt }}" loading="lazy">
+        </figure>
+      {% endif %}
     </div>
 
     <ul class="jl-configs">
-      <li class="jl-config jl-reveal">
-        <span class="jl-config__bhk">3<small>BHK</small></span>
-        <p>Branded residence</p>
-        <button class="jl-config__cta" type="button" data-jl-open="Get the 3 BHK floor plan &amp; price" data-jl-unit-preset="3bhk">Size &amp; price <span aria-hidden="true">→</span></button>
-      </li>
-      <li class="jl-config jl-reveal">
-        <span class="jl-config__bhk">4<small>BHK</small></span>
-        <p>Branded residence</p>
-        <button class="jl-config__cta" type="button" data-jl-open="Get the 4 BHK floor plan &amp; price" data-jl-unit-preset="4bhk">Size &amp; price <span aria-hidden="true">→</span></button>
-      </li>
-      <li class="jl-config jl-reveal">
-        <span class="jl-config__bhk">5<small>BHK</small></span>
-        <p>Branded residence</p>
-        <button class="jl-config__cta" type="button" data-jl-open="Get the 5 BHK floor plan &amp; price" data-jl-unit-preset="5bhk">Size &amp; price <span aria-hidden="true">→</span></button>
-      </li>
+      {% for config in lists.configs %}
+        <li class="jl-config jl-reveal">
+          <span class="jl-config__bhk">{{ config.title }}<small>{{ config.subtitle }}</small></span>
+          <p>{{ config.text }}</p>
+          <button class="jl-config__cta" type="button" data-jl-open="{{ config.link }}" data-jl-unit-preset="{{ config.value }}">{{ t.res_button }} <span aria-hidden="true">→</span></button>
+        </li>
+      {% endfor %}
     </ul>
   </section>
 
   {# ---------- 4. Price band ---------- #}
   <section class="jl-band" aria-label="Price list">
-    <img src="{% static img|add:'aerial-pools-1200.jpg' %}" alt="" loading="lazy" aria-hidden="true">
+    {% if imgs.price_bg.image %}<img src="{{ imgs.price_bg.image|src:1200 }}" alt="" loading="lazy" aria-hidden="true">{% endif %}
     <div class="jl-band__inner">
-      <p class="jl-eyebrow jl-eyebrow--light">Launch price list</p>
-      <h2 class="jl-band__title">Prices are shared with <em>registered enquirers.</em></h2>
-      <button class="jl-button jl-button--gold jl-button--shine" type="button" data-jl-open="Get the price list">Unlock the price list</button>
+      <p class="jl-eyebrow jl-eyebrow--light">{{ t.price_eyebrow }}</p>
+      <h2 class="jl-band__title">{{ t.price_title|em }}</h2>
+      <button class="jl-button jl-button--gold jl-button--shine" type="button" data-jl-open="{{ t.price_popup }}">{{ t.price_button }}</button>
     </div>
   </section>
 
   {# ---------- 5. Commercial ---------- #}
   <section class="jl-commercial" id="commercial" aria-labelledby="jl-com-title">
     <figure class="jl-commercial__image jl-reveal">
-      <img src="{% static img|add:'towers-podium.jpg' %}" alt="Residential towers rising above a lit retail podium, artistic impression" loading="lazy">
-      <figcaption>Artistic impression</figcaption>
+      {% if imgs.com_image.image %}<img src="{{ imgs.com_image.image|src:1920 }}" alt="{{ imgs.com_image.alt }}" loading="lazy">{% endif %}
+      {% if t.com_caption %}<figcaption>{{ t.com_caption }}</figcaption>{% endif %}
     </figure>
     <div class="jl-commercial__copy">
-      <p class="jl-eyebrow jl-eyebrow--light">Commercial · M3M Jacob Jewel Crest</p>
-      <h2 class="jl-display jl-display--light" id="jl-com-title">Retail at the foot <em>of an icon.</em></h2>
+      <p class="jl-eyebrow jl-eyebrow--light">{{ t.com_eyebrow }}</p>
+      <h2 class="jl-display jl-display--light" id="jl-com-title">{{ t.com_title|em }}</h2>
       <ul class="jl-commercial__list">
-        <li><strong>Retail shops</strong></li>
-        <li><strong>Food court</strong></li>
-        <li><strong>Restaurants</strong></li>
+        {% for entry in lists.commercial %}<li><strong>{{ entry.title }}</strong></li>{% endfor %}
       </ul>
-      <p class="jl-lead jl-lead--light">Shops and F&amp;B spaces within the Jacob &amp; Co. project on Noida Expressway.</p>
+      <p class="jl-lead jl-lead--light">{{ t.com_lead|em }}</p>
       <div class="jl-commercial__actions">
-        <button class="jl-button jl-button--gold" type="button" data-jl-open="Get commercial unit details" data-jl-interest-preset="commercial">Get commercial details</button>
-        <button class="jl-button jl-button--ghost" type="button" data-jl-open="Get the commercial price list" data-jl-interest-preset="commercial">Commercial price list</button>
+        <button class="jl-button jl-button--gold" type="button" data-jl-open="{{ t.com_popup }}" data-jl-interest-preset="commercial">{{ t.com_button }}</button>
+        <button class="jl-button jl-button--ghost" type="button" data-jl-open="{{ t.com_popup_2 }}" data-jl-interest-preset="commercial">{{ t.com_button_2 }}</button>
       </div>
     </div>
   </section>
@@ -179,94 +165,78 @@
   {# ---------- 6. Amenities ---------- #}
   <section class="jl-amenities" id="amenities" aria-labelledby="jl-amen-title">
     <header class="jl-section-head">
-      <p class="jl-eyebrow">Amenities</p>
-      <h2 class="jl-display" id="jl-amen-title">A lifestyle <em>beyond imagination.</em></h2>
+      <p class="jl-eyebrow">{{ t.amen_eyebrow }}</p>
+      <h2 class="jl-display" id="jl-amen-title">{{ t.amen_title|em }}</h2>
     </header>
     <ul class="jl-amenities__grid">
-      <li class="jl-amenity jl-amenity--wide jl-reveal">
-        <img src="{% static img|add:'crown-lounge.jpg' %}" alt="Sky lounge and pool in the crown of the tower above the clouds, artistic impression" loading="lazy">
-        <div><span>A crown above the clouds</span><h3>Sky lounges &amp; temperature-controlled pool</h3></div>
-      </li>
-      <li class="jl-amenity jl-reveal">
-        <img src="{% static img|add:'lagoon-pool-1200.jpg' %}" alt="Lagoon pool among palms and landscaped gardens, artistic impression" loading="lazy">
-        <div><span>Breathe. Unwind. Belong.</span><h3>Wellness &amp; spa retreats</h3></div>
-      </li>
-      <li class="jl-amenity jl-reveal">
-        <img src="{% static img|add:'tower-night-1200.jpg' %}" alt="Illuminated tower at night, artistic impression" loading="lazy">
-        <div><span>Evenings, elevated</span><h3>Private entertainment hubs</h3></div>
-      </li>
-      <li class="jl-amenity jl-amenity--wide jl-reveal">
-        <img src="{% static img|add:'towers-blue-hour.jpg' %}" alt="Towers and pool deck at blue hour, artistic impression" loading="lazy">
-        <div><span>Hospitality at home</span><h3>Concierge &amp; butler services</h3></div>
-      </li>
+      {% for amenity in lists.amenities %}
+        <li class="jl-amenity{% if amenity.group == 'wide' %} jl-amenity--wide{% endif %} jl-reveal">
+          <img src="{% if amenity.group == 'wide' %}{{ amenity.image|src:1920 }}{% else %}{{ amenity.image|src:1200 }}{% endif %}" alt="{{ amenity.image_alt }}" loading="lazy">
+          <div><span>{{ amenity.subtitle }}</span><h3>{{ amenity.title }}</h3></div>
+        </li>
+      {% endfor %}
     </ul>
     <div class="jl-amenities__cta">
-      <p>The complete amenity list is in the brochure.</p>
-      <button class="jl-button jl-button--dark" type="button" data-jl-open="Unlock the brochure">Unlock the brochure</button>
+      <p>{{ t.amen_cta_text }}</p>
+      <button class="jl-button jl-button--dark" type="button" data-jl-open="{{ t.amen_cta_popup }}">{{ t.amen_cta_button }}</button>
     </div>
   </section>
 
   {# ---------- 7. A closer look ---------- #}
   <section class="jl-gallery" id="gallery" aria-labelledby="jl-gal-title">
     <header class="jl-section-head jl-section-head--light">
-      <p class="jl-eyebrow jl-eyebrow--light">A closer look</p>
-      <h2 class="jl-display jl-display--light" id="jl-gal-title">Glimpses of a <em>masterpiece.</em></h2>
+      <p class="jl-eyebrow jl-eyebrow--light">{{ t.gal_eyebrow }}</p>
+      <h2 class="jl-display jl-display--light" id="jl-gal-title">{{ t.gal_title|em }}</h2>
     </header>
     <ul class="jl-gallery__grid">
-      {% for file, caption in gallery %}
+      {% for photo in lists.gallery %}
         <li class="jl-reveal">
-          <button type="button" class="jl-gallery__item" data-jl-photo="{% static img|add:file|add:'.jpg' %}" data-caption="{{ caption }}" aria-label="Open image: {{ caption }}">
-            <img src="{% static img|add:file|add:'-1200.jpg' %}" alt="{{ caption }}, artistic impression" loading="lazy">
-            <span>{{ caption }}</span>
+          <button type="button" class="jl-gallery__item" data-jl-photo="{{ photo.image|src:1920 }}" data-caption="{{ photo.title }}" aria-label="Open image: {{ photo.title }}">
+            <img src="{{ photo.image|src:1200 }}" alt="{{ photo.image_alt }}" loading="lazy">
+            <span>{{ photo.title }}</span>
           </button>
         </li>
       {% endfor %}
     </ul>
-    <p class="jl-note jl-note--light">All images are artistic impressions.</p>
+    {% if t.gal_note %}<p class="jl-note jl-note--light">{{ t.gal_note }}</p>{% endif %}
   </section>
 
   {# ---------- 8. Location ---------- #}
   <section class="jl-location" id="location" aria-labelledby="jl-loc-title">
     <div class="jl-location__copy">
-      <p class="jl-eyebrow">Location</p>
-      <h2 class="jl-display" id="jl-loc-title">Sector 97, <em>Noida Expressway.</em></h2>
+      <p class="jl-eyebrow">{{ t.loc_eyebrow }}</p>
+      <h2 class="jl-display" id="jl-loc-title">{{ t.loc_title|em }}</h2>
       <ul class="jl-location__list">
-        <li><strong>Noida–Greater Noida Expressway</strong><span>The address</span></li>
-        <li><strong>Central Noida &amp; Sector 18</strong><span>Business &amp; retail</span></li>
-        <li><strong>South Delhi</strong><span>Via Kalindi Kunj &amp; DND</span></li>
-        <li><strong>Greater Noida</strong><span>Along the expressway</span></li>
-        <li><strong>Noida International Airport, Jewar</strong><span>Via Yamuna Expressway</span></li>
+        {% for place in lists.places %}<li><strong>{{ place.title }}</strong><span>{{ place.subtitle }}</span></li>{% endfor %}
       </ul>
-      <button class="jl-button jl-button--dark" type="button" data-jl-open="Get the location map &amp; travel times">Get location map &amp; travel times</button>
+      <button class="jl-button jl-button--dark" type="button" data-jl-open="{{ t.loc_popup }}">{{ t.loc_button }}</button>
     </div>
     <div class="jl-location__map jl-reveal">
-      <iframe title="Map of Sector 97, Noida" src="{{ project.map_embed_url|default:'https://www.google.com/maps?q=Sector+97,+Noida,+Uttar+Pradesh&output=embed' }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      <iframe title="{{ t.loc_map_title }}" src="{{ project.map_embed_url|default:t.loc_map_url }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
     </div>
   </section>
 
   {# ---------- 9. Final call to action ---------- #}
   <section class="jl-final" id="enquire" aria-labelledby="jl-final-title">
-    <img src="{% static img|add:'crown-lounge-1200.jpg' %}" alt="" loading="lazy" aria-hidden="true">
+    {% if imgs.final_bg.image %}<img src="{{ imgs.final_bg.image|src:1200 }}" alt="" loading="lazy" aria-hidden="true">{% endif %}
     <div class="jl-final__inner">
       <div class="jl-final__copy">
-        <p class="jl-eyebrow jl-eyebrow--light">Private preview</p>
-        <h2 class="jl-display jl-display--light" id="jl-final-title">Own an icon <em>in the making.</em></h2>
+        <p class="jl-eyebrow jl-eyebrow--light">{{ t.final_eyebrow }}</p>
+        <h2 class="jl-display jl-display--light" id="jl-final-title">{{ t.final_title|em }}</h2>
         <ul class="jl-final__perks">
-          <li>Brochure &amp; launch price list</li>
-          <li>Floor plans for 3, 4 &amp; 5 BHK</li>
-          <li>Site visit at a time that suits you</li>
+          {% for perk in lists.perks %}<li>{{ perk.title }}</li>{% endfor %}
         </ul>
       </div>
       <div class="jl-final__card">
-        {% include "projects/landing/_lead_form.html" with prefix="final" button="Request a callback" %}
+        {% include "projects/landing/_lead_form.html" with prefix="final" button=t.final_button %}
       </div>
     </div>
   </section>
 
   {# ---------- 10. Disclaimer ---------- #}
   <section class="jl-disclaimer" aria-label="Disclaimer">
-    <p><strong>UP RERA:</strong> {{ project.rera }} · <a href="https://www.up-rera.in/" target="_blank" rel="noopener">up-rera.in</a></p>
-    <p>The Project is registered under the name “M3M J&amp;C” with UPRERA and the Towers 1, 2 &amp; 3 in the Project are named as ‘M3M Jacob &amp; Co Residences’. The “M3M Jacob &amp; Co Residences” are not owned, developed or sold by Jacob &amp; Co Ventures LLC or any of its affiliates and use the ‘Jacob &amp; Co’ name and mark under license from Jacob &amp; Co Ventures LLC, which license is subject to the terms of the License Agreement. Mayfairsky Estates Pvt Ltd. is the promoter and developer executing the Project. All images are artistic impressions. The information here is for general information only and does not constitute a legal offer or invitation to offer.</p>
+    <p><strong>{{ t.legal_label }}</strong> {{ t.legal_rera }} · <a href="{{ t.legal_link_url }}" target="_blank" rel="noopener">{{ t.legal_link_label }}</a></p>
+    <p>{{ t.legal_text }}</p>
   </section>
 </main>
 
@@ -274,12 +244,12 @@
 <dialog class="jl-dialog" aria-labelledby="jl-dialog-title" data-jl-dialog>
   <button class="jl-dialog__close" type="button" aria-label="Close" data-jl-close>×</button>
   <div class="jl-dialog__media" aria-hidden="true">
-    <img src="{% static img|add:'residence-balcony-1200.jpg' %}" alt="" loading="lazy">
-    <p>M3M Jacob &amp; Co. Residences<br><span>Sector 97 · Noida</span></p>
+    {% if imgs.popup_image.image %}<img src="{{ imgs.popup_image.image|src:1200 }}" alt="" loading="lazy">{% endif %}
+    <p>{{ t.popup_name }}<br><span>{{ t.popup_place }}</span></p>
   </div>
   <div class="jl-dialog__body">
-    <p class="jl-card__eyebrow">Instant access</p>
-    <h2 class="jl-card__title" id="jl-dialog-title" data-jl-dialog-title>Unlock the brochure</h2>
+    <p class="jl-card__eyebrow">{{ t.popup_eyebrow }}</p>
+    <h2 class="jl-card__title" id="jl-dialog-title" data-jl-dialog-title>{{ t.popup_title }}</h2>
     {% include "projects/landing/_popup_forms.html" with theme="jl" start="b" %}
   </div>
 </dialog>
@@ -292,8 +262,8 @@
 </dialog>
 
 <div class="jl-sticky" data-jl-sticky>
-  <a href="tel:{{ site.phone_dial }}" class="jl-sticky__call">Call</a>
-  <button type="button" class="jl-button jl-button--gold" data-jl-open="Unlock the brochure">Unlock brochure</button>
+  <a href="tel:{{ site.phone_dial }}" class="jl-sticky__call">{{ t.sticky_call }}</a>
+  <button type="button" class="jl-button jl-button--gold" data-jl-open="{{ t.sticky_popup }}">{{ t.sticky_button }}</button>
 </div>
 {% endwith %}
 {% endblock %}

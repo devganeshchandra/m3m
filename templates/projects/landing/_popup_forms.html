@@ -5,8 +5,8 @@
     b — The Cullinan style: tap a residence first, then name, mobile and email
     c — the Trump Tower style: large residence buttons, then the fields
   Every style uses the current page's theme (pf--jl / pf--cl / pf--tt) and posts the same landing
-  lead. Expects: theme, start ("a", "b" or "c": the style shown first) and popup_units, a list of
-  (value, label, note, interest, project slug).
+  lead. Expects: theme and start ("a", "b" or "c": the style shown first). The residence choices are
+  the page's lists.popup_units; the labels are t.popup_*.
 {% endcomment %}
 <div class="pf pf--{{ theme }}" data-pf data-pf-start="{{ start }}">
   {% for variant in "abc" %}
@@ -17,25 +17,25 @@
       <input type="hidden" name="interest" value="" data-pf-interest>
       <input type="hidden" name="message" value="" data-pf-message>
       <input type="hidden" name="unit" value="" data-pf-unit data-validate="choice"
-        data-required-message="Choose the residence you’re interested in." data-error-id="pf-{{ variant }}-unit-error">
+        data-required-message="{{ t.popup_unit_error }}" data-error-id="pf-{{ variant }}-unit-error">
 
       {% if variant == "b" %}
         <fieldset class="pf-step">
-          <legend><span>1</span> I’m interested in</legend>
+          <legend><span>1</span> {{ t.popup_interest }}</legend>
           <div class="pf-chips">
-            {% for value, label, note, interest, slug in popup_units %}
-              <button type="button" class="pf-chip" aria-pressed="false" data-pf-pick="{{ value }}">
-                <strong>{{ label }}</strong><small>{{ note }}</small>
+            {% for choice in lists.popup_units %}
+              <button type="button" class="pf-chip" aria-pressed="false" data-pf-pick="{{ choice.value }}">
+                <strong>{{ choice.title }}</strong><small>{{ choice.subtitle }}</small>
               </button>
             {% endfor %}
           </div>
           <span class="pf-error" id="pf-b-unit-error" role="alert" hidden></span>
         </fieldset>
       {% elif variant == "c" %}
-        <div class="pf-tiles pf-tiles--{{ popup_units|length }}">
-          {% for value, label, note, interest, slug in popup_units %}
-            <button type="button" class="pf-tile" aria-pressed="false" data-pf-pick="{{ value }}">
-              <strong>{{ label }}</strong><small>{{ note }}</small>
+        <div class="pf-tiles pf-tiles--{{ lists.popup_units|length }}">
+          {% for choice in lists.popup_units %}
+            <button type="button" class="pf-tile" aria-pressed="false" data-pf-pick="{{ choice.value }}">
+              <strong>{{ choice.title }}</strong><small>{{ choice.subtitle }}</small>
             </button>
           {% endfor %}
         </div>
@@ -43,7 +43,7 @@
       {% endif %}
 
       <div class="pf-fields{% if variant == 'b' %} pf-fields--later{% endif %}" data-pf-fields>
-        {% if variant == "b" %}<p class="pf-step__label"><span>2</span> Where should we send it?</p>{% endif %}
+        {% if variant == "b" %}<p class="pf-step__label"><span>2</span> {{ t.popup_send_to }}</p>{% endif %}
         <label class="pf-field">
           <span{% if variant != "a" %} class="visually-hidden"{% endif %}>Full name</span>
           <input name="name" type="text" autocomplete="name" maxlength="80" placeholder="Full name" required
@@ -64,22 +64,22 @@
         </label>
         {% if variant == "a" %}
           <label class="pf-field">
-            <span>Looking for</span>
+            <span>{{ t.popup_looking_for }}</span>
             <select data-pf-select>
-              <option value="">Choose residence</option>
-              {% for value, label, note, interest, slug in popup_units %}<option value="{{ value }}">{{ label }} · {{ note }}</option>{% endfor %}
+              <option value="">{{ t.popup_choose }}</option>
+              {% for choice in lists.popup_units %}<option value="{{ choice.value }}">{{ choice.title }} · {{ choice.subtitle }}</option>{% endfor %}
             </select>
             <span class="pf-error" id="pf-a-unit-error" role="alert" hidden></span>
           </label>
         {% endif %}
         <button class="pf-submit" type="submit">
-          <span>Send me the details</span>
+          <span>{{ t.popup_submit }}</span>
           <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
       <p class="pf-status" role="status" aria-live="polite" data-form-status></p>
-      <p class="pf-note">By submitting, you agree that M3M India may call, WhatsApp or email you about this project.</p>
+      <p class="pf-note">{{ t.popup_note }}</p>
     </form>
   {% endfor %}
 </div>
-<script type="application/json" data-pf-units>{"units": [{% for value, label, note, interest, slug in popup_units %}{"value": "{{ value|escapejs }}", "label": "{{ label|escapejs }}", "interest": "{{ interest|escapejs }}", "project": "{{ slug|escapejs }}"}{% if not forloop.last %}, {% endif %}{% endfor %}]}</script>
+<script type="application/json" data-pf-units>{"units": [{% for choice in lists.popup_units %}{"value": "{{ choice.value|escapejs }}", "label": "{{ choice.title|escapejs }}", "interest": "{{ choice.group|escapejs }}", "project": "{{ choice.link|escapejs }}"}{% if not forloop.last %}, {% endif %}{% endfor %}]}</script>

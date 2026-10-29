@@ -1,25 +1,25 @@
 {% load static %}
 {% comment %}
   The header on project ad landing pages, in place of the site menu: the project name, links to
-  the page's own sections, a call link and an enquiry button. Expects: theme (jl / cl / tt),
-  brand (the project name), nav (list of (section id, label)) and open_attr (the attribute the
-  page's script uses to open its lead popup, e.g. "data-jl-open").
+  the page's own sections, a call link and an enquiry button. Expects: theme (jl / cl / tt) and
+  open_attr (the attribute the page's script uses to open its lead popup, e.g. "data-jl-open").
+  The name, links and labels come from the page's landing content (t.brand, lists.nav, t.nav_*).
 {% endcomment %}
 <header class="lnav lnav--{{ theme }}" data-lnav>
-  <a class="lnav__brand" href="#main-content" aria-label="{{ brand }}, back to top">
+  <a class="lnav__brand" href="#main-content" aria-label="{{ t.brand }}, back to top">
     <small>M3M</small>
-    <span>{{ brand }}</span>
+    <span>{{ t.brand }}</span>
   </a>
   <nav class="lnav__links" id="lnav-links" aria-label="On this page">
-    {% for anchor, label in nav %}<a href="#{{ anchor }}">{{ label }}</a>{% endfor %}
-    <a class="lnav__menu-cta" href="#enquire">Enquire</a>
+    {% for link in lists.nav %}<a href="#{{ link.link }}">{{ link.title }}</a>{% endfor %}
+    <a class="lnav__menu-cta" href="#enquire">{{ t.nav_enquire }}</a>
   </nav>
   <div class="lnav__actions">
     <a class="lnav__call" href="tel:{{ site.phone_dial }}" aria-label="Call {{ site.phone_display }}">
       <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
       <span>{{ site.phone_display }}</span>
     </a>
-    <button class="lnav__cta" type="button" {{ open_attr }}="Request a callback">Enquire now</button>
+    <button class="lnav__cta" type="button" {{ open_attr }}="{{ t.nav_cta_popup }}">{{ t.nav_cta }}</button>
     <button class="lnav__toggle" type="button" aria-expanded="false" aria-controls="lnav-links" data-lnav-toggle>
       <span class="visually-hidden">Menu</span><i></i><i></i>
     </button>

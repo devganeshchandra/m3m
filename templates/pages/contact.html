@@ -1,4 +1,5 @@
 {% extends "inner_base.html" %}
+{% load site_tags %}
 
 {% block hero_actions %}
 <div class="inner-hero__actions">
@@ -47,10 +48,28 @@
           </li>
         {% endif %}
       </ul>
+      {% with steps=inner.next_step_list %}
+        {% if steps %}
+          <ol class="contact-steps" aria-label="What happens next">
+            {% for title, text in steps %}
+              <li class="contact-steps__item">
+                <span class="contact-steps__number" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
+                <strong>{{ title }}</strong>
+                {% if text %}<span>{{ text }}</span>{% endif %}
+              </li>
+            {% endfor %}
+          </ol>
+        {% endif %}
+      {% endwith %}
+      {% if inner.info_image %}
+        <figure class="contact-picture contact-picture--info">
+          {% picture inner.info_image sizes="(max-width: 900px) 92vw, 40vw" alt=inner.info_image_alt %}
+        </figure>
+      {% endif %}
     </div>
 
     <div class="contact-form-card">
-      <h2 class="contact-form-card__title">Request a call back</h2>
+      <h2 class="contact-form-card__title">Request a callback</h2>
       <p class="contact-form-card__intro">Tell us a little about what you’re looking for. Fields marked * are required.</p>
       <form class="contact-form" novalidate data-lead-form action="{% url 'submit_enquiry' %}" method="post">
         {% include "partials/form_tracking.html" with source="contact" %}
@@ -104,7 +123,7 @@
         <span class="contact-field__error" id="contact-consent-error" hidden></span>
         <div aria-live="polite" class="contact-form__status" role="status" data-form-status></div>
         <button class="ip-button ip-button--navy ip-button--wide" type="submit">
-          <span>Request a call back</span>
+          <span>Request a callback</span>
           {% include "icons/arrow.html" %}
         </button>
       </form>
@@ -133,6 +152,11 @@
     <div>
       <p class="ip-label"><span aria-hidden="true"></span>Good to know</p>
       <h2 class="ip-heading" id="faq-title">Frequently <em>asked.</em></h2>
+      {% if inner.faq_image %}
+        <figure class="contact-picture contact-picture--faq">
+          {% picture inner.faq_image sizes="(max-width: 900px) 92vw, 36vw" alt=inner.faq_image_alt %}
+        </figure>
+      {% endif %}
     </div>
     <div class="faq__list">
       {% for faq in faqs %}

@@ -1,13 +1,19 @@
+from django import forms
+from django.db import models
 from django.contrib import admin
-from django.utils.html import format_html
+from django.utils.html import format_html, format_html_join
 from unfold.admin import ModelAdmin, StackedInline, TabularInline
 
 from core.admin import SingletonAdmin
+from projects import landing
 from projects.models import (
     BillionaireBlockPage,
     BillionaireItem,
-    BillionaireNews,
     BillionaireResidence,
+    LandingImage,
+    LandingItem,
+    LandingPage,
+    LandingText,
     Project,
     ProjectConfiguration,
     ProjectHighlight,
@@ -88,109 +94,39 @@ class BillionaireResidenceInline(StackedInline):
     fields = [("name", "order", "is_published"), "tagline", ("size", "configuration"), "features", ("image", "image_alt"), "floor_plan"]
 
 
-class BillionaireNewsInline(StackedInline):
-    model = BillionaireNews
-    extra = 0
-    tab = True
-    fields = [
-        ("title", "tag"),
-        ("publication", "published_on"),
-        "summary",
-        "body",
-        "key_points",
-        ("url", "is_press_release"),
-        ("order", "is_published"),
-    ]
-
-
 @admin.register(BillionaireBlockPage)
 class BillionaireBlockPageAdmin(SingletonAdmin):
-    inlines = [BillionaireNewsInline, BillionaireResidenceInline]
+    # Only the fields the live page and homepage teaser use. Every other text, image and list on
+    # /billionaire-block is under “Ad landing pages → Billionaire Block”.
+    inlines = [BillionaireResidenceInline]
     fieldsets = [
         (
             "Hero (top of the page)",
-            {"fields": ["hero_video", "hero_image", "hero_image_alt", "eyebrow", "title", "tagline"]},
+            {
+                "fields": ["hero_video", "hero_image", "hero_image_alt", "eyebrow", "title", "tagline"],
+                "description": "Every other text, picture and list on the page is under "
+                "“Ad landing pages → Billionaire Block”. The “Residence types” tab only fills the "
+                "“Preferred residence” choices in the viewing form.",
+            },
         ),
         (
             "Homepage teaser",
             {
-                "fields": ["teaser_label", "teaser_heading", "teaser_text", "teaser_button"],
-                "description": "The Billionaire Block band on the homepage, just after the projects section. "
-                "It also uses the hero video and images, and the “About the project” figures.",
-            },
-        ),
-        (
-            "About the project (just below the hero)",
-            {"fields": ["about_label", "about_heading", "about_text", "about_image", "about_image_2", "about_facts"]},
-        ),
-        (
-            "What we are building",
-            {
                 "fields": [
-                    "building_label",
-                    "building_heading",
-                    "building_text",
+                    "teaser_label",
+                    "teaser_heading",
+                    "teaser_text",
+                    "teaser_button",
+                    "about_facts",
+                    "about_image",
                     "building_image",
                     "building_image_2",
-                    "building_points",
-                    "building_note",
-                ]
-            },
-        ),
-        (
-            "News (just below the hero)",
-            {
-                "fields": ["news_label", "news_heading", "news_intro"],
-                "description": "The stories are in the “News” tab at the top.",
-            },
-        ),
-        ("Manifesto", {"fields": ["manifesto_heading", "manifesto_text"]}),
-        (
-            "Architecture & design",
-            {
-                "fields": [
-                    "architecture_label",
-                    "architecture_heading",
-                    "architecture_text",
-                    "architecture_image",
-                    ("credit_1_label", "credit_1_value"),
-                    ("credit_2_label", "credit_2_value"),
-                    ("credit_3_label", "credit_3_value"),
-                ]
-            },
-        ),
-        (
-            "Section headings",
-            {
-                "fields": [
-                    ("residences_label", "residences_heading"),
-                    ("features_label", "features_heading"),
-                    "features_intro",
-                    ("club_label", "club_heading"),
-                    "club_intro",
-                    ("amenities_label", "amenities_heading"),
-                    "amenities_intro",
-                    "amenities_indoor_heading",
-                    "amenities_wellness_heading",
-                    "amenities_leisure_heading",
-                    ("services_label", "services_heading"),
-                    "services_intro",
-                    ("security_label", "security_heading"),
-                    "security_text",
-                    "security_image",
-                    ("gallery_label", "gallery_heading"),
-                    ("specs_label", "specs_heading"),
-                    "specs_intro",
-                    "specs_image",
                 ],
-                "description": "The items in each list are under “Billionaire Block content” in the menu.",
+                "description": "The Billionaire Block band on the homepage, just after the projects section. "
+                "It also uses the hero video and image. The three smaller pictures around it are "
+                "About image, Building image and Building image 2.",
             },
         ),
-        (
-            "Location",
-            {"fields": ["location_label", "location_heading", "location_text", "location_note", "map_embed_url"]},
-        ),
-        ("Developer legacy", {"fields": ["legacy_label", "legacy_heading", "legacy_text"]}),
         (
             "Private viewing form",
             {
@@ -218,3 +154,141 @@ class BillionaireItemAdmin(ModelAdmin):
     list_filter = ["section", "is_published"]
     search_fields = ["title", "text"]
     fields = ["section", "title", "value", "text", ("image", "image_alt"), ("order", "is_published")]
+
+
+def _thumbnail(image):
+    if not image:
+        return ""
+    return format_html('<img src="{}" style="width:72px;height:48px;object-fit:cover;border-radius:4px">', image.url)
+
+
+def _list_field(slug=None):
+    return forms.ChoiceField(label="List", choices=[("", "Choose a list")] + landing.list_choices(slug))
+
+
+class LandingTextInline(TabularInline):
+    model = LandingText
+    extra = 0
+    tab = True
+    fields = ["section", "label", "value"]
+    readonly_fields = ["section", "label"]
+    can_delete = False
+    formfield_overrides = {models.TextField: {"widget": forms.Textarea(attrs={"rows": 2})}}
+
+    def has_add_permission(self, request, obj=None):
+        return False  # Each text is a fixed place on the page, created by projects/landing.py.
+
+
+class LandingImageInline(TabularInline):
+    model = LandingImage
+    extra = 0
+    tab = True
+    fields = ["section", "label", "preview", "image", "alt"]
+    readonly_fields = ["section", "label", "preview"]
+    can_delete = False
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    @admin.display(description="Now")
+    def preview(self, obj):
+        return _thumbnail(obj.image)
+
+
+class LandingItemInline(StackedInline):
+    model = LandingItem
+    extra = 0
+    tab = True
+    collapsible = True
+    verbose_name_plural = "Lists"
+    fields = [
+        ("list_key", "order", "is_published"),
+        ("title", "subtitle"),
+        ("value", "group", "link"),
+        "text",
+        ("image", "image_alt"),
+    ]
+
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        formset.form.base_fields["list_key"] = _list_field(obj.slug if obj else None)
+        return formset
+
+
+@admin.register(LandingPage)
+class LandingPageAdmin(ModelAdmin):
+    list_display = ["name", "slug"]
+    inlines = [LandingTextInline, LandingImageInline, LandingItemInline]
+
+    def get_fieldsets(self, request, obj=None):
+        fieldsets = [
+            (
+                None,
+                {
+                    "fields": ["name"],
+                    "description": "Every text, picture and list on this page is in the tabs above. "
+                    "Put *stars* around words in a heading to show them in italics.",
+                },
+            )
+        ]
+        if obj and obj.slug != "billionaire-block":  # Its title and description are on “Billionaire Block page”.
+            fieldsets.append(
+                (
+                    "Search engines & sharing",
+                    {"fields": ["seo_title", "seo_description", "share_title", "share_description", "share_image"]},
+                )
+            )
+        if obj:
+            fieldsets.append(
+                (
+                    "How each list uses its fields",
+                    {
+                        "fields": [],
+                        "classes": ["collapse"],
+                        "description": format_html_join(
+                            "", "<p><strong>{}</strong>: {}</p>", landing.list_help(obj.slug)
+                        ),
+                    },
+                )
+            )
+        return fieldsets
+
+    def has_add_permission(self, request):
+        return False  # A landing page needs its own template, so pages are added in code.
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+class LandingItemForm(forms.ModelForm):
+    list_key = _list_field()
+
+    class Meta:
+        model = LandingItem
+        fields = "__all__"
+
+
+@admin.register(LandingItem)
+class LandingItemAdmin(ModelAdmin):
+    form = LandingItemForm
+    list_display = ["thumbnail", "title", "list_name", "page", "order", "is_published"]
+    list_display_links = ["thumbnail", "title"]
+    list_editable = ["order", "is_published"]
+    list_filter = ["page", "list_key", "is_published"]
+    search_fields = ["title", "subtitle", "text"]
+    fields = [
+        ("page", "list_key"),
+        ("title", "subtitle"),
+        ("value", "group", "link"),
+        "text",
+        ("image", "image_alt"),
+        ("order", "is_published"),
+    ]
+
+    @admin.display(description="")
+    def thumbnail(self, obj):
+        return _thumbnail(obj.image)
+
+    @admin.display(description="List", ordering="list_key")
+    def list_name(self, obj):
+        return dict(landing.list_choices(obj.page.slug)).get(obj.list_key, obj.list_key)

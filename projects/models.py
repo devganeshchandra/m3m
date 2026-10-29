@@ -361,7 +361,7 @@ class BillionaireBlockPage(SingletonModel):
     brochure = models.FileField(upload_to="billionaire-block/", blank=True, help_text="PDF. Visitors share their name and phone first.")
     brochure_heading = models.CharField(max_length=120, default="The private brochure")
     brochure_text = models.CharField(
-        max_length=200, default="Share your name and number and the brochure is yours. A copy is also sent to you on WhatsApp."
+        max_length=200, default="Share your name and number and the brochure is yours."
     )
 
     # Footer
@@ -517,3 +517,102 @@ class BillionaireNews(models.Model):
     @property
     def key_point_list(self):
         return [line.strip() for line in self.key_points.splitlines() if line.strip()]
+
+
+class LandingPage(models.Model):
+    """The editable content of a custom landing page: its texts, single images and lists.
+
+    The page design lives in its template; every word and picture on it is a row here, so the
+    content team can change them in the admin. Rows are created by projects/landing.py.
+    """
+
+    slug = models.SlugField(unique=True, max_length=120, editable=False)
+    name = models.CharField(max_length=120)
+    seo_title = models.CharField("Browser & Google title", max_length=160, blank=True)
+    seo_description = models.CharField("Google description", max_length=300, blank=True)
+    share_title = models.CharField(max_length=160, blank=True, help_text="Title when the link is shared, e.g. on WhatsApp.")
+    share_description = models.CharField(max_length=300, blank=True)
+    share_image = ResizingImageField(upload_to="landing/", blank=True, help_text="Picture when the link is shared.")
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Landing page"
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        if self.slug == "billionaire-block":
+            return reverse("projects:billionaire_block")
+        return reverse("projects:detail", args=[self.slug])
+
+
+class LandingText(models.Model):
+    """One heading, paragraph, button label or note on a landing page."""
+
+    page = models.ForeignKey(LandingPage, related_name="texts", on_delete=models.CASCADE)
+    section = models.CharField(max_length=80)
+    key = models.SlugField(max_length=60)
+    label = models.CharField(max_length=160)
+    value = models.TextField(
+        "Text",
+        blank=True,
+        help_text="Put *stars* around words to show them in italics. {rera} is replaced by the RERA number.",
+    )
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order", "id"]
+        constraints = [models.UniqueConstraint(fields=["page", "key"], name="unique_landing_text")]
+        verbose_name = "Text"
+
+    def __str__(self):
+        return f"{self.section}: {self.label}"
+
+
+class LandingImage(models.Model):
+    """One fixed picture on a landing page, e.g. a section background."""
+
+    page = models.ForeignKey(LandingPage, related_name="images", on_delete=models.CASCADE)
+    section = models.CharField(max_length=80)
+    key = models.SlugField(max_length=60)
+    label = models.CharField(max_length=160)
+    image = ResizingImageField(upload_to="landing/", blank=True, help_text="Landscape, at least 1600px wide.")
+    alt = models.CharField("Description", max_length=240, blank=True, help_text="For screen readers and Google.")
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order", "id"]
+        constraints = [models.UniqueConstraint(fields=["page", "key"], name="unique_landing_image")]
+        verbose_name = "Image"
+
+    def __str__(self):
+        return f"{self.section}: {self.label}"
+
+
+class LandingItem(models.Model):
+    """One entry in a list on a landing page (a slide, an amenity, a question…); `list_key` decides which."""
+
+    page = models.ForeignKey(LandingPage, related_name="items", on_delete=models.CASCADE)
+    list_key = models.CharField("List", max_length=40)
+    title = models.CharField(max_length=200)
+    subtitle = models.CharField(max_length=200, blank=True)
+    value = models.CharField(max_length=120, blank=True)
+    group = models.CharField(max_length=80, blank=True)
+    text = models.TextField(blank=True)
+    link = models.CharField(max_length=500, blank=True)
+    image = ResizingImageField(upload_to="landing/", blank=True)
+    image_alt = models.CharField("Image description", max_length=240, blank=True)
+    order = models.PositiveIntegerField(default=0, help_text="Lower numbers appear first.")
+    is_published = models.BooleanField("Show on site", default=True)
+
+    class Meta:
+        ordering = ["list_key", "order", "id"]
+        verbose_name = "List item"
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def lines(self):
+        return [line.strip() for line in self.text.splitlines() if line.strip()]

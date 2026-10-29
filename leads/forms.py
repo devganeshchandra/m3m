@@ -55,6 +55,8 @@ class EnquiryForm(forms.Form):
         elif source != Enquiry.Source.GUIDED:
             if message := validation.validate_name(data.get("name")):
                 errors["name"] = message
+        if source in Enquiry.BANNER_FORMS and data.get("interest") not in Enquiry.Interest.values:
+            errors["interest"] = "Choose residential or commercial."
 
         if source == Enquiry.Source.GUIDED:
             if data.get("interest") not in Enquiry.Interest.values:
@@ -75,7 +77,13 @@ class EnquiryForm(forms.Form):
                 errors["email"] = message
         # These forms have no consent checkbox: sending them is the request to be contacted.
         # The landing page states the contact terms beside its submit button.
-        no_consent = {Enquiry.Source.HERO, Enquiry.Source.BILLIONAIRE, Enquiry.Source.BROCHURE, Enquiry.Source.LANDING}
+        no_consent = {
+            Enquiry.Source.HERO,
+            Enquiry.Source.BILLIONAIRE,
+            Enquiry.Source.BROCHURE,
+            Enquiry.Source.LANDING,
+            *Enquiry.BANNER_FORMS,
+        }
         if source not in no_consent and not data.get("consent"):
             errors["consent"] = GUIDED_CONSENT_ERROR if source == Enquiry.Source.GUIDED else CONSENT_ERROR
 

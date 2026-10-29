@@ -398,6 +398,326 @@
     schedule();
   }
 
+  /* ---------- Animated headings: shared letter splitting ---------- */
+
+  // Puts each letter of an element in its own span, keeping words unbroken.
+  // Screen readers read a plain copy of the text instead of the letters.
+  function splitLetters(element, className, eachLetter) {
+    var text = element.textContent.trim();
+    var copy = document.createElement("span");
+    copy.className = "visually-hidden";
+    copy.textContent = text;
+    var letters = document.createElement("span");
+    letters.setAttribute("aria-hidden", "true");
+    text.split(/(\s+)/).forEach(function (part) {
+      if (!part) return;
+      if (/^\s+$/.test(part)) {
+        letters.appendChild(document.createTextNode(" "));
+        return;
+      }
+      var word = document.createElement("span");
+      word.className = "hero-word";
+      Array.from(part).forEach(function (letter) {
+        var char = document.createElement("span");
+        char.className = className;
+        char.textContent = letter;
+        eachLetter(char);
+        word.appendChild(char);
+      });
+      letters.appendChild(word);
+    });
+    element.textContent = "";
+    element.appendChild(copy);
+    element.appendChild(letters);
+  }
+
+  /* ---------- Homepage headline: letter animation and mouse tilt ---------- */
+
+  function initHeroHeadline() {
+    var headline = $("[data-hero-headline]");
+    if (!headline || reduceMotion) return;
+    var lines = $all("[data-hero-line]", headline);
+    var start = 0.35;
+    var step = 0.045;
+    var count = 0;
+    var waveStart = 0;
+
+    lines.forEach(function (line, lineIndex) {
+      if (lineIndex > 0) start += 0.25;
+      splitLetters(line, "hero-char", function (char) {
+        char.style.setProperty("--d", (start + count * step).toFixed(3) + "s");
+        char.style.setProperty("--s", (count * 0.08).toFixed(2) + "s");
+        char.dataset.index = count;
+        count += 1;
+      });
+    });
+
+    // The wave starts once every letter has landed, then rolls left to right.
+    waveStart = start + count * step + 1.4;
+    $all(".hero-char", headline).forEach(function (char) {
+      char.style.setProperty("--w", (waveStart + Number(char.dataset.index) * 0.07).toFixed(2) + "s");
+    });
+
+    var lastLine = lines[lines.length - 1];
+    var flourish = $(".hero-flourish", headline);
+    function sizeFlourish() {
+      if (flourish && lastLine) headline.style.setProperty("--flourish-width", lastLine.offsetWidth + "px");
+    }
+    headline.style.setProperty("--flourish-delay", (start + count * step + 0.6).toFixed(2) + "s");
+    sizeFlourish();
+    window.addEventListener("resize", sizeFlourish);
+    if (document.fonts) document.fonts.ready.then(sizeFlourish);
+
+    // The headline leans gently towards the pointer.
+    var hero = headline.closest(".phase-one-hero");
+    if (!hero || !window.matchMedia("(pointer: fine)").matches) return;
+    hero.addEventListener("pointermove", function (event) {
+      var box = hero.getBoundingClientRect();
+      var x = (event.clientX - box.left) / box.width - 0.5;
+      var y = (event.clientY - box.top) / box.height - 0.5;
+      headline.style.setProperty("--hero-ry", (x * 10).toFixed(2) + "deg");
+      headline.style.setProperty("--hero-rx", (y * -8).toFixed(2) + "deg");
+    });
+    hero.addEventListener("pointerleave", function () {
+      headline.style.setProperty("--hero-ry", "0deg");
+      headline.style.setProperty("--hero-rx", "0deg");
+    });
+  }
+
+  /* ---------- Section headings that slide up into view ---------- */
+
+  function initTitleReveal() {
+    var titles = $all("[data-title-reveal]");
+    if (!titles.length) return;
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+      titles.forEach(function (title) {
+        title.classList.add("is-in");
+      });
+      return;
+    }
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-in");
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "0px 0px -10% 0px" },
+    );
+    titles.forEach(function (title) {
+      observer.observe(title);
+    });
+  }
+
+  /* ---------- Enquiry form heading: letters quiver like a plucked string ---------- */
+
+  // Used by the banner form heading, the homepage projects heading and the
+  // homepage project names. Every heading inside one [data-quiver-box] quivers
+  // together, letter after letter. A box quivers when it comes into view, every
+  // few seconds while it stays in view (boxes take turns), and on hover.
+  function initQuiverTitle() {
+    if (reduceMotion) return;
+    var boxes = [];
+    $all("[data-quiver-title]").forEach(function (title) {
+      var box = title.closest("[data-quiver-box]") || title.parentElement;
+      if (boxes.indexOf(box) < 0) boxes.push(box);
+    });
+    boxes.forEach(function (box, order) {
+      var titles = $all("[data-quiver-title]", box);
+      var index = 0;
+      titles.forEach(function (title) {
+        splitLetters(title, "quiver-char", function (char) {
+          char.style.setProperty("--q", (index * 0.035).toFixed(3) + "s");
+          index += 1;
+        });
+      });
+
+      var busy = false;
+      var visible = !("IntersectionObserver" in window);
+      function quiver() {
+        if (busy || document.hidden) return;
+        busy = true;
+        box.classList.remove("is-quivering");
+        void box.offsetWidth; // Restart the animation.
+        box.classList.add("is-quivering");
+        setTimeout(function () {
+          box.classList.remove("is-quivering");
+          busy = false;
+        }, 1100 + index * 35);
+      }
+
+      if (!visible) {
+        new IntersectionObserver(
+          function (entries) {
+            var nowVisible = entries[0].isIntersecting;
+            if (nowVisible && !visible) setTimeout(quiver, 1200 + (order % 4) * 350);
+            visible = nowVisible;
+          },
+          { threshold: 0.4 },
+        ).observe(titles[0]);
+      }
+      setTimeout(function () {
+        setInterval(function () {
+          if (visible) quiver();
+        }, 5000);
+      }, (order % 4) * 600);
+      box.addEventListener("pointerenter", quiver);
+    });
+  }
+
+
+  /* ---------- "Interested in" chips: residential or commercial ---------- */
+
+  function initInterestPick() {
+    $all("[data-interest-pick]").forEach(function (group) {
+      var input = $('input[name="interest"]', group);
+      var chips = $all("[data-interest-value]", group);
+      function choose(value) {
+        input.value = value;
+        chips.forEach(function (chip) {
+          chip.setAttribute("aria-pressed", chip.dataset.interestValue === value ? "true" : "false");
+        });
+      }
+      chips.forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          choose(chip.dataset.interestValue);
+          setError(input, "");
+        });
+      });
+      // A hidden field keeps its value through form.reset(), so clear it by hand.
+      var form = group.closest("form");
+      if (form) {
+        form.addEventListener("reset", function () {
+          choose("");
+        });
+      }
+    });
+  }
+
+  /* ---------- Banner form button: leans towards the pointer, ripples on click ---------- */
+
+  function initFancyButton() {
+    if (reduceMotion) return;
+    $all("[data-fancy-button]").forEach(function (button) {
+      if (window.matchMedia("(pointer: fine)").matches) {
+        button.addEventListener("pointermove", function (event) {
+          var box = button.getBoundingClientRect();
+          var x = (event.clientX - box.left) / box.width - 0.5;
+          var y = (event.clientY - box.top) / box.height - 0.5;
+          button.style.setProperty("--pull-x", (x * 10).toFixed(1) + "px");
+          button.style.setProperty("--pull-y", (y * 6).toFixed(1) + "px");
+        });
+        button.addEventListener("pointerleave", function () {
+          button.style.setProperty("--pull-x", "0px");
+          button.style.setProperty("--pull-y", "0px");
+        });
+      }
+      button.addEventListener("pointerdown", function (event) {
+        var box = button.getBoundingClientRect();
+        var ripple = document.createElement("span");
+        ripple.className = "submit-ripple";
+        ripple.setAttribute("aria-hidden", "true");
+        ripple.style.left = event.clientX - box.left + "px";
+        ripple.style.top = event.clientY - box.top + "px";
+        button.appendChild(ripple);
+        ripple.addEventListener("animationend", function () {
+          ripple.remove();
+        });
+      });
+    });
+  }
+
+  /* ---------- Homepage gold dust ---------- */
+
+  function initHeroSparkles() {
+    var canvas = $("[data-hero-sparkles]");
+    if (!canvas || reduceMotion || !canvas.getContext) return;
+    var hero = canvas.parentElement;
+    var context = canvas.getContext("2d");
+    var ratio = Math.min(window.devicePixelRatio || 1, 2);
+    var width = 0;
+    var height = 0;
+    var specks = [];
+    var pointer = { x: -9999, y: -9999 };
+    var visible = true;
+    var frame = null;
+
+    function speck(anywhere) {
+      return {
+        x: Math.random() * width,
+        y: anywhere ? Math.random() * height : height + 10,
+        size: 0.6 + Math.random() * 2.2,
+        rise: 0.15 + Math.random() * 0.55,
+        drift: Math.random() * Math.PI * 2,
+        twinkle: Math.random() * Math.PI * 2,
+        hue: 38 + Math.random() * 14,
+      };
+    }
+
+    function resize() {
+      width = hero.offsetWidth;
+      height = hero.offsetHeight;
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      var total = Math.round(Math.min(110, width / 14));
+      specks = [];
+      for (var i = 0; i < total; i += 1) specks.push(speck(true));
+    }
+
+    function draw() {
+      context.clearRect(0, 0, width, height);
+      specks.forEach(function (s, i) {
+        s.y -= s.rise;
+        s.drift += 0.01;
+        s.twinkle += 0.05;
+        s.x += Math.sin(s.drift) * 0.3;
+        // Specks near the pointer are blown softly aside.
+        var dx = s.x - pointer.x;
+        var dy = s.y - pointer.y;
+        var distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance > 0 && distance < 120) {
+          s.x += (dx / distance) * (120 - distance) * 0.04;
+          s.y += (dy / distance) * (120 - distance) * 0.04;
+        }
+        if (s.y < -10 || s.x < -20 || s.x > width + 20) specks[i] = speck(false);
+        var alpha = 0.35 + Math.sin(s.twinkle) * 0.35;
+        var glow = context.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.size * 4);
+        glow.addColorStop(0, "hsla(" + s.hue + ", 90%, 78%, " + alpha + ")");
+        glow.addColorStop(1, "hsla(" + s.hue + ", 90%, 60%, 0)");
+        context.fillStyle = glow;
+        context.beginPath();
+        context.arc(s.x, s.y, s.size * 4, 0, Math.PI * 2);
+        context.fill();
+      });
+      frame = visible && !document.hidden ? requestAnimationFrame(draw) : null;
+    }
+
+    function play() {
+      if (!frame && visible && !document.hidden) frame = requestAnimationFrame(draw);
+    }
+
+    resize();
+    window.addEventListener("resize", resize);
+    hero.addEventListener("pointermove", function (event) {
+      var box = hero.getBoundingClientRect();
+      pointer.x = event.clientX - box.left;
+      pointer.y = event.clientY - box.top;
+    });
+    hero.addEventListener("pointerleave", function () {
+      pointer.x = pointer.y = -9999;
+    });
+    document.addEventListener("visibilitychange", play);
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        visible = entries[0].isIntersecting;
+        play();
+      }).observe(hero);
+    }
+    play();
+  }
+
   /* ---------- Our Journey values ---------- */
 
   function initJourney() {
@@ -806,24 +1126,57 @@
     });
   }
 
-  // Whole-number figures count up the first time they scroll into view.
+  // Figures count up the first time they scroll into view. A figure may carry a
+  // symbol before it and a unit after it ("₹1,839", "2,279K+", "4.5M"); the
+  // number keeps its own commas and decimals. Text like "Jul 2026" is left alone.
+  var COUNT_PATTERN = /^([₹$+~]*\s?)(\d[\d,]*(?:\.\d+)?)(\s?[^\d\s][^\d]*)?$/;
+
   function initCountUp() {
     var figures = $all("[data-count-up]").filter(function (figure) {
-      return /^\d+$/.test(figure.textContent.trim());
+      return COUNT_PATTERN.test(figure.textContent.trim());
     });
     if (!figures.length || reduceMotion || !("IntersectionObserver" in window)) return;
 
-    function run(figure) {
-      var target = Number(figure.textContent.trim());
-      // Years count over their last few years; other figures count from zero.
-      var start = target >= 1900 ? target - 16 : 0;
+    function parse(figure) {
+      var match = figure.textContent.trim().match(COUNT_PATTERN);
+      var digits = match[2];
+      var target = Number(digits.replace(/,/g, ""));
+      var plainYear = !match[1] && !match[3] && digits.indexOf(",") < 0 && target >= 1900 && target < 2100;
+      return {
+        before: match[1],
+        after: match[3] || "",
+        target: target,
+        decimals: (digits.split(".")[1] || "").length,
+        // Indian grouping (12,34,567) is kept when the figure is written that way.
+        locale: /\d,\d\d,\d{3}/.test(digits) ? "en-IN" : "en-US",
+        commas: digits.indexOf(",") >= 0,
+        // Years count over their last few years; other figures count from zero.
+        start: plainYear ? target - 16 : 0,
+      };
+    }
+
+    function format(figure, value) {
+      var text = figure.commas
+        ? value.toLocaleString(figure.locale, { minimumFractionDigits: figure.decimals, maximumFractionDigits: figure.decimals })
+        : value.toFixed(figure.decimals);
+      return figure.before + text + figure.after;
+    }
+
+    function run(element, figure) {
       var began = null;
+      element.classList.add("is-counting");
       function frame(time) {
         began = began || time;
-        var progress = Math.min((time - began) / 1600, 1);
-        var eased = 1 - Math.pow(1 - progress, 3);
-        figure.textContent = String(Math.round(start + (target - start) * eased));
-        if (progress < 1) requestAnimationFrame(frame);
+        var progress = Math.min((time - began) / 2000, 1);
+        var eased = 1 - Math.pow(1 - progress, 4);
+        element.textContent = format(figure, figure.start + (figure.target - figure.start) * eased);
+        if (progress < 1) {
+          requestAnimationFrame(frame);
+          return;
+        }
+        element.textContent = format(figure, figure.target);
+        element.classList.remove("is-counting");
+        element.classList.add("is-counted");
       }
       requestAnimationFrame(frame);
     }
@@ -832,11 +1185,16 @@
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
         observer.unobserve(entry.target);
-        run(entry.target);
+        setTimeout(run, entry.target._countDelay, entry.target, entry.target._countUp);
       });
     }, { threshold: 0.6 });
-    figures.forEach(function (figure) {
-      observer.observe(figure);
+    figures.forEach(function (element, index) {
+      element._countUp = parse(element);
+      // Hold the finished width so the line does not jump while digits change.
+      element.style.minWidth = element.offsetWidth + "px";
+      element._countDelay = (index % 3) * 150;
+      element.textContent = format(element._countUp, element._countUp.start);
+      observer.observe(element);
     });
   }
 
@@ -866,6 +1224,12 @@
     initAnchorLinks();
     initCursor();
     initCarousel();
+    initHeroHeadline();
+    initHeroSparkles();
+    initTitleReveal();
+    initQuiverTitle();
+    initInterestPick();
+    initFancyButton();
     initJourney();
     initPress();
     initEnquiryDialog();

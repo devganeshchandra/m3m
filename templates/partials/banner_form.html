@@ -1,0 +1,49 @@
+{# The short enquiry form on the right of a menu-page banner. Title and intro come from the page in the admin. #}
+<aside class="hero-enquiry inner-hero__aside" aria-labelledby="banner-form-title" data-quiver-box>
+  <p class="hero-enquiry__eyebrow">Personal guidance</p>
+  <h2 class="hero-enquiry__title" id="banner-form-title" data-quiver-title>{{ inner.form_title }}</h2>
+  {% if inner.form_intro %}<p class="hero-enquiry__intro">{{ inner.form_intro }}</p>{% endif %}
+
+  <form class="hero-enquiry__form" novalidate data-lead-form action="{% url 'submit_enquiry' %}" method="post">
+    {% include "partials/form_tracking.html" with source=inner.form_source %}
+    <fieldset class="interest-pick" data-interest-pick>
+      <legend>Interested in</legend>
+      <input type="hidden" name="interest" value="" data-validate="interest" data-error-id="banner-interest-error" data-no-blur-validate>
+      <div class="interest-pick__chips">
+        <button type="button" class="interest-pick__chip" aria-pressed="false" data-interest-value="residential">
+          <strong>Residential</strong><small>Homes &amp; residences</small>
+        </button>
+        <button type="button" class="interest-pick__chip" aria-pressed="false" data-interest-value="commercial">
+          <strong>Commercial</strong><small>Retail &amp; offices</small>
+        </button>
+      </div>
+      <span class="hero-enquiry__error" id="banner-interest-error" role="alert" hidden></span>
+    </fieldset>
+
+    <label class="hero-enquiry__field">
+      <span>Full name</span>
+      <input data-error-id="banner-name-error" autocomplete="name" maxlength="80" name="name" placeholder="Your name" required data-validate="name">
+      <span class="hero-enquiry__error" id="banner-name-error" hidden></span>
+    </label>
+
+    <div class="hero-enquiry__row">
+      <label class="hero-enquiry__field">
+        <span>Mobile / WhatsApp</span>
+        <input data-error-id="banner-phone-error" autocomplete="tel" inputmode="tel" maxlength="25" name="phone" placeholder="Mobile number" required type="tel" data-validate="phone">
+        <span class="hero-enquiry__error" id="banner-phone-error" hidden></span>
+      </label>
+      <label class="hero-enquiry__field">
+        <span>Email address</span>
+        <input data-error-id="banner-email-error" autocomplete="email" maxlength="254" name="email" placeholder="name@example.com" required type="email" data-validate="email">
+        <span class="hero-enquiry__error" id="banner-email-error" hidden></span>
+      </label>
+    </div>
+
+    <div aria-live="polite" class="hero-enquiry__status" role="status" data-form-status></div>
+    <button class="hero-enquiry__submit" type="submit" data-fancy-button>
+      <span class="submit-label">Send me the details</span>
+      <span class="submit-arrow" aria-hidden="true">→</span>
+    </button>
+  </form>
+  <p class="hero-enquiry__note">Your details are used only to respond to this enquiry.</p>
+</aside>

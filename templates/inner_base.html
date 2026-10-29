@@ -2,7 +2,9 @@
 {% load site_tags %}
 {% comment %}
   Layout for the menu pages. Child templates fill the "page" block and may add
-  figures under the banner with the "hero_stats" block.
+  figures under the banner with the "hero_stats" block, and a box beside the
+  banner text with the "hero_aside" block. By default that box is the page's
+  enquiry form, shown when the page has a form title in the admin.
 {% endcomment %}
 
 {% block title %}{% if inner.seo_title %}{{ inner.seo_title }}{% else %}{{ inner.get_key_display }} | {{ site.site_name }}{% endif %}{% endblock %}
@@ -18,6 +20,7 @@
       {% picture inner.banner sizes="100vw" alt=inner.banner_alt css_class="inner-hero__image" priority=True %}
     </div>
     <div class="inner-hero__veil" aria-hidden="true"></div>
+    <div class="inner-hero__body">
     <div class="inner-hero__content">
       <nav class="inner-hero__crumbs" aria-label="Breadcrumb">
         <a href="/">Home</a>
@@ -31,6 +34,8 @@
       </h1>
       <p class="inner-hero__intro">{{ inner.intro }}</p>
       {% block hero_actions %}{% endblock %}
+    </div>
+    {% block hero_aside %}{% if inner.form_title %}{% include "partials/banner_form.html" %}{% endif %}{% endblock %}
     </div>
     {% block hero_stats %}{% endblock %}
     <a class="inner-hero__scroll" href="#page-start" aria-label="Scroll to content"><span></span></a>

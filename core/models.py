@@ -103,7 +103,7 @@ class SiteSettings(SingletonModel):
             "information will be provided with the relevant project materials."
         )
     )
-    footer_note = models.CharField(max_length=120, default="Website experience · Phase 1", blank=True)
+    footer_note = models.CharField(max_length=120, default="", blank=True)
 
     enquiry_success_message = models.TextField(
         default="Thank you. Your details have been received and our team will be in touch shortly.",
@@ -300,6 +300,10 @@ class InnerPage(models.Model):
     title_emphasis = models.CharField(max_length=80, blank=True, help_text="Second line, shown in accent colour.")
     intro = models.TextField(help_text="Short paragraph under the title.")
 
+    # Form on the right of the banner
+    form_title = models.CharField(max_length=80, blank=True, help_text="Leave empty to hide the form.")
+    form_intro = models.CharField(max_length=200, blank=True, help_text="Short line under the form title.")
+
     # First section under the banner
     intro_label = models.CharField(max_length=80, blank=True)
     intro_heading = models.CharField(max_length=160, blank=True)
@@ -313,6 +317,21 @@ class InnerPage(models.Model):
     # Our Journey page only
     quote_text = models.TextField(blank=True, help_text="Large quotation. Leave empty to hide.")
     quote_attribution = models.CharField(max_length=120, blank=True)
+
+    # Contact page only
+    next_steps = models.TextField(
+        "“What happens next” cards",
+        blank=True,
+        help_text="Shown under the contact details, one card per line: title | short text. Leave empty to hide.",
+    )
+    info_image = ResizingImageField(
+        upload_to="page-banners/", blank=True, help_text="Shown under the contact details, beside the form."
+    )
+    info_image_alt = models.CharField(max_length=160, blank=True)
+    faq_image = ResizingImageField(
+        upload_to="page-banners/", blank=True, help_text="Shown under the “Frequently asked” heading."
+    )
+    faq_image_alt = models.CharField(max_length=160, blank=True)
 
     seo_title = models.CharField(max_length=120, blank=True, help_text="Browser tab / Google title.")
     seo_description = models.CharField(max_length=300, blank=True, help_text="Defaults to the intro.")
@@ -332,6 +351,20 @@ class InnerPage(models.Model):
     @classmethod
     def for_key(cls, key):
         return cls.objects.filter(key=key).first()
+
+    @property
+    def form_source(self):
+        """The enquiry source for the banner form (the Contact page already has its own "contact" form)."""
+        return "contact_banner" if self.key == self.Key.CONTACT else self.key
+
+    @property
+    def next_step_list(self):
+        steps = []
+        for line in self.next_steps.splitlines():
+            title, _, text = line.partition("|")
+            if title.strip():
+                steps.append((title.strip(), text.strip()))
+        return steps
 
 
 class FAQ(models.Model):
