@@ -91,6 +91,162 @@ body:has(.lnav) {
   white-space: nowrap;
 }
 
+/* A logo in place of the name (Jacob & Co.): a taller bar, the logo set off by a hairline, and a
+   gold light that passes over it now and then. */
+body:has(.lnav--logo) {
+  --header-h: 92px;
+}
+
+.lnav--logo {
+  height: 92px;
+}
+
+.lnav--logo .lnav__brand {
+  position: relative;
+  display: block;
+  height: 66px;
+  padding-right: clamp(18px, 2vw, 30px);
+  border-right: 1px solid var(--lnav-line);
+}
+
+/* The Cullinan's champagne logo sits on a sapphire bar. Its logo is wide, so it is a little lower. */
+.lnav--cl.lnav--logo {
+  --lnav-bg: linear-gradient(90deg, rgb(11 24 48 / 97%), rgb(19 40 77 / 96%));
+  --lnav-text: #ffffff;
+  --lnav-muted: rgb(255 255 255 / 70%);
+  --lnav-accent: #d9c391;
+  --lnav-cta-bg: linear-gradient(135deg, #f3e7cc, #d9c391 55%, #a88c55);
+  --lnav-cta-text: #0b1830;
+  --lnav-line: rgb(217 195 145 / 25%);
+  --lnav-panel: #0b1830;
+}
+
+.lnav--cl.lnav--logo .lnav__brand {
+  height: 58px;
+}
+
+/* Trump Tower's logo is a tall white lockup (tower, wordmark, Tribeca and M3M), so the bar is taller
+   to keep its small lines readable, and settles to a slimmer bar once the page scrolls. */
+body:has(.lnav--tt.lnav--logo) {
+  --header-h: 104px;
+}
+
+.lnav--tt.lnav--logo {
+  --lnav-bg: linear-gradient(180deg, rgb(9 15 28 / 96%), rgb(14 23 41 / 94%));
+  height: 104px;
+  transition: height 400ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 300ms ease;
+}
+
+.lnav--tt.lnav--logo::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(212 178 106 / 80%) 30%, #f7e7bd 50%, rgb(212 178 106 / 80%) 70%, transparent);
+  content: "";
+  opacity: 0.7;
+}
+
+.lnav--tt.lnav--logo .lnav__brand {
+  height: 80px;
+  transition: height 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lnav--tt.lnav--logo.is-scrolled {
+  height: 80px;
+}
+
+.lnav--tt.lnav--logo.is-scrolled .lnav__brand {
+  height: 60px;
+}
+
+/* Trump Tower's menu: brighter, larger tabs; on hover the text turns gold and lifts, a small gold
+   diamond drops in above it and a gold line draws beneath. */
+.lnav--tt .lnav__links {
+  gap: clamp(8px, 1.2vw, 18px);
+}
+
+.lnav--tt .lnav__links a {
+  padding: 10px 14px;
+  color: rgb(255 255 255 / 86%);
+  font-size: 12.5px;
+  letter-spacing: 0.2em;
+  transition: color 300ms ease, letter-spacing 400ms cubic-bezier(0.16, 1, 0.3, 1), transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lnav--tt .lnav__links a::before {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: #e9cf8f;
+  box-shadow: 0 0 10px rgb(243 226 180 / 80%);
+  content: "";
+  opacity: 0;
+  transform: translate(-50%, -8px) rotate(45deg) scale(0.4);
+  transition: opacity 300ms ease, transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.lnav--tt .lnav__links a::after {
+  right: 14px;
+  bottom: 4px;
+  left: 14px;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, #e9cf8f 20%, #fff3cf 50%, #e9cf8f 80%, transparent);
+  transform-origin: center;
+}
+
+.lnav--tt .lnav__links a:hover,
+.lnav--tt .lnav__links a:focus-visible,
+.lnav--tt .lnav__links a.is-current {
+  color: #f3dda3;
+  text-shadow: 0 0 18px rgb(243 221 163 / 45%);
+}
+
+.lnav--tt .lnav__links a:hover {
+  letter-spacing: 0.24em;
+  transform: translateY(-1px);
+}
+
+.lnav--tt .lnav__links a:hover::before,
+.lnav--tt .lnav__links a.is-current::before {
+  opacity: 1;
+  transform: translate(-50%, 0) rotate(45deg) scale(1);
+}
+
+.lnav--tt .lnav__links > .fx-pill {
+  --pad-x: 0px;
+  --pad-y: 0px;
+  border: 1px solid rgb(233 207 143 / 40%);
+  background: linear-gradient(180deg, rgb(233 207 143 / 16%), rgb(233 207 143 / 4%));
+  box-shadow: inset 0 1px 0 rgb(255 243 207 / 18%), 0 6px 20px rgb(0 0 0 / 25%);
+}
+
+.lnav__logo {
+  display: block;
+  width: auto;
+  height: 100%;
+  filter: drop-shadow(0 2px 10px rgb(0 0 0 / 35%));
+}
+
+.lnav__logo-shine {
+  position: absolute;
+  inset: 0 clamp(18px, 2vw, 30px) 0 0;
+  background: linear-gradient(105deg, transparent 35%, #f3d998 48%, #fff8e0 50%, #e4b866 52%, transparent 65%) no-repeat;
+  background-size: 260% 100%;
+  -webkit-mask: var(--logo) left center / contain no-repeat;
+  mask: var(--logo) left center / contain no-repeat;
+  pointer-events: none;
+  animation: lnav-logo-shine 6s ease-in-out 1.5s infinite;
+}
+
+@keyframes lnav-logo-shine {
+  0% { background-position: 130% 0; }
+  35%, 100% { background-position: -30% 0; }
+}
+
 .lnav__links {
   display: flex;
   flex: 1 1 auto;
@@ -242,6 +398,53 @@ body:has(.lnav) {
     font-size: 1.1rem;
   }
 
+  body:has(.lnav--logo) {
+    --header-h: 72px;
+  }
+
+  .lnav--logo {
+    height: 72px;
+  }
+
+  .lnav--logo .lnav__brand {
+    height: 52px;
+    padding-right: 0;
+    border-right: 0;
+  }
+
+  .lnav--logo .lnav__logo-shine {
+    right: 0;
+  }
+
+  .lnav--cl.lnav--logo .lnav__brand {
+    height: 44px;
+  }
+
+  body:has(.lnav--tt.lnav--logo) {
+    --header-h: 80px;
+  }
+
+  .lnav--tt.lnav--logo,
+  .lnav--tt.lnav--logo.is-scrolled {
+    height: 80px;
+  }
+
+  .lnav--tt.lnav--logo .lnav__brand,
+  .lnav--tt.lnav--logo.is-scrolled .lnav__brand {
+    height: 60px;
+  }
+
+  .lnav--tt .lnav__links a,
+  .lnav--tt .lnav__links a:hover {
+    padding: 14px 0;
+    letter-spacing: 0.18em;
+    transform: none;
+  }
+
+  .lnav--tt .lnav__links a::before {
+    display: none;
+  }
+
   .lnav__links {
     position: absolute;
     top: 100%;
@@ -297,6 +500,12 @@ body:has(.lnav) {
   }
 
   .lnav__call {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lnav__logo-shine {
     display: none;
   }
 }

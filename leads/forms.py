@@ -52,6 +52,9 @@ class EnquiryForm(forms.Form):
                 errors["interest"] = "Choose residential or commercial."
             if message := validation.validate_lead_email(data.get("email")):
                 errors["email"] = message
+            # Optional here: the private line on the Jacob & Co. page asks for it, the other forms don't.
+            if data.get("callTime") and data["callTime"] not in Enquiry.CallTime.values:
+                errors["callTime"] = "Choose a preferred time for your call."
         elif source != Enquiry.Source.GUIDED:
             if message := validation.validate_name(data.get("name")):
                 errors["name"] = message

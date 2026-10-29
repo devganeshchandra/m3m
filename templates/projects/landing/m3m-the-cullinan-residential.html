@@ -2,7 +2,8 @@
 {% load static landing_tags %}
 {% comment %}
   Ad landing page for M3M The Cullinan, Sector 94, Noida (used automatically for this project).
-  Theme: "the diamond" — porcelain, sapphire and platinum, sharp corners, bold Outfit headings.
+  Theme: "the diamond" — porcelain, sapphire and platinum with the logo's champagne, sharp corners,
+  bold Outfit headings.
   Every text, image and list comes from the admin (Landing pages → M3M The Cullinan); the slots
   and their starting content are in projects/landing_pages/cullinan.py.
 {% endcomment %}
@@ -53,17 +54,23 @@
   {# ---------- 1. Hero: split screen, the two-step form beside the headline ---------- #}
   <section class="cl-hero" aria-labelledby="cl-title">
     <div class="cl-hero__panel">
+      <span class="cl-hero__facets" aria-hidden="true"></span>
       <p class="cl-kicker cl-in">
         <span class="cl-gem" aria-hidden="true"></span> {{ t.hero_kicker }}
       </p>
-      <h1 class="cl-hero__title cl-in" id="cl-title">
-        <small>{{ t.hero_title_small }}</small>
-        <span class="cl-hero__the">{{ t.hero_title_the }}</span> {{ t.hero_title }}
+      {# Letters rise in and roll in a wave; "Cullinan" shimmers sapphire to platinum (site.js initHeroHeadline). #}
+      <h1 class="cl-hero__title" id="cl-title" data-hero-headline>
+        <small class="cl-in">{{ t.hero_title_small }}</small>
+        <span class="hero-line hero-line--one cl-hero__the" data-hero-line>{{ t.hero_title_the }}</span>
+        <span class="hero-line hero-line--two" data-hero-line>{{ t.hero_title }}</span>
+        <svg class="hero-flourish" viewBox="0 0 420 28" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <path d="M4 18 C 90 4, 180 4, 260 14 S 380 26, 416 8" pathLength="1"/>
+        </svg>
       </h1>
       <p class="cl-hero__line cl-in">{{ t.hero_line|em }}</p>
 
-      <div class="cl-hero__form cl-in" id="cl-hero-form">
-        <p class="cl-hero__form-title">{{ t.hero_form_title }} <span>{{ t.hero_form_title_more }}</span></p>
+      <div class="cl-hero__form cl-in" id="cl-hero-form" data-quiver-box>
+        <p class="cl-hero__form-title"><span data-quiver-title>{{ t.hero_form_title }}</span> <span class="cl-hero__form-more">{{ t.hero_form_title_more }}</span></p>
         {% include "projects/landing/_cullinan_form.html" with prefix="hero" button=t.hero_form_button %}
       </div>
     </div>
@@ -94,7 +101,7 @@
     </div>
   </div>
 
-  {# ---------- 3. Residences: the room tour ---------- #}
+  {# ---------- 3. Residences: the room tour (a tab changes the picture) ---------- #}
   <section class="cl-tour" id="residences" aria-labelledby="cl-tour-title">
     <header class="cl-tour__head">
       <p class="cl-kicker">{{ t.tour_kicker }}</p>
@@ -103,23 +110,29 @@
     </header>
 
     <div class="cl-tour__stage" data-cl-tour>
-      <div class="cl-tour__tabs" role="tablist" aria-label="Rooms">
+      <div class="cl-tour__side">
+        {% if t.tour_hint %}<p class="cl-tour__hint">{{ t.tour_hint }}</p>{% endif %}
+        <div class="cl-tour__tabs" role="tablist" aria-label="Rooms">
+          {% for room in lists.rooms %}
+            <button type="button" role="tab" id="cl-tab-{{ forloop.counter }}" aria-controls="cl-room-{{ forloop.counter }}"
+              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" {% if not forloop.first %}tabindex="-1"{% endif %}>
+              <span>{{ forloop.counter|stringformat:"02d" }}</span>{{ room.subtitle }}<i class="cl-tour__bar" aria-hidden="true"></i>
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="cl-tour__rooms">
         {% for room in lists.rooms %}
-          <button type="button" role="tab" id="cl-tab-{{ forloop.counter }}" aria-controls="cl-room-{{ forloop.counter }}"
-            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" {% if not forloop.first %}tabindex="-1"{% endif %}>
-            <span>{{ forloop.counter|stringformat:"02d" }}</span>{{ room.subtitle }}
-          </button>
+          <figure class="cl-room" role="tabpanel" id="cl-room-{{ forloop.counter }}" aria-labelledby="cl-tab-{{ forloop.counter }}" {% if not forloop.first %}hidden{% endif %}>
+            <img src="{{ room.image|src:1920 }}" alt="{{ room.image_alt }}" loading="lazy">
+            <figcaption>
+              <span class="cl-room__no" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }} / {{ lists.rooms|length|stringformat:"02d" }}</span>
+              <strong>{{ room.title }}</strong>
+              <span>{{ room.text }}</span>
+            </figcaption>
+          </figure>
         {% endfor %}
       </div>
-      {% for room in lists.rooms %}
-        <figure class="cl-room" role="tabpanel" id="cl-room-{{ forloop.counter }}" aria-labelledby="cl-tab-{{ forloop.counter }}" {% if not forloop.first %}hidden{% endif %}>
-          <img src="{{ room.image|src:1920 }}" alt="{{ room.image_alt }}" loading="lazy">
-          <figcaption>
-            <strong>{{ room.title }}</strong>
-            <span>{{ room.text }}</span>
-          </figcaption>
-        </figure>
-      {% endfor %}
     </div>
 
     <div class="cl-configs">
@@ -139,13 +152,148 @@
     </div>
   </section>
 
-  {# ---------- 4. Why The Cullinan ---------- #}
-  <section class="cl-pillars" aria-label="Why The Cullinan">
-    <ul>
+  {# ---------- 4. Cut your own Cullinan: four taps grade a diamond certificate, then a normal lead form ---------- #}
+  <section class="cl-cert" id="certificate" aria-labelledby="cl-cert-title">
+    <ul class="cl-cert__pillars">
       {% for pillar in lists.pillars %}
         <li class="cl-up"><span>{{ forloop.counter|stringformat:"02d" }}</span><strong>{{ pillar.title }}</strong></li>
       {% endfor %}
     </ul>
+
+    <header class="cl-cert__head">
+      <p class="cl-kicker">{{ t.cert_kicker }}</p>
+      <h2 class="cl-display" id="cl-cert-title">{{ t.cert_title|em }}</h2>
+      <p class="cl-lead">{{ t.cert_lead }}</p>
+    </header>
+
+    <div class="cl-cert__stage" data-cl-cert>
+      <form class="cl-cert__form" novalidate data-lead-form data-cl-cert-form action="{% url 'submit_enquiry' %}" method="post"
+        data-residential-project="{{ project.slug }}" data-commercial-project="{{ t.form_commercial_project }}" data-request="{{ t.cert_request }}">
+        {% include "partials/form_tracking.html" with source="landing" %}
+        <input type="hidden" name="project" value="{{ project.slug }}" data-cert-project>
+        <input type="hidden" name="interest" value="residential" data-cert-interest>
+        <input type="hidden" name="callTime" value="" data-cert-time>
+        <input type="hidden" name="message" value="{{ t.cert_request }}" data-cert-message>
+
+        <ol class="cl-cert__progress" aria-hidden="true"><li class="is-active"><span>C</span></li><li><span>C</span></li><li><span>C</span></li><li><span>✓</span></li></ol>
+
+        <fieldset class="cl-cert__step" data-cert-step>
+          <legend>{{ t.cert_step_1 }}</legend>
+          <div class="cl-cert__carats">
+            {% for choice in lists.units %}
+              <label class="cl-cert__carat">
+                <input type="radio" name="unit" value="{{ choice.value }}" data-label="{{ choice.title }}" data-interest="{{ choice.group|default:'residential' }}" data-cert-carat>
+                <span class="cl-cert__gem" aria-hidden="true"></span>
+                <strong>{{ choice.title }}</strong>
+                <small>{{ choice.subtitle }}</small>
+              </label>
+            {% endfor %}
+          </div>
+          <p class="cl-cert__error" role="alert" hidden data-cert-error>{{ t.cert_choose_error }}</p>
+          <div class="cl-cert__nav"><button class="cl-cert__next" type="button" data-cert-next>{{ t.cert_next }} <span aria-hidden="true">→</span></button></div>
+        </fieldset>
+
+        <fieldset class="cl-cert__step" data-cert-step hidden>
+          <legend>{{ t.cert_step_2 }}</legend>
+          <div class="cl-cert__cuts">
+            {% for cut in lists.cert_cuts %}
+              <button class="cl-cert__cut" type="button" aria-pressed="false" data-cert-cut="{{ cut.title }}">
+                <span class="cl-cert__facet" aria-hidden="true"></span>
+                <strong>{{ cut.title }}</strong>
+                {% if cut.subtitle %}<small>{{ cut.subtitle }}</small>{% endif %}
+              </button>
+            {% endfor %}
+          </div>
+          <p class="cl-cert__error" role="alert" hidden data-cert-error>{{ t.cert_choose_error }}</p>
+          <div class="cl-cert__nav">
+            <button class="cl-cert__back" type="button" data-cert-back>{{ t.cert_back }}</button>
+            <button class="cl-cert__next" type="button" data-cert-next>{{ t.cert_next }} <span aria-hidden="true">→</span></button>
+          </div>
+        </fieldset>
+
+        <fieldset class="cl-cert__step" data-cert-step hidden>
+          <legend>{{ t.cert_step_3 }}</legend>
+          <div class="cl-cert__slots">
+            {% for slot in lists.cert_slots %}
+              <button class="cl-cert__slot" type="button" aria-pressed="false" data-cert-slot="{{ slot.value }}" data-label="{{ slot.title }}{% if slot.subtitle %}, {{ slot.subtitle }}{% endif %}">
+                <strong>{{ slot.title }}</strong>
+                {% if slot.subtitle %}<small>{{ slot.subtitle }}</small>{% endif %}
+              </button>
+            {% endfor %}
+          </div>
+          <p class="cl-cert__error" role="alert" hidden data-cert-error>{{ t.cert_choose_error }}</p>
+          <div class="cl-cert__nav">
+            <button class="cl-cert__back" type="button" data-cert-back>{{ t.cert_back }}</button>
+            <button class="cl-cert__next" type="button" data-cert-next>{{ t.cert_next }} <span aria-hidden="true">→</span></button>
+          </div>
+        </fieldset>
+
+        <fieldset class="cl-cert__step" data-cert-step hidden>
+          <legend>{{ t.cert_step_4 }}</legend>
+          <p class="cl-cert__privacy">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v5c0 4.5-3 8.4-7 10-4-1.6-7-5.5-7-10V6l7-3zM9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>{{ t.cert_privacy }}</span>
+          </p>
+          <div class="cl-cert__fields">
+            <label class="cl-field">
+              <span>Full name</span>
+              <input name="name" type="text" autocomplete="name" maxlength="80" placeholder="Full name" required
+                data-validate="realName" data-error-id="cert-name-error" data-cert-name>
+              <span class="cl-field__error" id="cert-name-error" role="alert" hidden></span>
+            </label>
+            <label class="cl-field">
+              <span>Mobile number</span>
+              <input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="25" placeholder="Mobile number" required
+                data-validate="phone" data-error-id="cert-phone-error">
+              <span class="cl-field__error" id="cert-phone-error" role="alert" hidden></span>
+            </label>
+            <label class="cl-field cl-cert__wide">
+              <span>Email</span>
+              <input name="email" type="email" autocomplete="email" maxlength="254" placeholder="Email address" required
+                data-validate="leadEmail" data-error-id="cert-email-error">
+              <span class="cl-field__error" id="cert-email-error" role="alert" hidden></span>
+            </label>
+          </div>
+          <div class="cl-cert__nav">
+            <button class="cl-cert__back" type="button" data-cert-back>{{ t.cert_back }}</button>
+            <button class="cl-button cl-button--solid cl-fancy" type="submit" data-fancy-button>
+              <span class="submit-label">{{ t.cert_button }}</span>
+              <span class="submit-arrow" aria-hidden="true">→</span>
+            </button>
+          </div>
+          <p class="cl-form__status" role="status" aria-live="polite" data-form-status></p>
+        </fieldset>
+      </form>
+
+      {# The certificate mirrors the visitor's choices; it is decoration, so screen readers skip it. #}
+      <div class="cl-certificate" aria-hidden="true" data-cert-doc>
+        <div class="cl-certificate__paper">
+          <div class="cl-certificate__top">
+            {% if imgs.brand_logo.image %}<span class="cl-certificate__crest" style="--logo: url('{{ imgs.brand_logo.image.url }}')"></span>{% endif %}
+            <p class="cl-certificate__no">No. <span data-cert-no>CL-0000</span></p>
+          </div>
+          <p class="cl-certificate__title">{{ t.cert_doc_title }}</p>
+          <p class="cl-certificate__sub">{{ t.cert_doc_sub }}</p>
+          <svg class="cl-diamond" viewBox="0 0 120 100" data-cert-diamond>
+            <polygon class="cl-diamond__crown" points="25,8 95,8 118,34 2,34"/>
+            <polygon class="cl-diamond__pavilion" points="2,34 118,34 60,96"/>
+            <g class="cl-diamond__lines">
+              <path d="M25 8 L40 34 L60 8 L80 34 L95 8"/>
+              <path d="M2 34 L40 34 L60 96 L80 34 L118 34"/>
+              <path d="M40 34 L60 60 L80 34"/>
+            </g>
+            <g class="cl-diamond__spark"><path d="M98 4 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2z"/></g>
+          </svg>
+          <dl class="cl-certificate__grades">
+            <div><dt>{{ t.cert_owner }}</dt><dd data-cert-owner data-empty="{{ t.cert_guest }}" class="is-blank">{{ t.cert_guest }}</dd></div>
+            <div><dt>{{ t.cert_carat }}</dt><dd data-cert-grade="carat" class="is-blank">{{ t.cert_blank }}</dd></div>
+            <div><dt>{{ t.cert_cut }}</dt><dd data-cert-grade="cut" class="is-blank">{{ t.cert_blank }}</dd></div>
+            <div><dt>{{ t.cert_clarity }}</dt><dd data-cert-grade="clarity" class="is-blank">{{ t.cert_blank }}</dd></div>
+          </dl>
+          <span class="cl-certificate__seal"><span>{{ t.cert_seal }}</span></span>
+        </div>
+      </div>
+    </div>
   </section>
 
   {# ---------- 5. Amenities: filmstrip with filters ---------- #}
@@ -204,16 +352,21 @@
     </div>
   </section>
 
-  {# ---------- 7. A closer look: cinematic slider ---------- #}
+  {# ---------- 7. A closer look: cinematic slider with a progress bar and filmstrip ---------- #}
   <section class="cl-look" id="gallery" aria-labelledby="cl-look-title" data-cl-slider>
+    <header class="cl-look__head">
+      <p class="cl-kicker cl-kicker--light">{{ t.look_kicker }}</p>
+      <p class="cl-look__count" aria-hidden="true"><b data-cl-slide-index>01</b> / {{ lists.slides|length|stringformat:"02d" }}</p>
+    </header>
     <div class="cl-look__frame">
       {% for slide in lists.slides %}
         <figure class="cl-look__slide{% if forloop.first %} is-active{% endif %}" {% if not forloop.first %}aria-hidden="true"{% endif %}>
           <img src="{{ slide.image|src:1920 }}" alt="{{ slide.image_alt }}" loading="lazy">
         </figure>
       {% endfor %}
+      <span class="cl-look__corner cl-look__corner--tl" aria-hidden="true"></span>
+      <span class="cl-look__corner cl-look__corner--br" aria-hidden="true"></span>
       <div class="cl-look__overlay">
-        <p class="cl-kicker cl-kicker--light">{{ t.look_kicker }}</p>
         <h2 class="cl-look__title" id="cl-look-title" data-cl-slide-caption>{{ lists.slides.0.title }}</h2>
         <div class="cl-look__nav">
           <button type="button" data-cl-slide-step="-1" aria-label="Previous image">←</button>
@@ -221,48 +374,93 @@
           <button type="button" data-cl-slide-step="1" aria-label="Next image">→</button>
         </div>
       </div>
+      <span class="cl-look__progress" aria-hidden="true"><i data-cl-slide-progress></i></span>
     </div>
     <div class="cl-look__thumbs">
       {% for slide in lists.slides %}
         <button type="button" data-cl-slide="{{ forloop.counter0 }}" data-caption="{{ slide.title }}" aria-label="Show {{ slide.title }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
           <img src="{{ slide.image|src:480 }}" alt="" loading="lazy">
+          <span>{{ slide.title }}</span>
         </button>
       {% endfor %}
     </div>
-    {% if t.look_note %}<p class="cl-note">{{ t.look_note }}</p>{% endif %}
+    {% if t.look_note %}<p class="cl-note cl-note--light">{{ t.look_note }}</p>{% endif %}
   </section>
 
-  {# ---------- 8. Location ---------- #}
+  {# ---------- 8. Location: travel times beside a live map; a place shows its route (landing-location.js) ---------- #}
   <section class="cl-location" id="location" aria-labelledby="cl-loc-title">
-    <div class="cl-location__copy">
+    <header class="cl-location__head">
       <p class="cl-kicker">{{ t.loc_kicker }}</p>
       <h2 class="cl-display" id="cl-loc-title">{{ t.loc_title|em }}</h2>
-      <ol class="cl-times">
-        {% for place in lists.connectivity %}
-          <li class="cl-up"><strong>{{ place.value }}<small>{{ t.loc_unit }}</small></strong><span>{{ place.title }}</span></li>
-        {% endfor %}
-      </ol>
-      {% if t.loc_note %}<p class="cl-note">{{ t.loc_note }}</p>{% endif %}
-      <button class="cl-button cl-button--solid" type="button" data-cl-open="{{ t.loc_popup }}">{{ t.loc_button }}</button>
-    </div>
-    <div class="cl-location__visuals">
-      {% if imgs.location_map.image %}<figure class="cl-location__map cl-up"><img src="{{ imgs.location_map.image|src:1200 }}" alt="{{ imgs.location_map.alt }}" loading="lazy"></figure>{% endif %}
-      <div class="cl-location__live cl-up">
-        <iframe title="{{ t.loc_map_title }}" src="{{ project.map_embed_url|default:t.loc_map_url }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      {% if t.loc_lead %}<p class="cl-lead">{{ t.loc_lead }}</p>{% endif %}
+    </header>
+
+    <div class="cl-location__stage" data-lm-stage data-origin="{{ t.loc_origin }}" data-view="live">
+      <div class="cl-location__panel">
+        <ol class="cl-times" data-lm-list>
+          {% for place in lists.connectivity %}
+            <li>
+              <button class="cl-time" type="button" aria-pressed="false" data-lm-place="{{ place.link }}" data-label="{{ place.title }} · {{ place.value }} {{ t.loc_unit }}">
+                <span class="cl-time__ring" style="--m: {{ place.value|default:0 }}" aria-hidden="true">
+                  <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="28"/><circle class="cl-time__arc" cx="32" cy="32" r="28" pathLength="100"/></svg>
+                  <b data-lm-count="{{ place.value }}">{{ place.value }}</b>
+                  <small>{{ t.loc_unit }}</small>
+                </span>
+                <span class="cl-time__text">
+                  {% if place.subtitle %}<small>{{ place.subtitle }}</small>{% endif %}
+                  <strong>{{ place.title }}</strong>
+                  <span class="visually-hidden">{{ place.value }} {{ t.loc_unit }}</span>
+                </span>
+                <span class="cl-time__go" aria-hidden="true">→</span>
+              </button>
+            </li>
+          {% endfor %}
+        </ol>
+        {% if t.loc_note %}<p class="cl-note">{{ t.loc_note }}</p>{% endif %}
+        <button class="cl-button cl-button--solid" type="button" data-cl-open="{{ t.loc_popup }}">{{ t.loc_button }}</button>
+      </div>
+
+      <div class="cl-location__map cl-up">
+        <div class="cl-location__tabs" role="group" aria-label="Map view">
+          <button type="button" aria-pressed="true" data-lm-view="live">{{ t.loc_live }}</button>
+          {% if imgs.location_map.image %}<button type="button" aria-pressed="false" data-lm-view="plan">{{ t.loc_plan }}</button>{% endif %}
+        </div>
+        <iframe title="{{ t.loc_map_title }}" src="{{ project.map_embed_url|default:t.loc_map_url }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen data-lm-map></iframe>
+        {% if imgs.location_map.image %}<img class="cl-location__plan" src="{{ imgs.location_map.image|src:1200 }}" alt="{{ imgs.location_map.alt }}" loading="lazy">{% endif %}
+        <p class="cl-location__route" aria-live="polite"><span class="cl-location__pin" aria-hidden="true"></span><span data-lm-route>{{ t.loc_origin }}</span></p>
       </div>
     </div>
   </section>
 
-  {# ---------- 9. Final call to action ---------- #}
-  <section class="cl-final" id="enquire" aria-labelledby="cl-final-title">
-    <figure class="cl-final__image" aria-hidden="true">{% if imgs.final_image.image %}<img src="{{ imgs.final_image.image|src:828 }}" alt="" loading="lazy">{% endif %}</figure>
-    <div class="cl-final__card">
-      <p class="cl-kicker">{{ t.final_kicker }}</p>
-      <h2 class="cl-display" id="cl-final-title">{{ t.final_title|em }}</h2>
-      <ul class="cl-final__perks">
-        {% for perk in lists.perks %}<li>{{ perk.title }}</li>{% endfor %}
-      </ul>
-      {% include "projects/landing/_cullinan_form.html" with prefix="final" button=t.final_button %}
+  {# ---------- 9. The private vault: sealed documents; each opens the lead popup ---------- #}
+  <section class="cl-vault" id="enquire" aria-labelledby="cl-vault-title">
+    <header class="cl-vault__head">
+      <p class="cl-kicker cl-kicker--light">{{ t.vault_kicker }}</p>
+      <h2 class="cl-display cl-display--light" id="cl-vault-title">{{ t.vault_title|em }}</h2>
+      <p class="cl-lead cl-lead--light">{{ t.vault_lead }}</p>
+    </header>
+    <ul class="cl-vault__grid">
+      {% for doc in lists.vault %}
+        <li class="cl-up">
+          <button class="cl-vault__doc" type="button" data-cl-open="{{ doc.link|default:doc.title }}" {% if doc.value %}data-cl-unit-preset="{{ doc.value }}"{% endif %}>
+            <span class="cl-vault__preview" aria-hidden="true">{% if doc.image %}<img src="{{ doc.image|src:828 }}" alt="" loading="lazy">{% endif %}</span>
+            <span class="cl-vault__lock" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 11V8a5 5 0 0 1 10 0v3M6 11h12v9H6zM12 15v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+            <span class="cl-vault__tag">{{ t.vault_sealed }} · {{ forloop.counter|stringformat:"02d" }}</span>
+            <span class="cl-vault__text">
+              <strong>{{ doc.title }}</strong>
+              {% if doc.subtitle %}<small>{{ doc.subtitle }}</small>{% endif %}
+            </span>
+            <span class="cl-vault__cta">{{ t.vault_unlock }} <span aria-hidden="true">→</span></span>
+          </button>
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="cl-vault__all">
+      <button class="cl-button cl-button--light cl-vault__all-button" type="button" data-cl-open="{{ t.vault_all_popup }}">
+        <span class="cl-gem" aria-hidden="true"></span> {{ t.vault_all }}
+      </button>
     </div>
   </section>
 
@@ -273,12 +471,20 @@
   </section>
 </main>
 
-{# ---------- Lead popup ---------- #}
+{# ---------- Lead popup: a picture beside the rotating form styles; opens by itself 3 seconds after load ---------- #}
 <dialog class="cl-dialog" aria-labelledby="cl-dialog-title" data-cl-dialog>
   <button class="cl-dialog__close" type="button" aria-label="Close" data-cl-close>×</button>
-  <p class="cl-kicker">{{ t.dialog_kicker }}</p>
-  <h2 class="cl-dialog__title" id="cl-dialog-title" data-cl-dialog-title>{{ t.dialog_title }}</h2>
-  {% include "projects/landing/_popup_forms.html" with theme="cl" start="c" %}
+  <div class="cl-dialog__media" aria-hidden="true">
+    {% if imgs.dialog_image.image %}<img src="{{ imgs.dialog_image.image|src:828 }}" alt="" loading="lazy">{% endif %}
+    {% if imgs.brand_logo.image %}<img class="cl-dialog__logo" src="{{ imgs.brand_logo.image.url }}" alt="">{% endif %}
+    <p>{{ t.dialog_place }}</p>
+  </div>
+  <div class="cl-dialog__body" data-quiver-box>
+    <p class="cl-kicker">{{ t.dialog_kicker }}</p>
+    <h2 class="cl-dialog__title" id="cl-dialog-title" data-cl-dialog-title>{{ t.dialog_title }}</h2>
+    {% if t.dialog_intro %}<p class="cl-dialog__intro">{{ t.dialog_intro }}</p>{% endif %}
+    {% include "projects/landing/_popup_forms.html" with theme="cl" start="c" %}
+  </div>
 </dialog>
 
 <div class="cl-sticky">
@@ -290,5 +496,6 @@
 {% block scripts %}
 <script src="{% static 'js/landing-forms.js' %}" defer></script>
 <script src="{% static 'js/landing-cullinan.js' %}" defer></script>
+<script src="{% static 'js/landing-location.js' %}" defer></script>
 <script src="{% static 'js/landing-fx.js' %}" defer></script>
 {% endblock %}

@@ -1,8 +1,9 @@
 """M3M Trump Tower Noida ad landing page (templates/projects/landing/m3m-trump-tower-noida.html).
 
 No official project page exists yet: only the arrival render is official. Every other image is a
-representative luxury interior, labelled on the page. Prices, unit counts, sizes and land area are
-deliberately absent (listing sites disagree); they are offered in the price list instead.
+representative luxury interior, labelled on the page. Prices, unit counts and land area are deliberately
+absent (listing sites disagree); they are offered in the price list instead. The size range is the one
+M3M's sales team gives for the 4 & 5 BHK residences.
 """
 
 from projects.landing_pages import common
@@ -25,14 +26,15 @@ SEO = {
 HERO = "1. Hero"
 BAND = "2. At a glance"
 STEPS = "3. Three steps"
-RESIDENCES = "4. Residences"
-PRICE = "5. Price band"
-LIFE = "6. Lifestyle"
-LOCATION = "7. Location"
-FAQ = "8. Questions"
-FINAL = "9. Final form"
-LEGAL = "10. Disclaimer"
-EXTRAS = "11. Pop-ups & sticky buttons"
+LIFT = "4. The private lift"
+RESIDENCES = "5. Residences"
+COLLECTION = "6. The private collection"
+LIFE = "7. Lifestyle"
+LOCATION = "8. Location"
+FAQ = "9. Questions"
+FINAL = "10. Final form"
+LEGAL = "11. Disclaimer"
+EXTRAS = "12. Pop-ups & sticky buttons"
 FORM = "Forms"
 
 TEXTS = [
@@ -59,16 +61,52 @@ TEXTS = [
     (STEPS, "steps_title", "Heading", "Your price list in *three simple steps.*"),
     (STEPS, "steps_button", "Button", "Start now, it’s free"),
     (STEPS, "steps_popup", "Button: popup title", "Get the price list"),
+    (LIFT, "lift_kicker", "Small label", "The private lift"),
+    (LIFT, "lift_title", "Heading", "Rise to *your residence.*"),
+    (
+        LIFT,
+        "lift_lead",
+        "Intro",
+        "Choose your residence and how high you would like to live. The lift takes you there, and M3M’s team "
+        "sends the prices and floor plans for the floors you chose.",
+    ),
+    (LIFT, "lift_step_1", "Step 1: question", "Which residence?"),
+    (LIFT, "lift_step_2", "Step 2: question", "How high would you like to live?"),
+    (LIFT, "lift_step_3", "Step 3: question", "Who shall we welcome?"),
+    (LIFT, "lift_next", "Button: next step", "Continue"),
+    (LIFT, "lift_back", "Button: back", "Back"),
+    (LIFT, "lift_choose_error", "Message when nothing is chosen", "Choose one to continue."),
+    (
+        LIFT,
+        "lift_privacy",
+        "Privacy promise",
+        "Seen only by M3M’s official team for Trump Tower Noida, who will call you personally. Never shared, never sold.",
+    ),
+    (LIFT, "lift_button", "Send button", "Take me up"),
+    (LIFT, "lift_display", "Lift display: before a floor is chosen", "Lobby"),
+    (LIFT, "lift_plate", "Nameplate: label", "The residence of"),
+    (LIFT, "lift_guest", "Nameplate: name until one is typed", "Your name"),
+    (LIFT, "lift_welcome", "Shown when the lift arrives (after sending)", "Welcome home"),
+    (LIFT, "lift_request", "Note saved with each lead", "Requested: Private lift (prices & floor plans)"),
     (RESIDENCES, "res_eyebrow", "Small label", "The residences"),
     (RESIDENCES, "res_title", "Heading", "Homes with a *famous name.*"),
     (RESIDENCES, "res_lead", "Intro", "Generous 4 and 5 BHK residences, finished to a branded standard."),
     (RESIDENCES, "res_button", "Residence button ({unit} = the residence)", "Unlock {unit} details"),
     (RESIDENCES, "res_popup", "Residence button: popup title", "Get the {unit} price & floor plan"),
     (RESIDENCES, "res_note", "Note under the rooms", "Interior images are representative and do not show the actual residences."),
-    (PRICE, "price_eyebrow", "Small label", "Launch price list"),
-    (PRICE, "price_title", "Heading", "Be among the first *to know the price.*"),
-    (PRICE, "price_button", "Button", "Unlock the price list"),
-    (PRICE, "price_popup", "Button: popup title", "Get the launch price list"),
+    (COLLECTION, "vault_kicker", "Small label", "The private collection"),
+    (COLLECTION, "vault_title", "Heading", "Unlock what *others wait for.*"),
+    (
+        COLLECTION,
+        "vault_lead",
+        "Intro",
+        "Four sealed envelopes, kept for registered enquirers. Break a seal, or all four, and our team sends it to "
+        "you privately.",
+    ),
+    (COLLECTION, "vault_sealed", "Label on each envelope", "Sealed"),
+    (COLLECTION, "vault_unlock", "Button on each envelope", "Break the seal"),
+    (COLLECTION, "vault_all", "Main button", "Unlock the whole collection"),
+    (COLLECTION, "vault_all_popup", "Main button: popup title", "Unlock the price list, floor plans & brochure"),
     (LIFE, "life_eyebrow", "Small label", "The lifestyle"),
     (LIFE, "life_title", "Heading", "Every day, *a little extraordinary.*"),
     (LIFE, "life_cta_text", "Last tile: text", "The full amenity list is in the official brochure."),
@@ -77,7 +115,13 @@ TEXTS = [
     (LIFE, "life_note", "Note", "Lifestyle images are representative. Amenities follow the official project documents."),
     (LOCATION, "loc_eyebrow", "Small label", "Location"),
     (LOCATION, "loc_title", "Heading", "Sector 94, *at the heart of Noida.*"),
+    (LOCATION, "loc_lead", "Intro", "Tap a destination on the board to see the route from Sector 94."),
     (LOCATION, "loc_unit", "Unit after each travel time", "min"),
+    (LOCATION, "loc_origin", "Where the routes start (as typed in Google Maps)", "Sector 94, Noida, Uttar Pradesh"),
+    (LOCATION, "loc_board", "Board: title", "Departures · Sector 94"),
+    (LOCATION, "loc_board_place", "Board: first column", "Destination"),
+    (LOCATION, "loc_board_time", "Board: last column", "Drive"),
+    (LOCATION, "loc_board_go", "Board: line on each place", "Show route"),
     (LOCATION, "loc_note", "Note", "Travel times as stated by M3M India for its Sector 94 projects; they vary with route and traffic."),
     (LOCATION, "loc_button", "Button", "Book a site visit"),
     (LOCATION, "loc_popup", "Button: popup title", "Book a site visit"),
@@ -131,9 +175,9 @@ TEXTS = [
 ]
 
 IMAGES = [
-    (PRICE, "price_bg", "Background", "clouds.jpg", ""),
+    (common.HEADER, "brand_logo", "Logo (on the dark header and popup; PNG or WebP with transparency)",
+     "trump-logo.webp", "Trump Towers Delhi NCR, Tribeca and M3M"),
     (FINAL, "final_bg", "Background", "pool.jpg", ""),
-    (EXTRAS, "popup_image", "Popup: picture", "arrival.jpg", ""),
     (EXTRAS, "slidein_image", "Slide-in offer: picture", "suite.jpg", ""),
 ]
 
@@ -149,7 +193,22 @@ LISTS = {
     ),
     "interiors": ("Residence rooms", "Image, Title and Text: one line under the title."),
     "club": ("Lifestyle tiles", "Image and Title."),
-    "connectivity": ("Travel times", "Value: minutes. Title: the place."),
+    "specs": ("The private lift: key facts", "Title: the label (e.g. Size). Value: the fact (e.g. 4925 – 5685 sq.ft.)."),
+    "lift_floors": (
+        "The private lift: floors",
+        "Title: the view. Subtitle: the floors. Value: the short word on the lift display (e.g. High). "
+        "Image: the view the lift doors open on.",
+    ),
+    "vault": (
+        "The private collection: envelopes",
+        "Title, Subtitle (line under it) and Image (shown blurred inside). Link: the popup title. "
+        "Value: the residence the popup preselects (optional, e.g. 4bhk).",
+    ),
+    "connectivity": (
+        "Travel times",
+        "Value: minutes. Title: the place. Subtitle: its kind, e.g. Hospital. "
+        "Link: the place as typed in Google Maps, for the route.",
+    ),
     "faq": (
         "Questions",
         "Title: the question. Text: the answer. Subtitle: button label (leave empty for no button). "
@@ -159,6 +218,37 @@ LISTS = {
 }
 
 REPRESENTATIVE = ", representative image"
+
+# Travel times M3M states for its Sector 94 projects (The Cullinan, same sector): (minutes, place, kind, map query)
+CONNECTIVITY = (
+    ("2", "Amity University", "Education", "Amity University, Sector 125, Noida"),
+    ("5", "Max Healthcare", "Hospital", "Max Super Speciality Hospital, Patparganj"),
+    ("5", "Jasola Business Park", "Business", "Jasola District Centre, New Delhi"),
+    ("10", "Apollo Hospital", "Hospital", "Indraprastha Apollo Hospital, Sarita Vihar"),
+    ("12", "Ansal Plaza", "Shopping", "Ansal Plaza, Khel Gaon Marg, New Delhi"),
+    ("12", "Radisson Blu, Sector 18", "Hospitality", "Radisson Blu MBD Hotel, Noida"),
+)
+
+SPECS = (
+    ("Apartments", "4 & 5 BHK"),
+    ("Price", "On request"),
+    ("Size", "4925 – 5685 sq.ft."),
+    ("Location", "Noida"),
+)
+
+LIFT_FLOORS = (
+    ("City view", "Lower floors", "Low", "living"),
+    ("The skyline", "Middle floors", "Mid", "salon"),
+    ("Above the clouds", "Higher floors", "High", "clouds"),
+    ("Any floor", "Show me every option", "Any", "lounge-hall"),
+)
+
+VAULT_ITEMS = (
+    ("Launch price list", "Every residence, every floor", "Unlock the launch price list", "", "dossier"),
+    ("Floor plans", "4 & 5 BHK, in full", "Unlock the floor plans", "", "suite"),
+    ("Payment plan", "Milestones and launch offers", "Unlock the payment plan", "", "lobby"),
+    ("Brochure", "The complete Trump Tower story", "Unlock the brochure", "", "arrival"),
+)
 
 ITEMS = {
     "nav": common.nav(("residences", "Residences"), ("lifestyle", "Lifestyle"), ("location", "Location"), ("faq", "FAQ")),
@@ -218,17 +308,18 @@ ITEMS = {
             ("games", "Games room"),
         )
     ],
-    # Travel times M3M states for its Sector 94 projects (The Cullinan, same sector)
+    "specs": [{"title": label, "value": fact} for label, fact in SPECS],
+    "lift_floors": [
+        {"title": title, "subtitle": floors, "value": word, "image": f"{name}.jpg"}
+        for title, floors, word, name in LIFT_FLOORS
+    ],
+    "vault": [
+        {"title": title, "subtitle": line, "link": popup, "value": preset, "image": f"{name}.jpg"}
+        for title, line, popup, preset, name in VAULT_ITEMS
+    ],
     "connectivity": [
-        {"value": minutes, "title": place}
-        for minutes, place in (
-            ("2", "Amity University"),
-            ("5", "Max Healthcare"),
-            ("5", "Jasola Business Park"),
-            ("10", "Apollo Hospital"),
-            ("12", "Ansal Plaza"),
-            ("12", "Radisson Blu, Sector 18"),
-        )
+        {"value": minutes, "title": place, "subtitle": kind, "link": query}
+        for minutes, place, kind, query in CONNECTIVITY
     ],
     "faq": [
         {

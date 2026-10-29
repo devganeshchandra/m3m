@@ -90,6 +90,30 @@ def seed(apps=None):
                     LandingItem.objects.create(page=page, list_key=list_key, order=order, **item)
 
 
+def add_lists(apps, slug, keys):
+    """Fill lists added to an existing page with their starting items, unless the list has items already."""
+    LandingPage = apps.get_model("projects", "LandingPage")
+    LandingItem = apps.get_model("projects", "LandingItem")
+    page = LandingPage.objects.filter(slug=slug).first()
+    if page is None:
+        return
+    module = PAGES[slug]
+    for list_key in keys:
+        if LandingItem.objects.filter(page=page, list_key=list_key).exists():
+            continue
+        for order, item in enumerate(module.ITEMS[list_key]):
+            item = dict(item)
+            item["image"] = _copy_static(module, item.get("image", ""))
+            LandingItem.objects.create(page=page, list_key=list_key, order=order, **item)
+
+
+def replace_texts(apps, slug, changes):
+    """Swap starting texts for new ones, leaving any text the content team has edited as it is."""
+    LandingText = apps.get_model("projects", "LandingText")
+    for key, old, new in changes:
+        LandingText.objects.filter(page__slug=slug, key=key, value=old).update(value=new)
+
+
 def context(slug, rera=""):
     """Template context for a landing page, or None when the page has no content in the admin."""
     from projects.models import LandingPage

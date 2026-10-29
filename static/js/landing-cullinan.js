@@ -1,6 +1,7 @@
 /*
  * M3M The Cullinan landing page: the two-step lead form, the lead popup, the room tour,
- * amenity filters, the slider and scroll reveals. Validation and sending come from site.js.
+ * "Cut your own Cullinan", amenity filters, the slider and scroll reveals. Validation and sending
+ * come from site.js; the location map is landing-location.js.
  */
 (function () {
   "use strict";
@@ -93,7 +94,7 @@
       dialog.close();
     });
 
-    // Four seconds after every page open or refresh, offer the price list. It waits if the
+    // Three seconds after every page open or refresh, offer the price list. It waits if the
     // visitor is already filling in a form, and stops once they have sent their details.
     var SENT_KEY = "cullinan-lead-sent";
     function seen() {
@@ -111,7 +112,7 @@
       }
     }
     document.addEventListener("landing:sent", markSent);
-    $all("[data-cl-form] [data-form-status]").forEach(function (item) {
+    $all("[data-cl-form] [data-form-status], [data-cl-cert-form] [data-form-status]").forEach(function (item) {
       new MutationObserver(function () {
         if (item.classList.contains("is-success")) markSent();
       }).observe(item, { attributes: true, attributeFilter: ["class"] });
@@ -122,7 +123,7 @@
       if (active && active.closest && active.closest("form")) return;
       open("Get the price list & floor plans");
     }
-    setTimeout(autoOpen, 4000);
+    setTimeout(autoOpen, 3000);
     dialog.addEventListener("click", function (event) {
       if (event.target === dialog) dialog.close();
     });
@@ -130,14 +131,19 @@
 
   /* ---------- Room tour (tabs) ---------- */
 
+  // The rooms also step on by themselves every few seconds, a thin line filling under the tab,
+  // until the visitor picks a room or points at the tour.
   function initTour() {
     var stage = $("[data-cl-tour]");
     if (!stage) return;
     var tabs = $all('[role="tab"]', stage);
+    var timer = null;
+    var current = 0;
 
     function select(tab, focus) {
-      tabs.forEach(function (item) {
+      tabs.forEach(function (item, index) {
         var on = item === tab;
+        if (on) current = index;
         item.setAttribute("aria-selected", on ? "true" : "false");
         item.tabIndex = on ? 0 : -1;
         document.getElementById(item.getAttribute("aria-controls")).hidden = !on;
@@ -145,8 +151,35 @@
       if (focus) tab.focus();
     }
 
+    function stop() {
+      clearInterval(timer);
+      timer = null;
+      stage.classList.remove("is-playing");
+    }
+
+    function play() {
+      if (reduceMotion || timer) return;
+      stage.classList.add("is-playing");
+      timer = setInterval(function () {
+        select(tabs[(current + 1) % tabs.length]);
+      }, 5000);
+    }
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting && !stage.dataset.picked) play();
+        else stop();
+      }, { threshold: 0.4 }).observe(stage);
+    }
+    stage.addEventListener("pointerenter", stop);
+    stage.addEventListener("pointerleave", function () {
+      if (!stage.dataset.picked) play();
+    });
+
     tabs.forEach(function (tab, index) {
       tab.addEventListener("click", function () {
+        stage.dataset.picked = "1";
+        stop();
         select(tab);
       });
       tab.addEventListener("keydown", function (event) {
@@ -195,6 +228,8 @@
     var thumbs = $all("[data-cl-slide]", slider);
     var caption = $("[data-cl-slide-caption]", slider);
     var count = $("[data-cl-slide-count]", slider);
+    var indexLabel = $("[data-cl-slide-index]", slider);
+    var progress = $("[data-cl-slide-progress]", slider);
     var current = 0;
     var timer = null;
     var pad = function (n) { return (n < 10 ? "0" : "") + n; };
@@ -210,6 +245,14 @@
       });
       caption.textContent = thumbs[current].dataset.caption;
       count.textContent = pad(current + 1) + " / " + pad(slides.length);
+      if (indexLabel) indexLabel.textContent = pad(current + 1);
+      // Restart the caption's entrance and the progress bar.
+      [caption, progress].forEach(function (element) {
+        if (!element || reduceMotion) return;
+        element.classList.remove("is-running");
+        void element.offsetWidth;
+        element.classList.add("is-running");
+      });
     }
 
     function restart() {
@@ -230,6 +273,138 @@
       });
     });
     restart();
+    if (progress && !reduceMotion) progress.classList.add("is-running");
+  }
+
+  /* ---------- Cut your own Cullinan: four steps grade a certificate, then the lead form ---------- */
+
+  function initCertificate() {
+    var stage = $("[data-cl-cert]");
+    if (!stage) return;
+    var form = $("[data-cl-cert-form]", stage);
+    var doc = $("[data-cert-doc]", stage);
+    var steps = $all("[data-cert-step]", form);
+    var dots = $all(".cl-cert__progress li", form);
+    var picked = { carat: null, cut: null, slot: null };
+    var current = 0;
+
+    var number = $("[data-cert-no]", doc);
+    if (number) number.textContent = "CL-" + String(Math.floor(10000 + Math.random() * 90000));
+
+    // A grade is rewritten with a short shimmer; the diamond gains colour with each one.
+    function grade(key, text) {
+      var cell = $('[data-cert-grade="' + key + '"]', doc);
+      cell.textContent = text;
+      cell.classList.remove("is-blank", "is-writing");
+      void cell.offsetWidth;
+      cell.classList.add("is-writing");
+      doc.dataset.graded = $all("[data-cert-grade]:not(.is-blank)", doc).length;
+    }
+
+    function show(next) {
+      steps[current].hidden = true;
+      current = next;
+      steps[current].hidden = false;
+      dots.forEach(function (dot, position) {
+        dot.classList.toggle("is-active", position <= current);
+      });
+      var focus = current === 3
+        ? $("[data-cert-name]", form)
+        : $("[aria-pressed='true'], input:checked, button, input", steps[current]);
+      if (focus) focus.focus({ preventScroll: true });
+    }
+
+    function hideError(step) {
+      var error = $("[data-cert-error]", step);
+      if (error) error.hidden = true;
+    }
+
+    function choose(buttons, button) {
+      buttons.forEach(function (other) {
+        other.setAttribute("aria-pressed", other === button ? "true" : "false");
+      });
+      hideError(button.closest("[data-cert-step]"));
+    }
+
+    function advanceFrom(step) {
+      setTimeout(function () {
+        if (current === step) show(step + 1);
+      }, 450);
+    }
+
+    $all("[data-cert-carat]", form).forEach(function (radio) {
+      radio.addEventListener("change", function () {
+        picked.carat = radio;
+        var commercial = radio.dataset.interest === "commercial";
+        $("[data-cert-interest]", form).value = commercial ? "commercial" : "residential";
+        $("[data-cert-project]", form).value = commercial ? form.dataset.commercialProject : form.dataset.residentialProject;
+        hideError(steps[0]);
+        grade("carat", radio.dataset.label);
+        advanceFrom(0);
+      });
+    });
+
+    var cuts = $all("[data-cert-cut]", form);
+    cuts.forEach(function (button) {
+      button.addEventListener("click", function () {
+        choose(cuts, button);
+        picked.cut = button.dataset.certCut;
+        grade("cut", picked.cut);
+        advanceFrom(1);
+      });
+    });
+
+    var slots = $all("[data-cert-slot]", form);
+    slots.forEach(function (button) {
+      button.addEventListener("click", function () {
+        choose(slots, button);
+        picked.slot = button;
+        $("[data-cert-time]", form).value = button.dataset.certSlot;
+        grade("clarity", button.dataset.label);
+        advanceFrom(2);
+      });
+    });
+
+    function ready(step) {
+      return [picked.carat, picked.cut, picked.slot][step] !== null;
+    }
+    $all("[data-cert-next]", form).forEach(function (button) {
+      button.addEventListener("click", function () {
+        if (!ready(current)) {
+          $("[data-cert-error]", steps[current]).hidden = false;
+          return;
+        }
+        show(current + 1);
+      });
+    });
+    $all("[data-cert-back]", form).forEach(function (button) {
+      button.addEventListener("click", function () {
+        show(current - 1);
+      });
+    });
+
+    var name = $("[data-cert-name]", form);
+    var owner = $("[data-cert-owner]", doc);
+    name.addEventListener("input", function () {
+      var typed = name.value.trim();
+      owner.textContent = typed || owner.dataset.empty;
+      owner.classList.toggle("is-blank", !typed);
+    });
+
+    // Runs before site.js sends the form: the sales team reads the choices in the lead's message.
+    form.addEventListener("submit", function () {
+      $("[data-cert-message]", form).value = [
+        form.dataset.request,
+        picked.carat ? "Interested in: " + picked.carat.dataset.label : "",
+        picked.cut ? "Wants: " + picked.cut : "",
+        picked.slot ? "Good time to talk: " + picked.slot.dataset.label : "",
+      ].filter(Boolean).join("\n");
+    }, true);
+
+    var status = $("[data-form-status]", form);
+    new MutationObserver(function () {
+      if (status.classList.contains("is-success")) stage.classList.add("is-certified");
+    }).observe(status, { attributes: true, attributeFilter: ["class"] });
   }
 
   /* ---------- Scroll reveals ---------- */
@@ -256,6 +431,7 @@
     initForms();
     initDialog();
     initTour();
+    initCertificate();
     initAmenities();
     initSlider();
     initReveals();

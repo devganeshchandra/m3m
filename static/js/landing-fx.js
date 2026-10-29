@@ -12,13 +12,13 @@
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var finePointer = window.matchMedia("(pointer: fine)").matches;
 
-  var HEADINGS = ".jl-display, .jl-band__title, .cl-display, .tt-title, .tt-steps__title, .tt-cta-band h2";
+  var HEADINGS = ".jl-display, .jl-band__title, .cl-display, .tt-title, .tt-steps__title";
   var CARDS = [
-    ".jl-config", ".jl-amenity", ".jl-gallery__item",
+    ".jl-amenity", ".jl-gallery__item", ".jl-plan__card", ".jl-pl-card", ".jl-pillars li",
     ".cl-config", ".cl-strip__card", ".cl-times li", ".cl-pillars li", ".cl-avenue__collage figure",
-    ".tt-showcase", ".tt-room", ".tt-mosaic__tile", ".tt-steps__list li", ".tt-times li",
+    ".tt-showcase", ".tt-room", ".tt-mosaic__tile",
   ].join(", ");
-  var FLAT_CARDS = ".tt-faq__item, .cl-room";
+  var FLAT_CARDS = ".tt-faq__item, .cl-room, .jl-time";
   var BUTTONS = ".jl-button, .cl-button, .tt-btn, .lnav__cta, .pf-submit, .jl-form__submit, .cl-form__submit, .tt-form__submit";
   var TABS = [
     { list: ".lnav__links", item: "a", current: ".is-current" },
@@ -126,6 +126,8 @@
 
   function initButtons() {
     $all(BUTTONS).forEach(function (button) {
+      // Buttons with the site's own animation (site.js initFancyButton) keep it alone.
+      if (button.hasAttribute("data-fancy-button")) return;
       button.classList.add("fx-btn");
       var glow = document.createElement("span");
       glow.className = "fx-btn__glow";

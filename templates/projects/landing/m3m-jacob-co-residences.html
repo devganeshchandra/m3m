@@ -64,9 +64,14 @@
         <p class="jl-hero__eyebrow jl-rise">
           <span class="jl-dot" aria-hidden="true"></span> {{ t.hero_eyebrow }}
         </p>
-        <h1 class="jl-hero__title jl-rise" id="jl-title">
-          <span>{{ t.hero_title_small }}</span> {{ t.hero_title }}
-          <em>{{ t.hero_title_em }}</em>
+        {# The letters rise in, then roll in a wave; the italic line shimmers gold (site.js initHeroHeadline). #}
+        <h1 class="jl-hero__title" id="jl-title" data-hero-headline>
+          <span class="jl-hero__kicker jl-rise">{{ t.hero_title_small }}</span>
+          <span class="hero-line hero-line--one" data-hero-line>{{ t.hero_title }}</span>
+          <span class="hero-line hero-line--two" data-hero-line>{{ t.hero_title_em }}</span>
+          <svg class="hero-flourish" viewBox="0 0 420 28" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <path d="M4 18 C 90 4, 180 4, 260 14 S 380 26, 416 8" pathLength="1"/>
+          </svg>
         </h1>
         <p class="jl-hero__tagline jl-rise">{{ t.hero_tagline|em }}</p>
         <ul class="jl-hero__chips jl-rise">
@@ -82,9 +87,14 @@
         <p class="jl-hero__rera jl-rise">{{ t.hero_rera }}</p>
       </div>
 
-      <aside class="jl-hero__card jl-rise" aria-labelledby="jl-hero-form-title">
-        <p class="jl-card__eyebrow">{{ t.card_eyebrow }}</p>
-        <h2 class="jl-card__title" id="jl-hero-form-title">{{ t.card_title|em }}</h2>
+      {# Heading letters quiver every few seconds and on hover, like the homepage form (site.js initQuiverTitle). #}
+      <aside class="jl-hero__card jl-rise" aria-labelledby="jl-hero-form-title" data-quiver-box>
+        <p class="jl-card__eyebrow"><span class="jl-dot" aria-hidden="true"></span>{{ t.card_eyebrow }}</p>
+        <h2 class="jl-card__title" id="jl-hero-form-title" data-quiver-title>{{ t.card_title }}</h2>
+        <svg class="quiver-string" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <path d="M2 6 Q 100 6 198 6"/>
+        </svg>
+        {% if t.card_intro %}<p class="jl-card__intro">{{ t.card_intro }}</p>{% endif %}
         {% include "projects/landing/_lead_form.html" with prefix="hero" button=t.card_button %}
       </aside>
     </div>
@@ -100,18 +110,44 @@
     </dl>
   </section>
 
-  {# ---------- 3. Residences ---------- #}
+  {# ---------- 3. Residences: the story, what sets them apart, and a picture slideshow ---------- #}
   <section class="jl-residences" id="residences" aria-labelledby="jl-res-title">
     <div class="jl-residences__intro">
       <p class="jl-eyebrow">{{ t.res_eyebrow }}</p>
       <h2 class="jl-display" id="jl-res-title">{{ t.res_title|em }}</h2>
       <p class="jl-lead">{{ t.res_lead|em }}</p>
+      {% if t.res_quote %}<blockquote class="jl-residences__quote jl-reveal"><p>{{ t.res_quote|em }}</p></blockquote>{% endif %}
+      <ul class="jl-pillars">
+        {% for pillar in lists.res_pillars %}
+          <li class="jl-reveal">
+            <span class="jl-pillars__no" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
+            <h3>{{ pillar.title }}</h3>
+            <p>{{ pillar.text }}</p>
+          </li>
+        {% endfor %}
+      </ul>
+      <a class="jl-button jl-button--dark jl-button--shine" href="#floor-plans">{{ t.res_button }} <span aria-hidden="true">→</span></a>
     </div>
 
-    <div class="jl-residences__media">
-      {% if imgs.res_main.image %}
-        <figure class="jl-residences__main jl-reveal">
-          <img src="{{ imgs.res_main.image|src:1920 }}" alt="{{ imgs.res_main.alt }}" loading="lazy">
+    <div class="jl-residences__media" data-jl-res-show>
+      <figure class="jl-residences__main jl-reveal">
+        <div class="jl-residences__slides">
+          {% if imgs.res_main.image %}
+            <img class="is-active" src="{{ imgs.res_main.image|src:1920 }}" alt="{{ imgs.res_main.alt }}" loading="lazy" data-caption="{{ imgs.res_main.alt|cut:', artistic impression' }}">
+          {% endif %}
+          {% for photo in lists.res_photos %}
+            <img{% if forloop.first and not imgs.res_main.image %} class="is-active"{% endif %} src="{{ photo.image|src:1920 }}" alt="{{ photo.image_alt }}" loading="lazy" data-caption="{{ photo.title }}">
+          {% endfor %}
+        </div>
+        {% if t.res_badge %}<span class="jl-residences__badge"><span class="jl-dot" aria-hidden="true"></span>{{ t.res_badge }}</span>{% endif %}
+        <figcaption>
+          <span class="jl-residences__count" aria-hidden="true"><b data-jl-res-index>01</b> / {{ lists.res_photos|length|add:1|stringformat:"02d" }}</span>
+          <span data-jl-res-caption>{{ imgs.res_main.alt|cut:', artistic impression' }}</span>
+        </figcaption>
+      </figure>
+      {% if imgs.res_tall.image %}
+        <figure class="jl-residences__tall jl-reveal">
+          <img src="{{ imgs.res_tall.image|src:1200 }}" alt="{{ imgs.res_tall.alt }}" loading="lazy">
         </figure>
       {% endif %}
       {% if imgs.res_side.image %}
@@ -119,17 +155,47 @@
           <img src="{{ imgs.res_side.image|src:1200 }}" alt="{{ imgs.res_side.alt }}" loading="lazy">
         </figure>
       {% endif %}
+      <div class="jl-residences__thumbs" role="group" aria-label="Choose a picture">
+        {% if imgs.res_main.image %}<button type="button" class="is-active" aria-label="Picture 1" aria-pressed="true"><img src="{{ imgs.res_main.image|src:480 }}" alt="" loading="lazy"></button>{% endif %}
+        {% for photo in lists.res_photos %}
+          <button type="button" aria-label="Picture {{ forloop.counter|add:1 }}: {{ photo.title }}" aria-pressed="false"><img src="{{ photo.image|src:480 }}" alt="" loading="lazy"></button>
+        {% endfor %}
+      </div>
     </div>
+  </section>
 
-    <ul class="jl-configs">
+  {# ---------- 3b. Floor plans: blurred plans; the whole card opens the lead popup ---------- #}
+  <section class="jl-plans" id="floor-plans" aria-labelledby="jl-plans-title">
+    <header class="jl-plans__head">
+      <p class="jl-eyebrow jl-eyebrow--light">{{ t.plans_eyebrow }}</p>
+      <h2 class="jl-display jl-display--light" id="jl-plans-title">{{ t.plans_title|em }}</h2>
+      <p class="jl-lead jl-lead--light">{{ t.plans_lead }}</p>
+    </header>
+    <ul class="jl-plans__grid">
       {% for config in lists.configs %}
-        <li class="jl-config jl-reveal">
-          <span class="jl-config__bhk">{{ config.title }}<small>{{ config.subtitle }}</small></span>
-          <p>{{ config.text }}</p>
-          <button class="jl-config__cta" type="button" data-jl-open="{{ config.link }}" data-jl-unit-preset="{{ config.value }}">{{ t.res_button }} <span aria-hidden="true">→</span></button>
+        <li class="jl-reveal">
+          <button class="jl-plan__card" type="button" data-jl-open="{{ config.link }}" data-jl-unit-preset="{{ config.value }}">
+            <span class="jl-plan__drawing">
+              {% if config.image %}<img src="{{ config.image|src:828 }}" alt="" loading="lazy">{% else %}{% include "projects/landing/_jl_plan.html" with rooms=forloop.counter %}{% endif %}
+              <span class="jl-plan__scan" aria-hidden="true"></span>
+            </span>
+            <span class="jl-plan__lock">
+              <span class="jl-plan__lock-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22"><path d="M7 11V8a5 5 0 0 1 10 0v3M6 11h12v9H6zM12 15v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              </span>
+              <span>{{ t.plans_unlock }}</span>
+            </span>
+            {% if config.text %}<span class="jl-plan__badge">{{ config.text }}</span>{% endif %}
+            <span class="jl-plan__meta">
+              <span><small>{{ t.plans_type_label }}</small><strong>{{ config.title }} {{ config.subtitle }}</strong></span>
+              <span><small>{{ t.plans_area_label }}</small><strong{% if not config.group %} class="is-locked"{% endif %}>{{ config.group|default:t.plans_area_locked }}</strong></span>
+            </span>
+            <span class="jl-plan__cta">{{ t.plans_button }} <span aria-hidden="true">→</span></span>
+          </button>
         </li>
       {% endfor %}
     </ul>
+    {% if t.plans_note %}<p class="jl-note jl-note--light jl-plans__note">{{ t.plans_note }}</p>{% endif %}
   </section>
 
   {# ---------- 4. Price band ---------- #}
@@ -201,39 +267,265 @@
     {% if t.gal_note %}<p class="jl-note jl-note--light">{{ t.gal_note }}</p>{% endif %}
   </section>
 
-  {# ---------- 8. Location ---------- #}
+  {# ---------- 8. Location: drive times beside a live map; a place shows its route ---------- #}
   <section class="jl-location" id="location" aria-labelledby="jl-loc-title">
-    <div class="jl-location__copy">
-      <p class="jl-eyebrow">{{ t.loc_eyebrow }}</p>
-      <h2 class="jl-display" id="jl-loc-title">{{ t.loc_title|em }}</h2>
-      <ul class="jl-location__list">
-        {% for place in lists.places %}<li><strong>{{ place.title }}</strong><span>{{ place.subtitle }}</span></li>{% endfor %}
-      </ul>
-      <button class="jl-button jl-button--dark" type="button" data-jl-open="{{ t.loc_popup }}">{{ t.loc_button }}</button>
+    <header class="jl-location__head">
+      <p class="jl-eyebrow jl-eyebrow--light">{{ t.loc_eyebrow }}</p>
+      <h2 class="jl-display jl-display--light" id="jl-loc-title">{{ t.loc_title|em }}</h2>
+      {% if t.loc_lead %}<p class="jl-lead jl-lead--light">{{ t.loc_lead }}</p>{% endif %}
+    </header>
+
+    <div class="jl-location__stage" data-lm-stage data-origin="{{ t.loc_origin }}">
+      <div class="jl-location__map jl-reveal">
+        <iframe title="{{ t.loc_map_title }}" src="{{ project.map_embed_url|default:t.loc_map_url }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen data-lm-map></iframe>
+        <span class="jl-location__corner jl-location__corner--tl" aria-hidden="true"></span>
+        <span class="jl-location__corner jl-location__corner--br" aria-hidden="true"></span>
+        <p class="jl-location__route" aria-live="polite">
+          <span class="jl-location__pin" aria-hidden="true"></span>
+          <span data-lm-route>{{ t.loc_origin }}</span>
+        </p>
+        <button class="jl-location__mode" type="button" aria-pressed="false" data-lm-mode>Day map</button>
+      </div>
+
+      <div class="jl-location__panel">
+        <ol class="jl-times" data-lm-list>
+          {% for place in lists.drive_times %}
+            <li>
+              <button class="jl-time" type="button" aria-pressed="false" data-lm-place="{{ place.link }}" data-label="{{ place.title }} · {{ place.value }} {{ t.loc_minutes }}">
+                <span class="jl-time__ring" style="--m: {{ place.value|default:0 }}" aria-hidden="true">
+                  <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="28"/><circle class="jl-time__arc" cx="32" cy="32" r="28" pathLength="100"/></svg>
+                  <b data-lm-count="{{ place.value }}">{{ place.value }}</b>
+                  <small>{{ t.loc_minutes }}</small>
+                </span>
+                <span class="jl-time__text">
+                  {% if place.subtitle %}<small>{{ place.subtitle }}</small>{% endif %}
+                  <strong>{{ place.title }}</strong>
+                  <span class="visually-hidden">{{ place.value }} {{ t.loc_minutes }}</span>
+                  <em>{{ t.loc_away }}</em>
+                </span>
+                <span class="jl-time__go" aria-hidden="true">→</span>
+              </button>
+            </li>
+          {% endfor %}
+        </ol>
+        {% if t.loc_note %}<p class="jl-note jl-note--light">{{ t.loc_note }}</p>{% endif %}
+        <div class="jl-location__value">
+          <h3>{{ t.loc_value_title|em }}</h3>
+          <p>{{ t.loc_value_text }}</p>
+          <button class="jl-button jl-button--gold jl-button--shine" type="button" data-jl-open="{{ t.loc_popup }}">{{ t.loc_button }}</button>
+        </div>
+      </div>
     </div>
-    <div class="jl-location__map jl-reveal">
-      <iframe title="{{ t.loc_map_title }}" src="{{ project.map_embed_url|default:t.loc_map_url }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+
+    {% if lists.places %}
+      <div class="jl-location__corridors">
+        <span class="jl-location__corridors-label">{{ t.loc_corridors }}</span>
+        <div class="jl-marquee" aria-hidden="true">
+          <div class="jl-marquee__track">
+            {% for copy in "12" %}{% for place in lists.places %}<span>{{ place.title }}</span>{% endfor %}{% endfor %}
+          </div>
+        </div>
+        <ul class="visually-hidden">{% for place in lists.places %}<li>{{ place.title }}</li>{% endfor %}</ul>
+      </div>
+    {% endif %}
+  </section>
+
+  {# ---------- 9. The private line: three taps instead of a form; a letter writes itself as you choose ---------- #}
+  <section class="jl-private" id="private-line" aria-labelledby="jl-pl-title">
+    <div class="jl-private__intro">
+      <p class="jl-eyebrow">{{ t.pl_eyebrow }}</p>
+      <h2 class="jl-display" id="jl-pl-title">{{ t.pl_title|em }}</h2>
+      <p class="jl-lead">{{ t.pl_lead }}</p>
+    </div>
+
+    <div class="jl-private__stage" data-jl-private>
+      <form class="jl-private__form" novalidate data-lead-form data-jl-form action="{% url 'submit_enquiry' %}" method="post"
+        data-residential-project="{{ project.slug }}" data-request="{{ t.pl_request }}">
+        {% include "partials/form_tracking.html" with source="landing" %}
+        <input type="hidden" name="project" value="{{ project.slug }}" data-jl-project>
+        <input type="hidden" name="interest" value="residential" data-jl-interest>
+        <input type="hidden" name="callTime" value="" data-jl-pl-call-time>
+        <input type="hidden" name="message" value="{{ t.pl_request }}" data-jl-pl-message>
+
+        <ol class="jl-private__progress" aria-hidden="true"><li class="is-active"></li><li></li><li></li></ol>
+
+        <fieldset class="jl-pl-step" data-jl-pl-step>
+          <legend>{{ t.pl_step_1 }}</legend>
+          <div class="jl-pl-cards">
+            {% for choice in lists.pl_choices %}
+              <button class="jl-pl-card" type="button" aria-pressed="false" data-jl-pl-choice="{{ choice.title }}" data-letter="{{ choice.text|default:choice.title }}">
+                <span class="jl-pl-card__no" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
+                <strong>{{ choice.title }}</strong>
+                {% if choice.subtitle %}<small>{{ choice.subtitle }}</small>{% endif %}
+                <span class="jl-pl-card__tick" aria-hidden="true">✓</span>
+              </button>
+            {% endfor %}
+          </div>
+          <p class="jl-pl-error" role="alert" hidden data-jl-pl-error>{{ t.pl_choose_error }}</p>
+          <div class="jl-pl-nav"><button class="jl-pl-next" type="button" data-jl-pl-next>{{ t.pl_next }} <span aria-hidden="true">→</span></button></div>
+        </fieldset>
+
+        <fieldset class="jl-pl-step" data-jl-pl-step hidden>
+          <legend>{{ t.pl_step_2 }}</legend>
+          <div class="jl-pl-slots">
+            {% for slot in lists.pl_slots %}
+              <button class="jl-pl-slot" type="button" aria-pressed="false" data-jl-pl-slot="{{ slot.value }}" data-label="{{ slot.title }}{% if slot.subtitle %}, {{ slot.subtitle }}{% endif %}" data-letter="{{ slot.text|default:slot.title|lower }}{% if slot.subtitle %} ({{ slot.subtitle }}){% endif %}">
+                <span class="jl-pl-slot__dial" aria-hidden="true" style="--slot: {{ forloop.counter0 }}"></span>
+                <strong>{{ slot.title }}</strong>
+                {% if slot.subtitle %}<small>{{ slot.subtitle }}</small>{% endif %}
+              </button>
+            {% endfor %}
+          </div>
+          <p class="jl-pl-error" role="alert" hidden data-jl-pl-error>{{ t.pl_choose_error }}</p>
+          <div class="jl-pl-nav">
+            <button class="jl-pl-back" type="button" data-jl-pl-back>{{ t.pl_back }}</button>
+            <button class="jl-pl-next" type="button" data-jl-pl-next>{{ t.pl_next }} <span aria-hidden="true">→</span></button>
+          </div>
+        </fieldset>
+
+        <fieldset class="jl-pl-step" data-jl-pl-step hidden>
+          <legend>{{ t.pl_step_3 }}</legend>
+          <p class="jl-pl-privacy">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v5c0 4.5-3 8.4-7 10-4-1.6-7-5.5-7-10V6l7-3zM9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>{{ t.pl_privacy }}</span>
+          </p>
+          <div class="jl-pl-fields">
+            <label class="jl-field">
+              <span>{{ t.form_name_label }}</span>
+              <input name="name" type="text" autocomplete="name" maxlength="80" placeholder="{{ t.form_name_placeholder }}" required
+                data-validate="realName" data-error-id="pl-name-error" data-jl-pl-name>
+              <span class="jl-field__error" id="pl-name-error" role="alert" hidden></span>
+            </label>
+            <label class="jl-field">
+              <span>{{ t.form_phone_label }}</span>
+              <input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="25" placeholder="{{ t.form_phone_placeholder }}" required
+                data-validate="phone" data-error-id="pl-phone-error">
+              <span class="jl-field__error" id="pl-phone-error" role="alert" hidden></span>
+            </label>
+            <label class="jl-field jl-pl-fields__wide">
+              <span>{{ t.form_email_label }}</span>
+              <input name="email" type="email" autocomplete="email" maxlength="254" placeholder="{{ t.form_email_placeholder }}" required
+                data-validate="leadEmail" data-error-id="pl-email-error">
+              <span class="jl-field__error" id="pl-email-error" role="alert" hidden></span>
+            </label>
+          </div>
+          <div class="jl-pl-nav">
+            <button class="jl-pl-back" type="button" data-jl-pl-back>{{ t.pl_back }}</button>
+            <button class="jl-button jl-form__submit jl-pl-submit" type="submit" data-fancy-button>
+              <span class="submit-label">{{ t.pl_button }}</span>
+              <span class="submit-arrow" aria-hidden="true">→</span>
+            </button>
+          </div>
+          <p class="jl-form__status" role="status" aria-live="polite" data-form-status></p>
+        </fieldset>
+      </form>
+
+      {# The letter mirrors the visitor's choices as they make them; it is decoration, so screen readers skip it. #}
+      <div class="jl-letter" aria-hidden="true" data-jl-letter>
+        <div class="jl-letter__paper">
+          {% if imgs.brand_logo.image %}<span class="jl-letter__crest" style="--logo: url('{{ imgs.brand_logo.image.url }}')"></span>{% endif %}
+          <p class="jl-letter__date" data-jl-letter-date></p>
+          <p>{{ t.pl_letter_to }} <span class="jl-letter__ink" data-jl-letter-name data-empty="{{ t.pl_letter_guest }}">{{ t.pl_letter_guest }}</span>,</p>
+          <p>{{ t.pl_letter_prepare }} <span class="jl-letter__ink is-blank" data-jl-letter-choice>{{ t.pl_letter_blank }}</span>.</p>
+          <p>{{ t.pl_letter_call }} <span class="jl-letter__ink is-blank" data-jl-letter-time>{{ t.pl_letter_blank }}</span>.</p>
+          <p class="jl-letter__sign">{{ t.pl_letter_sign }}</p>
+          <span class="jl-letter__seal"><span>{{ t.pl_sealed }}</span></span>
+        </div>
+      </div>
     </div>
   </section>
 
-  {# ---------- 9. Final call to action ---------- #}
+  {# ---------- 10. Private site visit: a viewing pass the visitor fills in; the day tiles are built by landing.js ---------- #}
   <section class="jl-final" id="enquire" aria-labelledby="jl-final-title">
-    {% if imgs.final_bg.image %}<img src="{{ imgs.final_bg.image|src:1200 }}" alt="" loading="lazy" aria-hidden="true">{% endif %}
+    {% if imgs.final_bg.image %}<img src="{{ imgs.final_bg.image|src:1920 }}" alt="" loading="lazy" aria-hidden="true">{% endif %}
     <div class="jl-final__inner">
       <div class="jl-final__copy">
         <p class="jl-eyebrow jl-eyebrow--light">{{ t.final_eyebrow }}</p>
         <h2 class="jl-display jl-display--light" id="jl-final-title">{{ t.final_title|em }}</h2>
+        {% if t.visit_lead %}<p class="jl-lead jl-lead--light">{{ t.visit_lead }}</p>{% endif %}
         <ul class="jl-final__perks">
           {% for perk in lists.perks %}<li>{{ perk.title }}</li>{% endfor %}
         </ul>
       </div>
-      <div class="jl-final__card">
-        {% include "projects/landing/_lead_form.html" with prefix="final" button=t.final_button %}
-      </div>
+
+      <form class="jl-pass" novalidate data-lead-form data-jl-form data-jl-pass action="{% url 'submit_enquiry' %}" method="post"
+        data-residential-project="{{ project.slug }}" data-request="{{ t.visit_request }}">
+        {% include "partials/form_tracking.html" with source="landing" %}
+        <input type="hidden" name="project" value="{{ project.slug }}" data-jl-project>
+        <input type="hidden" name="interest" value="residential" data-jl-interest>
+        <input type="hidden" name="message" value="{{ t.visit_request }}" data-jl-pass-message>
+        <input type="hidden" name="visit_date" value="" data-validate="choice" data-required-message="{{ t.visit_day_error }}" data-error-id="pass-day-error" data-jl-pass-date>
+        <input type="hidden" name="callTime" value="" data-validate="choice" data-required-message="{{ t.visit_time_error }}" data-error-id="pass-time-error" data-jl-pass-time>
+
+        <div class="jl-pass__head">
+          {% if imgs.brand_logo.image %}<span class="jl-pass__crest" style="--logo: url('{{ imgs.brand_logo.image.url }}')" aria-hidden="true"></span>{% endif %}
+          <p class="jl-pass__title"><small>{{ t.visit_admit }}</small>{{ t.visit_pass_label }}</p>
+          <p class="jl-pass__no" aria-hidden="true">No. <span data-jl-pass-no>JC-0000</span></p>
+        </div>
+
+        <fieldset class="jl-pass__group">
+          <legend>{{ t.visit_day }}</legend>
+          <div class="jl-pass__days" role="group" data-jl-pass-days></div>
+          <span class="jl-field__error" id="pass-day-error" role="alert" hidden></span>
+        </fieldset>
+
+        <fieldset class="jl-pass__group">
+          <legend>{{ t.visit_time }}</legend>
+          <div class="jl-pass__times">
+            {% for slot in lists.pl_slots %}{% if slot.value != "flexible" %}
+              <button class="jl-pass__time" type="button" aria-pressed="false" data-jl-pass-slot="{{ slot.value }}" data-label="{{ slot.title }}{% if slot.subtitle %}, {{ slot.subtitle }}{% endif %}">
+                <strong>{{ slot.title }}</strong>{% if slot.subtitle %}<small>{{ slot.subtitle }}</small>{% endif %}
+              </button>
+            {% endif %}{% endfor %}
+          </div>
+          <span class="jl-field__error" id="pass-time-error" role="alert" hidden></span>
+        </fieldset>
+
+        <label class="jl-switch">
+          <input type="checkbox" name="chauffeur" value="on">
+          <span class="jl-switch__track" aria-hidden="true"><span></span></span>
+          <span class="jl-switch__text"><strong>{{ t.visit_chauffeur }}</strong><small>{{ t.visit_chauffeur_note }}</small></span>
+        </label>
+
+        <div class="jl-pass__tear" aria-hidden="true"></div>
+
+        <div class="jl-pass__fields">
+          <label class="jl-field">
+            <span>{{ t.form_name_label }}</span>
+            <input name="name" type="text" autocomplete="name" maxlength="80" placeholder="{{ t.form_name_placeholder }}" required
+              data-validate="realName" data-error-id="pass-name-error">
+            <span class="jl-field__error" id="pass-name-error" role="alert" hidden></span>
+          </label>
+          <label class="jl-field">
+            <span>{{ t.form_phone_label }}</span>
+            <input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="25" placeholder="{{ t.form_phone_placeholder }}" required
+              data-validate="phone" data-error-id="pass-phone-error">
+            <span class="jl-field__error" id="pass-phone-error" role="alert" hidden></span>
+          </label>
+          <label class="jl-field jl-pass__wide">
+            <span>{{ t.form_email_label }}</span>
+            <input name="email" type="email" autocomplete="email" maxlength="254" placeholder="{{ t.form_email_placeholder }}" required
+              data-validate="leadEmail" data-error-id="pass-email-error">
+            <span class="jl-field__error" id="pass-email-error" role="alert" hidden></span>
+          </label>
+        </div>
+
+        <button class="jl-button jl-form__submit" type="submit" data-fancy-button>
+          <span class="submit-label">{{ t.final_button }}</span>
+          <span class="submit-arrow" aria-hidden="true">→</span>
+        </button>
+        <p class="jl-form__status" role="status" aria-live="polite" data-form-status></p>
+        <p class="jl-form__note">
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="13" height="13"><path d="M7 11V8a5 5 0 0 1 10 0v3M6 11h12v9H6z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+          {{ t.form_note }}
+        </p>
+        <span class="jl-pass__barcode" aria-hidden="true"></span>
+        <span class="jl-pass__stamp" aria-hidden="true">{{ t.visit_confirmed }}</span>
+      </form>
     </div>
   </section>
 
-  {# ---------- 10. Disclaimer ---------- #}
+  {# ---------- 11. Disclaimer ---------- #}
   <section class="jl-disclaimer" aria-label="Disclaimer">
     <p><strong>{{ t.legal_label }}</strong> {{ t.legal_rera }} · <a href="{{ t.legal_link_url }}" target="_blank" rel="noopener">{{ t.legal_link_label }}</a></p>
     <p>{{ t.legal_text }}</p>
@@ -271,5 +563,6 @@
 {% block scripts %}
 <script src="{% static 'js/landing-forms.js' %}" defer></script>
 <script src="{% static 'js/landing.js' %}" defer></script>
+<script src="{% static 'js/landing-location.js' %}" defer></script>
 <script src="{% static 'js/landing-fx.js' %}" defer></script>
 {% endblock %}

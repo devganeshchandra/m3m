@@ -5479,6 +5479,7 @@ section.finder-section {
 
 .inner-hero__body:has(.inner-hero__aside) .inner-hero__content {
   width: auto;
+  margin-inline: 0;
   padding: 0;
 }
 

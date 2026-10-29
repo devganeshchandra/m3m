@@ -4,11 +4,17 @@
   the page's own sections, a call link and an enquiry button. Expects: theme (jl / cl / tt) and
   open_attr (the attribute the page's script uses to open its lead popup, e.g. "data-jl-open").
   The name, links and labels come from the page's landing content (t.brand, lists.nav, t.nav_*).
+  A page with a logo in its admin images (imgs.brand_logo) shows the logo in place of the name.
 {% endcomment %}
-<header class="lnav lnav--{{ theme }}" data-lnav>
+<header class="lnav lnav--{{ theme }}{% if imgs.brand_logo.image %} lnav--logo{% endif %}" data-lnav>
   <a class="lnav__brand" href="#main-content" aria-label="{{ t.brand }}, back to top">
-    <small>M3M</small>
-    <span>{{ t.brand }}</span>
+    {% if imgs.brand_logo.image %}
+      <img class="lnav__logo" src="{{ imgs.brand_logo.image.url }}" alt="{{ imgs.brand_logo.alt|default:t.brand }}">
+      <span class="lnav__logo-shine" style="--logo: url('{{ imgs.brand_logo.image.url }}')" aria-hidden="true"></span>
+    {% else %}
+      <small>M3M</small>
+      <span>{{ t.brand }}</span>
+    {% endif %}
   </a>
   <nav class="lnav__links" id="lnav-links" aria-label="On this page">
     {% for link in lists.nav %}<a href="#{{ link.link }}">{{ link.title }}</a>{% endfor %}

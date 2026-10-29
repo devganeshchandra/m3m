@@ -3,7 +3,8 @@
 {% comment %}
   Ad landing page for M3M Trump Tower Noida, Sector 94 (used automatically for this project).
   Theme: "midnight & champagne" — deep midnight navy, champagne gold and ivory, Playfair Display
-  headings, image-led sections with slideshows and hover reveals.
+  headings, image-led sections with slideshows and hover reveals; Art Deco brass for the private lift
+  and the departures board.
   Every text, image and list comes from the admin (Landing pages → M3M Trump Tower Noida); the
   slots and their starting content are in projects/landing_pages/trump.py.
 {% endcomment %}
@@ -51,7 +52,7 @@
 {% block content %}
 <main class="tt" id="main-content">
 
-  {# ---------- Hero: cinematic slideshow, headline left, enquiry card right ---------- #}
+  {# ---------- Hero: cinematic slideshow, headline on frosted glass left, enquiry card right ---------- #}
   <section class="tt-hero" aria-labelledby="tt-title" data-tt-hero>
     <div class="tt-hero__slides" aria-hidden="true">
       {% for slide in lists.slides %}
@@ -65,10 +66,14 @@
     <div class="tt-hero__inner">
       <div class="tt-hero__copy">
         <p class="tt-badge tt-rise"><span class="tt-badge__dot" aria-hidden="true"></span> {{ t.hero_badge }}</p>
-        <h1 class="tt-hero__title tt-rise" id="tt-title">
-          <small>{{ t.hero_title_small }}</small>
-          {{ t.hero_title }}
-          <em>{{ t.hero_title_em }}</em>
+        {# Letters rise in and roll in a wave; the gold line shimmers (site.js initHeroHeadline, pages.css .hero-char). #}
+        <h1 class="tt-hero__title" id="tt-title" data-hero-headline>
+          <small class="tt-rise">{{ t.hero_title_small }}</small>
+          <span class="hero-line hero-line--one" data-hero-line>{{ t.hero_title }}</span>
+          <span class="hero-line hero-line--two" data-hero-line>{{ t.hero_title_em }}</span>
+          <svg class="hero-flourish" viewBox="0 0 420 28" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <path d="M4 18 C 90 4, 180 4, 260 14 S 380 26, 416 8" pathLength="1"/>
+          </svg>
         </h1>
         <p class="tt-hero__line tt-rise">{{ t.hero_line|em }}</p>
         <ul class="tt-hero__points tt-rise">
@@ -86,9 +91,9 @@
         </div>
       </div>
 
-      <aside class="tt-card tt-rise" aria-labelledby="tt-card-title">
+      <aside class="tt-card tt-card--hero tt-rise" aria-labelledby="tt-card-title">
         <div class="tt-card__ribbon">{{ t.card_ribbon }}</div>
-        <h2 class="tt-card__title" id="tt-card-title">{{ t.card_title|em }}</h2>
+        <h2 class="tt-card__title" id="tt-card-title"><span data-tt-letters>{{ t.card_title }}</span></h2>
         <p class="tt-card__sub">{{ t.card_sub|em }}</p>
         {% include "projects/landing/_trump_form.html" with prefix="hero" button=t.card_button %}
       </aside>
@@ -96,25 +101,158 @@
     <p class="tt-hero__legal">{{ t.hero_legal }}</p>
   </section>
 
-  {# ---------- Trust band ---------- #}
+  {# ---------- Trust band: gold sweeps up through each item on hover ---------- #}
   <section class="tt-band" aria-label="At a glance">
     <ul>
-      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V9l8-5 8 5v12M9 21v-6h6v6" /></svg><div><strong>{{ t.band_1_title }}</strong><span>{{ t.band_1_text }}</span></div></li>
-      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z" /><circle cx="12" cy="10" r="2.5" /></svg><div><strong>{{ t.band_2_title }}</strong><span>{{ t.band_2_text }}</span></div></li>
-      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.6 6.7 19.4l1.2-6L3.4 9.3l6-.7Z" /></svg><div><strong>{{ t.band_3_title }}</strong><span>{{ t.band_3_text }}</span></div></li>
-      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM9 8h6M9 12h6M9 16h4" /></svg><div><strong>{{ t.band_4_title }}</strong><span>{{ t.band_4_text }}</span></div></li>
+      <li><span class="tt-band__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V9l8-5 8 5v12M9 21v-6h6v6" /></svg></span><div><strong>{{ t.band_1_title }}</strong><span>{{ t.band_1_text }}</span></div></li>
+      <li><span class="tt-band__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z" /><circle cx="12" cy="10" r="2.5" /></svg></span><div><strong>{{ t.band_2_title }}</strong><span>{{ t.band_2_text }}</span></div></li>
+      <li><span class="tt-band__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.6 6.7 19.4l1.2-6L3.4 9.3l6-.7Z" /></svg></span><div><strong>{{ t.band_3_title }}</strong><span>{{ t.band_3_text }}</span></div></li>
+      <li><span class="tt-band__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM9 8h6M9 12h6M9 16h4" /></svg></span><div><strong>{{ t.band_4_title }}</strong><span>{{ t.band_4_text }}</span></div></li>
     </ul>
   </section>
 
-  {# ---------- How it works: three steps, one action ---------- #}
+  {# ---------- How it works: three cards that flood midnight and gold on hover ---------- #}
   <section class="tt-steps" aria-labelledby="tt-steps-title">
     <h2 class="tt-steps__title" id="tt-steps-title">{{ t.steps_title|em }}</h2>
     <ol class="tt-steps__list">
       {% for step in lists.steps %}
-        <li class="tt-up"><span>{{ forloop.counter }}</span><strong>{{ step.title }}</strong><p>{{ step.text }}</p></li>
+        <li class="tt-step tt-up">
+          <span class="tt-step__no" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
+          <span class="tt-step__icon" aria-hidden="true">
+            {% cycle '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>' '<svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7"/></svg>' '<svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></svg>' %}
+          </span>
+          <strong>{{ step.title }}</strong>
+          <p>{{ step.text }}</p>
+          <span class="tt-step__line" aria-hidden="true"></span>
+        </li>
       {% endfor %}
     </ol>
     <button class="tt-btn tt-btn--gold tt-btn--shine" type="button" data-tt-open="{{ t.steps_popup }}">{{ t.steps_button }}</button>
+  </section>
+
+  {# ---------- The private lift: key facts, then a three-step form beside an Art Deco lift (landing-trump.js initLift) ---------- #}
+  <section class="tt-lift" id="private-lift" aria-labelledby="tt-lift-title">
+    <ul class="tt-specs">
+      {% for spec in lists.specs %}
+        <li class="tt-up"><span>{{ spec.title }}</span><strong>{{ spec.value }}</strong></li>
+      {% endfor %}
+    </ul>
+
+    <header class="tt-head">
+      <p class="tt-eyebrow">{{ t.lift_kicker }}</p>
+      <h2 class="tt-title" id="tt-lift-title">{{ t.lift_title|em }}</h2>
+      <p class="tt-lead">{{ t.lift_lead }}</p>
+    </header>
+
+    <div class="tt-lift__stage" data-tt-lift>
+      <form class="tt-lift__form tt-up" novalidate data-lead-form data-tt-lift-form action="{% url 'submit_enquiry' %}" method="post">
+        {% include "partials/form_tracking.html" with source="landing" %}
+        <input type="hidden" name="project" value="{{ project.slug }}">
+        <input type="hidden" name="interest" value="residential">
+        <input type="hidden" name="message" value="{{ t.lift_request }}" data-lift-message data-request="{{ t.lift_request }}">
+        <input type="hidden" name="unit" value="" data-lift-unit data-validate="choice"
+          data-required-message="{{ t.form_unit_error }}" data-error-id="lift-unit-error">
+
+        {# The lift's call buttons double as the progress: the current step glows. #}
+        <ol class="tt-lift__buttons" aria-hidden="true">
+          <li class="is-lit"><span>1</span></li><li><span>2</span></li><li><span>3</span></li>
+        </ol>
+
+        <fieldset class="tt-lift__step" data-lift-step>
+          <legend>{{ t.lift_step_1 }}</legend>
+          <div class="tt-lift__choices tt-lift__choices--units">
+            {% for residence in lists.residences %}
+              <button class="tt-lift__choice" type="button" aria-pressed="false" data-lift-unit-choice="{{ residence.value }}" data-label="{{ residence.title }}">
+                <strong>{{ residence.title }}</strong><small>{{ residence.subtitle }}</small>
+              </button>
+            {% endfor %}
+          </div>
+          <span class="tt-lift__error" id="lift-unit-error" role="alert" hidden></span>
+          <p class="tt-lift__error" role="alert" hidden data-lift-error>{{ t.lift_choose_error }}</p>
+          <div class="tt-lift__nav"><button class="tt-lift__next" type="button" data-lift-next>{{ t.lift_next }} <span aria-hidden="true">→</span></button></div>
+        </fieldset>
+
+        <fieldset class="tt-lift__step" data-lift-step hidden>
+          <legend>{{ t.lift_step_2 }}</legend>
+          <div class="tt-lift__choices">
+            {% for floor in lists.lift_floors %}
+              <button class="tt-lift__choice tt-lift__choice--floor" type="button" aria-pressed="false" data-lift-floor="{{ forloop.counter0 }}"
+                data-label="{{ floor.title }}{% if floor.subtitle %} ({{ floor.subtitle }}){% endif %}" data-word="{{ floor.value|default:floor.title }}">
+                <strong>{{ floor.title }}</strong>{% if floor.subtitle %}<small>{{ floor.subtitle }}</small>{% endif %}
+              </button>
+            {% endfor %}
+          </div>
+          <p class="tt-lift__error" role="alert" hidden data-lift-error>{{ t.lift_choose_error }}</p>
+          <div class="tt-lift__nav">
+            <button class="tt-lift__back" type="button" data-lift-back>{{ t.lift_back }}</button>
+            <button class="tt-lift__next" type="button" data-lift-next>{{ t.lift_next }} <span aria-hidden="true">→</span></button>
+          </div>
+        </fieldset>
+
+        <fieldset class="tt-lift__step" data-lift-step hidden>
+          <legend>{{ t.lift_step_3 }}</legend>
+          <div class="tt-lift__fields">
+            <label class="tt-field">
+              <span class="visually-hidden">Full name</span>
+              <input name="name" type="text" autocomplete="name" maxlength="80" placeholder="Full name" required
+                data-validate="realName" data-error-id="lift-name-error" data-lift-name>
+              <span class="tt-field__error" id="lift-name-error" role="alert" hidden></span>
+            </label>
+            <label class="tt-field">
+              <span class="visually-hidden">Mobile number</span>
+              <input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="25" placeholder="Mobile number" required
+                data-validate="phone" data-error-id="lift-phone-error">
+              <span class="tt-field__error" id="lift-phone-error" role="alert" hidden></span>
+            </label>
+            <label class="tt-field tt-lift__wide">
+              <span class="visually-hidden">Email</span>
+              <input name="email" type="email" autocomplete="email" maxlength="254" placeholder="Email address" required
+                data-validate="leadEmail" data-error-id="lift-email-error">
+              <span class="tt-field__error" id="lift-email-error" role="alert" hidden></span>
+            </label>
+          </div>
+          <p class="tt-lift__privacy">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path d="M12 3l7 3v5c0 4.5-3 8.4-7 10-4-1.6-7-5.5-7-10V6l7-3zM9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>{{ t.lift_privacy }}</span>
+          </p>
+          <div class="tt-lift__nav">
+            <button class="tt-lift__back" type="button" data-lift-back>{{ t.lift_back }}</button>
+            <button class="tt-btn tt-btn--gold tt-btn--shine" type="submit">
+              {{ t.lift_button }}
+              <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <p class="tt-form__status" role="status" aria-live="polite" data-form-status></p>
+        </fieldset>
+      </form>
+
+      {# The lift mirrors the visitor's choices; it is decoration, so screen readers skip it. #}
+      <div class="tt-elevator tt-up" aria-hidden="true" data-lift-car>
+        <div class="tt-elevator__dial">
+          <svg viewBox="0 0 240 132">
+            <path class="tt-elevator__arc" d="M20 120 A100 100 0 0 1 220 120"/>
+            <path class="tt-elevator__arc tt-elevator__arc--inner" d="M36 120 A84 84 0 0 1 204 120"/>
+          </svg>
+          <ol class="tt-elevator__marks" style="--n: {{ lists.lift_floors|length }}">
+            {% for floor in lists.lift_floors %}<li style="--i: {{ forloop.counter0 }}"><span>{{ floor.value|default:floor.title }}</span></li>{% endfor %}
+          </ol>
+          <span class="tt-elevator__needle" data-lift-needle></span>
+          <span class="tt-elevator__hub"></span>
+        </div>
+        <p class="tt-elevator__display"><span data-lift-display data-empty="{{ t.lift_display }}">{{ t.lift_display }}</span><i data-lift-unit-display></i></p>
+        <div class="tt-elevator__shaft">
+          <div class="tt-elevator__views">
+            {% for floor in lists.lift_floors %}
+              {% if floor.image %}<img src="{{ floor.image|src:828 }}" alt="" loading="lazy" data-lift-view="{{ forloop.counter0 }}">{% endif %}
+            {% endfor %}
+          </div>
+          <p class="tt-elevator__welcome"><small>{{ t.lift_welcome }}</small><span data-lift-welcome></span></p>
+          <span class="tt-elevator__door tt-elevator__door--left"></span>
+          <span class="tt-elevator__door tt-elevator__door--right"></span>
+        </div>
+        <p class="tt-elevator__plate"><small>{{ t.lift_plate }}</small><span data-lift-owner data-empty="{{ t.lift_guest }}" class="is-blank">{{ t.lift_guest }}</span></p>
+      </div>
+    </div>
   </section>
 
   {# ---------- Residences ---------- #}
@@ -129,11 +267,16 @@
       {% for residence in lists.residences %}
         <article class="tt-showcase tt-up">
           {% if residence.image %}<img src="{{ residence.image|src:828 }}" alt="" aria-hidden="true" loading="lazy">{% endif %}
+          <span class="tt-showcase__frame" aria-hidden="true"></span>
+          <span class="tt-showcase__no" aria-hidden="true">No. {{ forloop.counter|stringformat:"02d" }}</span>
           <div class="tt-showcase__body">
             <p class="tt-eyebrow tt-eyebrow--light">{{ residence.subtitle }}</p>
             <h3>{{ residence.title }}</h3>
             <ul>{% for line in residence.lines %}<li>{{ line }}</li>{% endfor %}</ul>
-            <button class="tt-btn tt-btn--gold" type="button" data-tt-open="{{ t.res_popup|unit:residence.title }}" data-tt-unit-preset="{{ residence.value }}">{{ t.res_button|unit:residence.title }}</button>
+            <button class="tt-btn tt-btn--gold" type="button" data-tt-open="{{ t.res_popup|unit:residence.title }}" data-tt-unit-preset="{{ residence.value }}">
+              {{ t.res_button|unit:residence.title }}
+              <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
           </div>
         </article>
       {% endfor %}
@@ -143,6 +286,7 @@
       {% for room in lists.interiors %}
         <li class="tt-room tt-up">
           <img src="{{ room.image|src:828 }}" alt="{{ room.image_alt }}" loading="lazy">
+          <span class="tt-room__no" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
           <div class="tt-room__text"><h3>{{ room.title }}</h3><p>{{ room.text }}</p></div>
         </li>
       {% endfor %}
@@ -150,21 +294,48 @@
     {% if t.res_note %}<p class="tt-note">{{ t.res_note }}</p>{% endif %}
   </section>
 
-  {# ---------- Price band ---------- #}
-  <section class="tt-cta-band" aria-label="Price list">
-    {% if imgs.price_bg.image %}<img src="{{ imgs.price_bg.image|src:1920 }}" alt="" aria-hidden="true" loading="lazy">{% endif %}
-    <div class="tt-cta-band__inner tt-up">
-      <p class="tt-eyebrow tt-eyebrow--light">{{ t.price_eyebrow }}</p>
-      <h2>{{ t.price_title|em }}</h2>
-      <button class="tt-btn tt-btn--gold tt-btn--shine" type="button" data-tt-open="{{ t.price_popup }}">{{ t.price_button }}</button>
+  {# ---------- The private collection: sealed envelopes; each opens the lead popup ---------- #}
+  <section class="tt-vault" aria-labelledby="tt-vault-title">
+    <header class="tt-head">
+      <p class="tt-eyebrow tt-eyebrow--light">{{ t.vault_kicker }}</p>
+      <h2 class="tt-title tt-title--light" id="tt-vault-title">{{ t.vault_title|em }}</h2>
+      <p class="tt-lead tt-lead--light">{{ t.vault_lead }}</p>
+    </header>
+    <ul class="tt-vault__grid">
+      {% for doc in lists.vault %}
+        <li class="tt-up">
+          <button class="tt-env" type="button" data-tt-open="{{ doc.link|default:doc.title }}" {% if doc.value %}data-tt-unit-preset="{{ doc.value }}"{% endif %}>
+            <span class="tt-env__art" aria-hidden="true">
+              <span class="tt-env__inside"></span>
+              <span class="tt-env__letter">
+                {% if doc.image %}<img src="{{ doc.image|src:480 }}" alt="" loading="lazy">{% endif %}
+                <b>{{ doc.title }}</b>
+              </span>
+              <span class="tt-env__pocket"></span>
+              <span class="tt-env__flap"></span>
+              <span class="tt-env__seal">{{ t.brand|slice:":1" }}</span>
+            </span>
+            <span class="tt-env__tag">{{ t.vault_sealed }} · {{ forloop.counter|stringformat:"02d" }}</span>
+            <strong>{{ doc.title }}</strong>
+            {% if doc.subtitle %}<small>{{ doc.subtitle }}</small>{% endif %}
+            <span class="tt-env__cta">{{ t.vault_unlock }} <span aria-hidden="true">→</span></span>
+          </button>
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="tt-vault__all">
+      <button class="tt-btn tt-btn--gold tt-btn--shine" type="button" data-tt-open="{{ t.vault_all_popup }}">
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path d="M7 11V8a5 5 0 0 1 9.6-2M6 11h12v9H6zM12 15v2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        {{ t.vault_all }}
+      </button>
     </div>
   </section>
 
-  {# ---------- Lifestyle mosaic ---------- #}
+  {# ---------- Lifestyle mosaic, on warm champagne ---------- #}
   <section class="tt-section tt-life" id="lifestyle" aria-labelledby="tt-life-title">
-    <header class="tt-head tt-head--light">
-      <p class="tt-eyebrow tt-eyebrow--light">{{ t.life_eyebrow }}</p>
-      <h2 class="tt-title tt-title--light" id="tt-life-title">{{ t.life_title|em }}</h2>
+    <header class="tt-head">
+      <p class="tt-eyebrow">{{ t.life_eyebrow }}</p>
+      <h2 class="tt-title" id="tt-life-title">{{ t.life_title|em }}</h2>
     </header>
     <ul class="tt-mosaic">
       {% for tile in lists.club %}
@@ -178,26 +349,51 @@
         <button class="tt-btn tt-btn--gold" type="button" data-tt-open="{{ t.life_cta_popup }}">{{ t.life_cta_button }}</button>
       </li>
     </ul>
-    {% if t.life_note %}<p class="tt-note tt-note--light">{{ t.life_note }}</p>{% endif %}
+    {% if t.life_note %}<p class="tt-note">{{ t.life_note }}</p>{% endif %}
   </section>
 
-  {# ---------- Location ---------- #}
+  {# ---------- Location: a departures board beside a live map; a destination shows its route (landing-location.js) ---------- #}
   <section class="tt-section tt-location" id="location" aria-labelledby="tt-loc-title">
-    <div class="tt-location__copy">
+    <header class="tt-head">
       <p class="tt-eyebrow">{{ t.loc_eyebrow }}</p>
       <h2 class="tt-title" id="tt-loc-title">{{ t.loc_title|em }}</h2>
-      <ul class="tt-times">
-        {% for place in lists.connectivity %}
-          <li class="tt-up"><span class="tt-times__min"><strong>{{ place.value }}</strong>{{ t.loc_unit }}</span><span>{{ place.title }}</span></li>
-        {% endfor %}
-      </ul>
-      {% if t.loc_note %}<p class="tt-note tt-note--left">{{ t.loc_note }}</p>{% endif %}
-      <button class="tt-btn tt-btn--dark" type="button" data-tt-open="{{ t.loc_popup }}">{{ t.loc_button }}</button>
-    </div>
-    <div class="tt-location__visual tt-up">
-      <div class="tt-location__map">
-        <iframe title="{{ t.loc_map_title }}" src="{{ project.map_embed_url|default:t.loc_map_url }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      {% if t.loc_lead %}<p class="tt-lead">{{ t.loc_lead }}</p>{% endif %}
+    </header>
+
+    <div class="tt-location__stage" data-lm-stage data-origin="{{ t.loc_origin }}">
+      <div class="tt-board tt-up">
+        <p class="tt-board__top">
+          <span class="tt-board__title">{{ t.loc_board }}</span>
+          <span class="tt-board__clock" data-tt-clock aria-hidden="true">--:--</span>
+        </p>
+        <p class="tt-board__cols" aria-hidden="true"><span>{{ t.loc_board_place }}</span><span>{{ t.loc_board_time }}</span></p>
+        <ol class="tt-board__rows" data-lm-list>
+          {% for place in lists.connectivity %}
+            <li style="--i: {{ forloop.counter0 }}">
+              <button class="tt-board__row" type="button" aria-pressed="false" data-lm-place="{{ place.link }}" data-label="{{ place.title }} · {{ place.value }} {{ t.loc_unit }}">
+                <span class="tt-board__place">
+                  {% if place.subtitle %}<small>{{ place.subtitle }}</small>{% endif %}
+                  <strong>{{ place.title }}</strong>
+                  <span class="tt-board__go" aria-hidden="true">{{ t.loc_board_go }} →</span>
+                </span>
+                <span class="tt-board__time">
+                  <b class="tt-board__flap" data-lm-count="{{ place.value }}">{{ place.value }}</b>
+                  <small>{{ t.loc_unit }}</small>
+                </span>
+              </button>
+            </li>
+          {% endfor %}
+        </ol>
       </div>
+
+      <div class="tt-location__map tt-up">
+        <iframe title="{{ t.loc_map_title }}" src="{{ project.map_embed_url|default:t.loc_map_url }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen data-lm-map></iframe>
+        <p class="tt-location__route" aria-live="polite"><span class="tt-location__pin" aria-hidden="true"></span><span data-lm-route>{{ t.loc_origin }}</span></p>
+      </div>
+    </div>
+    <div class="tt-location__foot">
+      {% if t.loc_note %}<p class="tt-note">{{ t.loc_note }}</p>{% endif %}
+      <button class="tt-btn tt-btn--dark" type="button" data-tt-open="{{ t.loc_popup }}">{{ t.loc_button }}</button>
     </div>
   </section>
 
@@ -254,16 +450,19 @@
   </section>
 </main>
 
-{# ---------- Lead popup (buttons, 4-second timer and exit intent) ---------- #}
+{# ---------- Lead popup: compact, the logo on a midnight crown above the rotating form styles ---------- #}
 <dialog class="tt-dialog" aria-labelledby="tt-dialog-title" data-tt-dialog>
   <button class="tt-dialog__close" type="button" aria-label="Close" data-tt-close>×</button>
-  <div class="tt-dialog__media" aria-hidden="true">
-    {% if imgs.popup_image.image %}<img src="{{ imgs.popup_image.image|src:828 }}" alt="" loading="lazy">{% endif %}
-    <p><small>{{ t.hero_title_small }}</small>{{ t.hero_title }}<span>{{ t.hero_title_em }}</span></p>
+  <div class="tt-dialog__crown">
+    {% if imgs.brand_logo.image %}
+      <img class="tt-dialog__logo" src="{{ imgs.brand_logo.image.url }}" alt="{{ imgs.brand_logo.alt|default:t.brand }}">
+    {% else %}
+      <p class="tt-dialog__name"><small>{{ t.hero_title_small }}</small>{{ t.hero_title }} <span>{{ t.hero_title_em }}</span></p>
+    {% endif %}
+    <div class="tt-card__ribbon">{{ t.card_ribbon }}</div>
   </div>
   <div class="tt-dialog__body">
-    <div class="tt-card__ribbon">{{ t.card_ribbon }}</div>
-    <h2 class="tt-card__title" id="tt-dialog-title" data-tt-dialog-title>{{ t.card_title }}</h2>
+    <h2 class="tt-card__title" id="tt-dialog-title"><span data-tt-dialog-title data-tt-letters>{{ t.card_title }}</span></h2>
     <p class="tt-card__sub">{{ t.card_sub|em }}</p>
     {% include "projects/landing/_popup_forms.html" with theme="tt" start="a" %}
   </div>
@@ -292,5 +491,6 @@
 {% block scripts %}
 <script src="{% static 'js/landing-forms.js' %}" defer></script>
 <script src="{% static 'js/landing-trump.js' %}" defer></script>
+<script src="{% static 'js/landing-location.js' %}" defer></script>
 <script src="{% static 'js/landing-fx.js' %}" defer></script>
 {% endblock %}

@@ -170,13 +170,21 @@ class SiteTests(TestCase):
     def test_jacob_co_uses_its_ad_landing_page(self):
         response = self.client.get("/projects/m3m-jacob-co-residences")
         self.assertTemplateUsed(response, "projects/landing/m3m-jacob-co-residences.html")
-        # Five forms: hero and final, plus the popup's three rotating styles; all send landing leads.
-        self.assertContains(response, 'name="source" value="landing"', count=5, html=False)
-        for field, count in (('data-validate="realName"', 5), ('data-validate="leadEmail"', 5),
-                             ('data-validate="interest"', 2), ('data-pf-variant=', 3)):
+        # Six forms: hero, private line and viewing pass, plus the popup's three rotating styles; all send landing leads.
+        self.assertContains(response, 'name="source" value="landing"', count=6, html=False)
+        for field, count in (('data-validate="realName"', 6), ('data-validate="leadEmail"', 6),
+                             ('data-validate="interest"', 1), ('data-pf-variant=', 3)):
             self.assertContains(response, field, count=count, html=False)
         self.assertContains(response, 'data-commercial-project="m3m-jacob-jewel-crest-noida"', html=False)
         self.assertContains(response, "Jacob &amp; Co Ventures LLC")
+        # Logo, locked floor plans that open the popup, drive times in minutes and the private line.
+        self.assertContains(response, 'class="lnav__logo"', html=False)
+        self.assertContains(response, 'class="jl-plan__card"', count=3, html=False)
+        self.assertContains(response, 'data-lm-place="Mall of Noida, Noida"', html=False)
+        self.assertContains(response, 'data-jl-pl-slot="evening"', html=False)
+        self.assertNotContains(response, "data-jl-pl-day", html=False)
+        self.assertContains(response, 'name="visit_date"', html=False)
+        self.assertContains(response, 'name="chauffeur"', html=False)
         # Other projects keep the standard page.
         self.assertTemplateUsed(self.client.get("/projects/m3m-the-line-pentsuites"), "projects/detail.html")
 
@@ -190,7 +198,39 @@ class SiteTests(TestCase):
         self.assertContains(response, 'data-commercial-project="m3m-the-cullinan-avenue"', count=2, html=False)
         self.assertContains(response, 'class="cl-strip__card"', count=12, html=False)
         self.assertContains(response, "Lavish Buildmart Pvt. Ltd.")
+        # Logo, "Cut your own Cullinan", the route map and the private vault.
+        self.assertContains(response, 'class="lnav__logo"', html=False)
+        self.assertContains(response, "data-cl-cert-form", html=False)
+        self.assertContains(response, 'data-lm-place="Amity University, Sector 125, Noida"', html=False)
+        self.assertContains(response, 'class="cl-vault__doc"', count=4, html=False)
         self.assertContains(response, "UPRERAPRJ442214")
+
+    def test_jacob_private_line_lead_keeps_the_call_time(self):
+        lead = {
+            "source": "landing", "name": "Asha Verma", "phone": "9876543210", "email": "asha@gmail.com",
+            "interest": "residential", "project": "m3m-jacob-co-residences", "callTime": "evening",
+            "message": "Requested: Private line call\nWants: A private site visit\nGood time to talk: Tomorrow, Evening",
+        }
+        self.assertTrue(self.client.post("/api/enquiries", lead).json()["ok"])
+        enquiry = Enquiry.objects.get(source="landing")
+        self.assertEqual(enquiry.call_time, "evening")
+        self.assertIn("Wants: A private site visit", enquiry.message)
+        # Only the known call times are accepted.
+        response = self.client.post("/api/enquiries", {**lead, "callTime": "midnight", "phone": "9876543211"})
+        self.assertIn("callTime", response.json()["errors"])
+
+    def test_jacob_viewing_pass_lead_keeps_the_visit(self):
+        response = self.client.post("/api/enquiries", {
+            "source": "landing", "name": "Asha Verma", "phone": "9876543210", "email": "asha@gmail.com",
+            "interest": "residential", "project": "m3m-jacob-co-residences", "callTime": "afternoon",
+            "visit_date": "2026-11-07", "chauffeur": "on",
+            "message": "Requested: Private site visit\nVisit time: Afternoon, 12 – 3 PM",
+        })
+        self.assertTrue(response.json()["ok"])
+        enquiry = Enquiry.objects.get(source="landing")
+        self.assertEqual(enquiry.call_time, "afternoon")
+        for line in ("Preferred date: 07 Nov 2026", "Chauffeur pickup requested", "Visit time: Afternoon"):
+            self.assertIn(line, enquiry.message)
 
     def test_cullinan_retail_lead_reaches_the_avenue(self):
         response = self.client.post("/api/enquiries", {
@@ -206,10 +246,10 @@ class SiteTests(TestCase):
     def test_trump_tower_uses_its_own_ad_landing_page(self):
         response = self.client.get("/projects/m3m-trump-tower-noida")
         self.assertTemplateUsed(response, "projects/landing/m3m-trump-tower-noida.html")
-        # Hero and final forms plus the popup's three rotating styles, each with the residence choice.
-        self.assertContains(response, 'name="source" value="landing"', count=5, html=False)
+        # Hero, private lift and final forms plus the popup's three rotating styles, each with the residence choice.
+        self.assertContains(response, 'name="source" value="landing"', count=6, html=False)
         for field in ('data-validate="choice"', 'data-validate="realName"', 'data-validate="leadEmail"'):
-            self.assertContains(response, field, count=5, html=False)
+            self.assertContains(response, field, count=6, html=False)
         self.assertContains(response, "not owned, developed or sold by The Trump Organization")
         # Disputed listing figures stay off the page.
         for unverified in ("₹", "crore", "acres", "158"):

@@ -25,13 +25,14 @@ SEO = {
 
 HERO = "1. Hero"
 RESIDENCES = "2. Residences"
-AMENITIES = "3. Amenities"
-AVENUE_SECTION = "4. Commercial (The Cullinan Avenue)"
-GALLERY = "5. A closer look"
-LOCATION = "6. Location"
-FINAL = "7. Final form"
-LEGAL = "8. Disclaimer"
-EXTRAS = "9. Popup & sticky bar"
+CERT = "3. Cut your own Cullinan"
+AMENITIES = "4. Amenities"
+AVENUE_SECTION = "5. Commercial (The Cullinan Avenue)"
+GALLERY = "6. A closer look"
+LOCATION = "7. Location"
+VAULT = "8. The private vault"
+LEGAL = "9. Disclaimer"
+EXTRAS = "10. Popup & sticky bar"
 FORM = "Forms"
 
 TEXTS = [
@@ -50,6 +51,7 @@ TEXTS = [
     (RESIDENCES, "tour_kicker", "Small label", "The residences"),
     (RESIDENCES, "tour_title", "Heading", "An emblem of *grace and grandeur.*"),
     (RESIDENCES, "tour_lead", "Intro", "Expansive 3, 4 and 5 BHK homes with extended balconies, spacious rooms and panoramic windows."),
+    (RESIDENCES, "tour_hint", "Line above the room tabs", "Tap a room to step inside"),
     (RESIDENCES, "config_text", "Residence cards: line", "Size, floor plan & price on request"),
     (RESIDENCES, "config_button", "Residence cards: button", "Get floor plan"),
     (RESIDENCES, "config_popup", "Residence cards: popup title ({unit} = the residence)", "Get the {unit} floor plan & price"),
@@ -57,6 +59,40 @@ TEXTS = [
     (RESIDENCES, "price_text", "Price card: line", "Current prices and payment plans, shared by our team."),
     (RESIDENCES, "price_button", "Price card: button", "Unlock prices"),
     (RESIDENCES, "price_popup", "Price card: popup title", "Get the price list"),
+    (CERT, "cert_kicker", "Small label", "Your Cullinan, certified"),
+    (CERT, "cert_title", "Heading", "Cut your own *Cullinan.*"),
+    (
+        CERT,
+        "cert_lead",
+        "Intro",
+        "A diamond is graded by its 4Cs. Grade your home in four taps: choose the carat, the cut and the moment "
+        "we call, and your private certificate fills in as you go.",
+    ),
+    (CERT, "cert_step_1", "Step 1: question", "Carat · Choose your residence"),
+    (CERT, "cert_step_2", "Step 2: question", "Cut · What shall we prepare for you?"),
+    (CERT, "cert_step_3", "Step 3: question", "Clarity · When is a good time to talk?"),
+    (CERT, "cert_step_4", "Step 4: question", "Certify · Where shall we reach you?"),
+    (CERT, "cert_next", "Button: next step", "Continue"),
+    (CERT, "cert_back", "Button: back", "Back"),
+    (CERT, "cert_choose_error", "Message when nothing is chosen", "Choose one to continue."),
+    (
+        CERT,
+        "cert_privacy",
+        "Privacy promise",
+        "This is your private information. Only M3M’s official relationship manager for The Cullinan will see it, "
+        "and they will call you personally at the time you chose. Never shared, never sold.",
+    ),
+    (CERT, "cert_button", "Send button", "Certify my Cullinan"),
+    (CERT, "cert_doc_title", "Certificate: title", "Certificate of grading"),
+    (CERT, "cert_doc_sub", "Certificate: line under the title", "M3M The Cullinan · Sector 94, Noida"),
+    (CERT, "cert_owner", "Certificate: name label", "Prepared for"),
+    (CERT, "cert_guest", "Certificate: name until one is typed", "Your name"),
+    (CERT, "cert_carat", "Certificate: label 1", "Carat"),
+    (CERT, "cert_cut", "Certificate: label 2", "Cut"),
+    (CERT, "cert_clarity", "Certificate: label 3", "Clarity"),
+    (CERT, "cert_blank", "Certificate: value until chosen", "To be graded"),
+    (CERT, "cert_seal", "Seal after sending", "Certified"),
+    (CERT, "cert_request", "Note saved with each lead", "Requested: Cut your own Cullinan"),
     (AMENITIES, "amen_kicker", "Small label", "Premier offerings"),
     (AMENITIES, "amen_title", "Heading", "Every day, *beautifully lived.*"),
     (AMENITIES, "amen_all", "Filter button: everything", "All"),
@@ -74,7 +110,11 @@ TEXTS = [
     (GALLERY, "look_note", "Note", "All images are artistic impressions."),
     (LOCATION, "loc_kicker", "Small label", "Connectivity"),
     (LOCATION, "loc_title", "Heading", "Minutes from *everything you need.*"),
+    (LOCATION, "loc_lead", "Intro", "Tap a place to see the route from The Cullinan."),
     (LOCATION, "loc_unit", "Unit after each travel time", "min"),
+    (LOCATION, "loc_origin", "Where the routes start (as typed in Google Maps)", "Sector 94, Noida, Uttar Pradesh"),
+    (LOCATION, "loc_live", "Map tab: live map", "Live map"),
+    (LOCATION, "loc_plan", "Map tab: location plan", "Location plan"),
     (LOCATION, "loc_note", "Note", "*Travel times as stated by M3M India; they vary with route and traffic."),
     (LOCATION, "loc_button", "Button", "Book a site visit"),
     (LOCATION, "loc_popup", "Button: popup title", "Book a site visit"),
@@ -85,9 +125,19 @@ TEXTS = [
         "Map link, used when the project has none (Google Maps → Share → Embed a map → the src=… link)",
         "https://www.google.com/maps?q=M3M+The+Cullinan,+Sector+94,+Noida&output=embed",
     ),
-    (FINAL, "final_kicker", "Small label", "Private preview"),
-    (FINAL, "final_title", "Heading", "Your Cullinan *awaits.*"),
-    (FINAL, "final_button", "Form button", "Request a callback"),
+    (VAULT, "vault_kicker", "Small label", "The private vault"),
+    (VAULT, "vault_title", "Heading", "Unlock what *others wait for.*"),
+    (
+        VAULT,
+        "vault_lead",
+        "Intro",
+        "Four documents, kept for registered enquirers. Open one, or the whole vault, and our team sends it to you "
+        "privately.",
+    ),
+    (VAULT, "vault_sealed", "Label on each sealed document", "Sealed"),
+    (VAULT, "vault_unlock", "Button on each document", "Unlock"),
+    (VAULT, "vault_all", "Main button", "Unlock the whole vault"),
+    (VAULT, "vault_all_popup", "Main button: popup title", "Unlock the price list, floor plans & brochure"),
     (LEGAL, "legal_name", "Project name (bold)", "M3M The Cullinan"),
     (LEGAL, "legal_rera", "RERA line", "UP RERA {rera} · Promoter: Lavish Buildmart Pvt. Ltd. (UPRERAPRM221722) · Details at"),
     (LEGAL, "legal_link_label", "RERA link text", "up-rera.in/projects"),
@@ -104,6 +154,13 @@ TEXTS = [
     ),
     (EXTRAS, "dialog_kicker", "Popup: small line", "M3M The Cullinan · Sector 94"),
     (EXTRAS, "dialog_title", "Popup: title", "Get the price list"),
+    (
+        EXTRAS,
+        "dialog_intro",
+        "Popup: line under the title",
+        "Launch prices, floor plans and offers, shared privately by M3M’s official team.",
+    ),
+    (EXTRAS, "dialog_place", "Popup: line on the picture", "Sector 94 · Noida Expressway"),
     (EXTRAS, "sticky_call", "Mobile bar: call button", "Call"),
     (EXTRAS, "sticky_button", "Mobile bar: button", "Get price list"),
     (EXTRAS, "sticky_popup", "Mobile bar: popup title", "Get the price list"),
@@ -114,12 +171,14 @@ TEXTS = [
 ]
 
 IMAGES = [
+    (common.HEADER, "brand_logo", "Logo (on the dark header; PNG or WebP with transparency)", "cullinan-logo.webp",
+     "M3M The Cullinan, everything imagined"),
     (HERO, "hero_image", "Main picture", "hero-aerial.jpg", ""),
     (AVENUE_SECTION, "avenue_a", "Collage: large picture", "avenue-facade.jpg", "The Cullinan Avenue retail façade at dusk, artistic impression"),
     (AVENUE_SECTION, "avenue_b", "Collage: second picture", "avenue-skylight.jpg", "Multi-level atrium under a skylight, artistic impression"),
     (AVENUE_SECTION, "avenue_c", "Collage: third picture", "avenue-cafe.jpg", "Café and dining at the Avenue, artistic impression"),
     (LOCATION, "location_map", "Location map", "location-map.jpg", "Location map of M3M The Cullinan, Sector 94, Noida"),
-    (FINAL, "final_image", "Background picture", "towers-day.jpg", ""),
+    (EXTRAS, "dialog_image", "Popup: picture", "living.jpg", ""),
 ]
 
 LISTS = {
@@ -139,11 +198,54 @@ LISTS = {
     ),
     "avenue_tags": ("Commercial: tags", "Title only."),
     "slides": ("A closer look: slider", "Image and Title (the caption)."),
-    "connectivity": ("Travel times", "Value: minutes. Title: the place."),
-    "perks": ("Final form: what you get", "Title only."),
+    "connectivity": (
+        "Travel times",
+        "Value: minutes. Title: the place. Subtitle: its kind, e.g. Hospital. "
+        "Link: the place as typed in Google Maps, for the route.",
+    ),
+    "cert_cuts": ("Cut your own Cullinan: what to prepare", "Title and Subtitle (line under it)."),
+    "cert_slots": (
+        "Cut your own Cullinan: times",
+        "Title and Subtitle (the hours). Value must be one of: morning, afternoon, evening, flexible.",
+    ),
+    "vault": (
+        "The private vault: documents",
+        "Title, Subtitle (line under it) and Image (shown blurred). Link: the popup title. "
+        "Value: the residence the popup preselects (optional, e.g. 3bhk).",
+    ),
 }
 
 IMPRESSION = ", artistic impression"
+
+CONNECTIVITY = (
+    ("2", "Amity University", "Education", "Amity University, Sector 125, Noida"),
+    ("5", "Max Healthcare", "Hospital", "Max Super Speciality Hospital, Patparganj"),
+    ("5", "Jasola Business Park", "Business", "Jasola District Centre, New Delhi"),
+    ("10", "Apollo Hospital", "Hospital", "Indraprastha Apollo Hospital, Sarita Vihar"),
+    ("12", "Ansal Plaza", "Shopping", "Ansal Plaza, Khel Gaon Marg, New Delhi"),
+    ("12", "Radisson Blu, Sector 18", "Hospitality", "Radisson Blu MBD Hotel, Noida"),
+)
+
+CERT_CUTS = (
+    ("Price & payment plan", "Launch pricing, privately"),
+    ("Floor plans & sizes", "Every layout, in full"),
+    ("A private site visit", "At a time that suits you"),
+    ("Investment outlook", "Growth, rentals and returns"),
+)
+
+CERT_SLOTS = (
+    ("Morning", "9 AM – 12 PM", "morning"),
+    ("Afternoon", "12 – 3 PM", "afternoon"),
+    ("Evening", "3 – 6 PM", "evening"),
+    ("Any time", "Whenever suits", "flexible"),
+)
+
+VAULT_ITEMS = (
+    ("Launch price list", "Every residence, every floor", "Unlock the launch price list", "", "towers-day"),
+    ("Floor plans", "3, 4 & 5 BHK, in full", "Unlock the floor plans", "", "master-suite"),
+    ("Payment plan", "Milestones and offers", "Unlock the payment plan", "", "open-living"),
+    ("Brochure", "The complete Cullinan story", "Unlock the brochure", "", "lobby"),
+)
 
 ITEMS = {
     "nav": common.nav(
@@ -229,22 +331,13 @@ ITEMS = {
     ],
     # (minutes, place) as stated on the official project page
     "connectivity": [
-        {"value": minutes, "title": place}
-        for minutes, place in (
-            ("2", "Amity University"),
-            ("5", "Max Healthcare"),
-            ("5", "Jasola Business Park"),
-            ("10", "Apollo Hospital"),
-            ("12", "Ansal Plaza"),
-            ("12", "Radisson Blu, Sector 18"),
-        )
+        {"value": minutes, "title": place, "subtitle": kind, "link": query}
+        for minutes, place, kind, query in CONNECTIVITY
     ],
-    "perks": [
-        {"title": title}
-        for title in (
-            "Launch price list & payment plans",
-            "Floor plans for 3, 4 & 5 BHK",
-            "A site visit at a time that suits you",
-        )
+    "cert_cuts": [{"title": title, "subtitle": line} for title, line in CERT_CUTS],
+    "cert_slots": [{"title": title, "subtitle": hours, "value": value} for title, hours, value in CERT_SLOTS],
+    "vault": [
+        {"title": title, "subtitle": line, "link": popup, "value": preset, "image": f"{name}.jpg"}
+        for title, line, popup, preset, name in VAULT_ITEMS
     ],
 }

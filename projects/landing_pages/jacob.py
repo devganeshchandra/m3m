@@ -24,14 +24,16 @@ SEO = {
 
 HERO = "1. Hero"
 RESIDENCES = "2. Residences"
-PRICE = "3. Price band"
-COMMERCIAL = "4. Commercial"
-AMENITIES = "5. Amenities"
-GALLERY = "6. A closer look"
-LOCATION = "7. Location"
-FINAL = "8. Final form"
-LEGAL = "9. Disclaimer"
-EXTRAS = "10. Popup & sticky bar"
+PLANS = "3. Floor plans"
+PRICE = "4. Price band"
+COMMERCIAL = "5. Commercial"
+AMENITIES = "6. Amenities"
+GALLERY = "7. A closer look"
+LOCATION = "8. Location"
+PRIVATE = "9. Private line"
+FINAL = "10. Private site visit"
+LEGAL = "11. Disclaimer"
+EXTRAS = "12. Popup & sticky bar"
 FORM = "Forms"
 
 TEXTS = [
@@ -49,11 +51,36 @@ TEXTS = [
     (HERO, "hero_rera", "RERA line", "UP RERA: {rera}"),
     (HERO, "card_eyebrow", "Form card: small label", "Limited launch inventory"),
     (HERO, "card_title", "Form card: title", "Get the brochure & price list"),
+    (HERO, "card_intro", "Form card: line under the title", "Launch prices, payment plans and floor plans, sent to you privately."),
     (HERO, "card_button", "Form card: button", "Unlock now"),
-    (RESIDENCES, "res_eyebrow", "Small label", "The residences"),
-    (RESIDENCES, "res_title", "Heading", "An icon *in the making.*"),
-    (RESIDENCES, "res_lead", "Intro", "Calm over chaos. Views over walls. Homes where your legacy resides."),
-    (RESIDENCES, "res_button", "Button on each residence", "Size & price"),
+    (RESIDENCES, "res_eyebrow", "Small label", "The residences · 3, 4 & 5 BHK"),
+    (RESIDENCES, "res_title", "Heading", "Where artistry *becomes an address.*"),
+    (
+        RESIDENCES,
+        "res_lead",
+        "Intro",
+        "Three towers of branded 3, 4 and 5 BHK residences on Noida Expressway, where the artistry of Jacob & Co. "
+        "meets the craftsmanship of M3M. Rooms flow into private balconies, light moves freely through every space, "
+        "and the city becomes a view rather than a noise.",
+    ),
+    (RESIDENCES, "res_quote", "Quote beside the pictures", "Calm over chaos. Views over walls. Homes where your legacy resides."),
+    (RESIDENCES, "res_badge", "Badge on the pictures", "Limited launch inventory"),
+    (RESIDENCES, "res_button", "Button", "Explore the floor plans"),
+    (PLANS, "plans_eyebrow", "Small label", "Configurations"),
+    (PLANS, "plans_title", "Heading", "Floor plans, *privately shared.*"),
+    (
+        PLANS,
+        "plans_lead",
+        "Intro",
+        "Every layout is reserved for registered enquirers. Tap a plan to unlock the full drawing, the size and the "
+        "launch price.",
+    ),
+    (PLANS, "plans_unlock", "Text on the locked plan", "Unlock plan"),
+    (PLANS, "plans_type_label", "Label: type", "Type"),
+    (PLANS, "plans_area_label", "Label: size", "Size"),
+    (PLANS, "plans_area_locked", "Size shown when none is typed in the list", "On request"),
+    (PLANS, "plans_button", "Button on each plan", "Request private pricing"),
+    (PLANS, "plans_note", "Note", "Plans are shown blurred until requested. Drawings are indicative."),
     (PRICE, "price_eyebrow", "Small label", "Launch price list"),
     (PRICE, "price_title", "Heading", "Prices are shared with *registered enquirers.*"),
     (PRICE, "price_button", "Button", "Unlock the price list"),
@@ -74,8 +101,26 @@ TEXTS = [
     (GALLERY, "gal_eyebrow", "Small label", "A closer look"),
     (GALLERY, "gal_title", "Heading", "Glimpses of a *masterpiece.*"),
     (GALLERY, "gal_note", "Note", "All images are artistic impressions."),
-    (LOCATION, "loc_eyebrow", "Small label", "Location"),
-    (LOCATION, "loc_title", "Heading", "Sector 97, *Noida Expressway.*"),
+    (LOCATION, "loc_eyebrow", "Small label", "Location advantage · Sector 97, Noida"),
+    (LOCATION, "loc_title", "Heading", "Everything, *minutes away.*"),
+    (
+        LOCATION,
+        "loc_lead",
+        "Intro",
+        "The mall, the metro, the campus and the expressway are a short drive from home. Tap a place to see the route.",
+    ),
+    (LOCATION, "loc_origin", "Where the routes start (as typed in Google Maps)", "Sector 97, Noida, Uttar Pradesh"),
+    (LOCATION, "loc_minutes", "Word after the number", "min"),
+    (LOCATION, "loc_away", "Line under each place", "away by car"),
+    (LOCATION, "loc_value_title", "Box: heading", "Built for *capital appreciation.*"),
+    (
+        LOCATION,
+        "loc_value_text",
+        "Box: text",
+        "Multi-modal transport & robust infrastructure for future capital appreciation.",
+    ),
+    (LOCATION, "loc_corridors", "Label before the connected roads", "Connected to"),
+    (LOCATION, "loc_note", "Note under the times", "Approximate drive times in light traffic."),
     (LOCATION, "loc_button", "Button", "Get location map & travel times"),
     (LOCATION, "loc_popup", "Button: popup title", "Get the location map & travel times"),
     (LOCATION, "loc_map_title", "Map description (for screen readers)", "Map of Sector 97, Noida"),
@@ -85,9 +130,57 @@ TEXTS = [
         "Map link, used when the project has none (Google Maps → Share → Embed a map → the src=… link)",
         "https://www.google.com/maps?q=Sector+97,+Noida,+Uttar+Pradesh&output=embed",
     ),
-    (FINAL, "final_eyebrow", "Small label", "Private preview"),
-    (FINAL, "final_title", "Heading", "Own an icon *in the making.*"),
-    (FINAL, "final_button", "Form button", "Request a callback"),
+    (PRIVATE, "pl_eyebrow", "Small label", "The private line"),
+    (PRIVATE, "pl_title", "Heading", "Three taps. *One private call.*"),
+    (
+        PRIVATE,
+        "pl_lead",
+        "Intro",
+        "Choose what you would like to know and when to talk. Your letter writes itself, and your relationship "
+        "manager calls you at that time.",
+    ),
+    (PRIVATE, "pl_step_1", "Step 1: question", "What shall we prepare for you?"),
+    (PRIVATE, "pl_step_2", "Step 2: question", "When is a good time to talk?"),
+    (PRIVATE, "pl_step_3", "Step 3: question", "Where shall we reach you?"),
+    (PRIVATE, "pl_next", "Button: next step", "Continue"),
+    (PRIVATE, "pl_back", "Button: back", "Back"),
+    (PRIVATE, "pl_choose_error", "Message when nothing is chosen", "Choose one to continue."),
+    (
+        PRIVATE,
+        "pl_privacy",
+        "Privacy promise",
+        "This is your private information. Only M3M’s official relationship manager for this project will see it, "
+        "and they will call you personally at the time you chose. Never shared, never sold.",
+    ),
+    (PRIVATE, "pl_button", "Send button", "Seal my private call"),
+    (PRIVATE, "pl_letter_to", "Letter: greeting", "Dear"),
+    (PRIVATE, "pl_letter_guest", "Letter: name until one is typed", "Guest"),
+    (PRIVATE, "pl_letter_prepare", "Letter: line before the choice", "We are preparing"),
+    (PRIVATE, "pl_letter_call", "Letter: line before the time", "Your relationship manager will call you"),
+    (PRIVATE, "pl_letter_blank", "Letter: gap until a choice is made", "…"),
+    (PRIVATE, "pl_letter_sign", "Letter: signature", "M3M Jacob & Co. Residences"),
+    (PRIVATE, "pl_sealed", "Stamp after sending", "Sealed"),
+    (PRIVATE, "pl_request", "Note saved with each lead", "Requested: Private line call"),
+    (FINAL, "final_eyebrow", "Small label", "By invitation · Private site visit"),
+    (FINAL, "final_title", "Heading", "See it before *the world does.*"),
+    (
+        FINAL,
+        "visit_lead",
+        "Intro",
+        "Reserve a private viewing of the site, hosted by your relationship manager. Choose a day and a time, and "
+        "we will confirm it with you by phone.",
+    ),
+    (FINAL, "visit_admit", "Pass: small line", "Admit one"),
+    (FINAL, "visit_pass_label", "Pass: title", "Private viewing pass"),
+    (FINAL, "visit_day", "Pass: day question", "Choose a day"),
+    (FINAL, "visit_time", "Pass: time question", "Choose a time"),
+    (FINAL, "visit_day_error", "Message when no day is chosen", "Choose a day for your visit."),
+    (FINAL, "visit_time_error", "Message when no time is chosen", "Choose a time for your visit."),
+    (FINAL, "visit_chauffeur", "Pass: chauffeur switch", "Chauffeur pickup"),
+    (FINAL, "visit_chauffeur_note", "Pass: line under the switch", "From your home or office, on request"),
+    (FINAL, "final_button", "Pass: send button", "Reserve my viewing"),
+    (FINAL, "visit_confirmed", "Stamp after sending", "Reserved"),
+    (FINAL, "visit_request", "Note saved with each lead", "Requested: Private site visit"),
     (LEGAL, "legal_label", "RERA label (bold)", "UP RERA:"),
     (LEGAL, "legal_rera", "RERA number", "{rera}"),
     (LEGAL, "legal_link_label", "RERA link text", "up-rera.in"),
@@ -132,10 +225,14 @@ TEXTS = [
 ]
 
 IMAGES = [
-    (RESIDENCES, "res_main", "Large picture", "residence-balcony.jpg",
+    (common.HEADER, "brand_logo", "Logo (white on transparent, PNG or WebP)", "jacob-logo.webp",
+     "M3M Jacob & Co. Residences, Noida"),
+    (RESIDENCES, "res_main", "Large picture (first of the slideshow)", "residence-balcony.jpg",
      "Living room opening to a private balcony over green views, artistic impression"),
     (RESIDENCES, "res_side", "Small picture", "balcony-golf-view.jpg",
      "Private balcony overlooking a golf course, artistic impression"),
+    (RESIDENCES, "res_tall", "Tall picture", "res-golf-view.jpg",
+     "Greens and the Noida skyline seen from the residences, artistic impression"),
     (PRICE, "price_bg", "Background", "aerial-pools.jpg", ""),
     (COMMERCIAL, "com_image", "Picture", "towers-podium.jpg",
      "Residential towers rising above a lit retail podium, artistic impression"),
@@ -148,9 +245,12 @@ LISTS = {
     "slides": ("Hero slideshow", "Image. Title: a name for the admin only (not shown)."),
     "hero_chips": ("Hero: short points", "Title only."),
     "trust": ("At a glance strip", "Title: the label. Text: the value ({rera} = the RERA number)."),
+    "res_photos": ("Residences: more pictures", "Image and Title: its caption. They follow the large picture in its slideshow."),
+    "res_pillars": ("Residences: what sets them apart", "Title and Text."),
     "configs": (
-        "Residence types",
+        "Floor plans",
         "Title: the number, e.g. “3”. Subtitle: small text after it, e.g. “BHK”. Text: line under it. "
+        "Group: the size, e.g. “2,500 sq ft” (empty shows “On request”). Image: the floor plan, shown blurred. "
         "Value: the residence code the popup preselects (e.g. 3bhk). Link: the popup title.",
     ),
     "commercial": ("Commercial: what's included", "Title only."),
@@ -159,15 +259,68 @@ LISTS = {
         "Image, Title and Subtitle (small line above the title). Group: type “wide” for a double-width tile.",
     ),
     "gallery": ("A closer look (gallery)", "Image and Title: its caption."),
-    "places": ("Location: places nearby", "Title: the place. Subtitle: small line under it."),
-    "perks": ("Final form: what you get", "Title only."),
+    "places": ("Location: connected roads", "Title: the road or area. Subtitle: not shown."),
+    "drive_times": (
+        "Location: minutes away",
+        "Title: the place. Value: minutes by car (a number). Subtitle: its kind, e.g. Metro. "
+        "Link: the place as typed in Google Maps, for the route (empty shows a close map of the project's area).",
+    ),
+    "pl_choices": ("Private line: step 1 cards", "Title, Subtitle (line under it) and Text: how the letter names it."),
+    "pl_slots": (
+        "Private line: times",
+        "Title and Subtitle (the hours); Text: how the letter says it, e.g. “in the evening”. "
+        "Value must be one of: morning, afternoon, evening, flexible.",
+    ),
+    "perks": ("Private site visit: what the visit includes", "Title only."),
 }
 
 IMPRESSION = ", artistic impression"
 
+RES_PHOTOS = (
+    ("res-interior", "Living rooms that open to the sky"),
+    ("res-terrace", "A private terrace for every residence"),
+    ("crown-deck", "The sky deck in the crown"),
+    ("lagoon-cabana", "Cabanas on the lagoon"),
+)
+
+RES_PILLARS = (
+    ("Calm over chaos", "Homes set above landscaped greens and water, away from the rush of the city."),
+    ("Views over walls", "Generous glazing and private balconies frame the skyline and the greens beyond."),
+    ("Service as standard", "Concierge and butler services make hospitality part of everyday life."),
+    ("A name that endures", "The artistry of Jacob & Co., in an address made to be handed down."),
+)
+
+DRIVE_TIMES = (
+    ("Mall of Noida", "3", "Shopping", "Mall of Noida, Noida"),
+    ("Noida Expressway", "4", "Expressway", ""),
+    ("Amity University", "8", "Education", "Amity University, Sector 125, Noida"),
+    ("Botanical Garden Metro Station", "10", "Metro", "Botanical Garden Metro Station, Noida"),
+    ("Radisson Blu MBD Hotel", "16", "Hospitality", "Radisson Blu MBD Hotel, Noida"),
+)
+
+PL_CHOICES = (
+    ("Price & payment plan", "Launch pricing, privately", "the launch price and payment plan"),
+    ("Floor plans & sizes", "Every layout, in full", "the floor plans and sizes"),
+    ("A private site visit", "Chauffeured, at your time", "a private site visit"),
+    ("Investment outlook", "Growth, rentals and returns", "an investment outlook"),
+)
+
+PERKS = (
+    "Chauffeur pickup from your home or office",
+    "A private walkthrough with your relationship manager",
+    "The launch price list and floor plans, in hand",
+)
+
+PL_SLOTS = (
+    ("Morning", "9 AM – 12 PM", "morning", "in the morning"),
+    ("Afternoon", "12 – 3 PM", "afternoon", "in the afternoon"),
+    ("Evening", "3 – 6 PM", "evening", "in the evening"),
+    ("Any time", "Whenever suits", "flexible", "whenever suits you"),
+)
+
 ITEMS = {
     "nav": common.nav(
-        ("residences", "Residences"), ("commercial", "Commercial"), ("amenities", "Amenities"),
+        ("residences", "Residences"), ("floor-plans", "Floor plans"), ("commercial", "Commercial"), ("amenities", "Amenities"),
         ("gallery", "Gallery"), ("location", "Location"),
     ),
     "popup_units": common.popup_units(
@@ -193,6 +346,11 @@ ITEMS = {
             ("UP RERA", "{rera}"),
         )
     ],
+    "res_photos": [
+        {"image": f"{name}.jpg", "title": caption, "image_alt": caption + IMPRESSION}
+        for name, caption in RES_PHOTOS
+    ],
+    "res_pillars": [{"title": title, "text": text} for title, text in RES_PILLARS],
     "configs": [
         {
             "title": number,
@@ -240,8 +398,16 @@ ITEMS = {
             ("Noida International Airport, Jewar", "Via Yamuna Expressway"),
         )
     ],
+    "drive_times": [
+        {"title": title, "value": minutes, "subtitle": kind, "link": query}
+        for title, minutes, kind, query in DRIVE_TIMES
+    ],
+    "pl_choices": [{"title": title, "subtitle": line, "text": letter} for title, line, letter in PL_CHOICES],
+    "pl_slots": [
+        {"title": title, "subtitle": hours, "value": value, "text": letter} for title, hours, value, letter in PL_SLOTS
+    ],
     "perks": [
         {"title": title}
-        for title in ("Brochure & launch price list", "Floor plans for 3, 4 & 5 BHK", "Site visit at a time that suits you")
+        for title in PERKS
     ],
 }
