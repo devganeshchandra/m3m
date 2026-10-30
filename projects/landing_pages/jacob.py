@@ -39,6 +39,8 @@ FORM = "Forms"
 TEXTS = [
     (common.HEADER, "brand", "Project name in the header", "Jacob & Co. Residences"),
     *common.TEXTS,
+    *common.contact_texts(whatsapp="+917399673996"),
+    *common.rera_texts(),
     (HERO, "hero_eyebrow", "Small line above the title", "Now launched · Sector 97, Noida Expressway"),
     (HERO, "hero_title_small", "Title: small part", "M3M"),
     (HERO, "hero_title", "Title", "Jacob & Co."),
@@ -48,7 +50,6 @@ TEXTS = [
     (HERO, "hero_popup", "First button: popup title", "Unlock the brochure"),
     (HERO, "hero_button_2", "Second button", "Get the price list"),
     (HERO, "hero_popup_2", "Second button: popup title", "Get the price list"),
-    (HERO, "hero_rera", "RERA line", "UP RERA: {rera}"),
     (HERO, "card_eyebrow", "Form card: small label", "Limited launch inventory"),
     (HERO, "card_title", "Form card: title", "Get the brochure & price list"),
     (HERO, "card_intro", "Form card: line under the title", "Launch prices, payment plans and floor plans, sent to you privately."),
@@ -86,9 +87,9 @@ TEXTS = [
     (PRICE, "price_button", "Button", "Unlock the price list"),
     (PRICE, "price_popup", "Button: popup title", "Get the price list"),
     (COMMERCIAL, "com_caption", "Image caption", "Artistic impression"),
-    (COMMERCIAL, "com_eyebrow", "Small label", "Commercial · M3M Jacob Jewel Crest"),
+    (COMMERCIAL, "com_eyebrow", "Small label", "Commercial · M3M Jewel Crest Avenue"),
     (COMMERCIAL, "com_title", "Heading", "Retail at the foot *of an icon.*"),
-    (COMMERCIAL, "com_lead", "Text", "Shops and F&B spaces within the Jacob & Co. project on Noida Expressway."),
+    (COMMERCIAL, "com_lead", "Text", "High-street retail, fine dining and cafés, integrated with the residences."),
     (COMMERCIAL, "com_button", "First button", "Get commercial details"),
     (COMMERCIAL, "com_popup", "First button: popup title", "Get commercial unit details"),
     (COMMERCIAL, "com_button_2", "Second button", "Commercial price list"),
@@ -109,18 +110,18 @@ TEXTS = [
         "Intro",
         "The mall, the metro, the campus and the expressway are a short drive from home. Tap a place to see the route.",
     ),
-    (LOCATION, "loc_origin", "Where the routes start (as typed in Google Maps)", "Sector 97, Noida, Uttar Pradesh"),
+    (LOCATION, "loc_origin", "Where the routes start (as typed in Google Maps)", "M3M Jacob & Co. Residences, Sector 97, Noida"),
     (LOCATION, "loc_minutes", "Word after the number", "min"),
     (LOCATION, "loc_away", "Line under each place", "away by car"),
-    (LOCATION, "loc_value_title", "Box: heading", "Built for *capital appreciation.*"),
+    (LOCATION, "loc_value_title", "Box: heading", "Connected to *what matters.*"),
     (
         LOCATION,
         "loc_value_text",
         "Box: text",
-        "Multi-modal transport & robust infrastructure for future capital appreciation.",
+        "Noida Expressway, the metro and Central Noida, a short drive from home.",
     ),
     (LOCATION, "loc_corridors", "Label before the connected roads", "Connected to"),
-    (LOCATION, "loc_note", "Note under the times", "Approximate drive times in light traffic."),
+    (LOCATION, "loc_note", "Note under the times", "Drive times as Google Maps shows them for the fastest route; live traffic can change them."),
     (LOCATION, "loc_button", "Button", "Get location map & travel times"),
     (LOCATION, "loc_popup", "Button: popup title", "Get the location map & travel times"),
     (LOCATION, "loc_map_title", "Map description (for screen readers)", "Map of Sector 97, Noida"),
@@ -227,6 +228,7 @@ TEXTS = [
 IMAGES = [
     (common.HEADER, "brand_logo", "Logo (white on transparent, PNG or WebP)", "jacob-logo.webp",
      "M3M Jacob & Co. Residences, Noida"),
+    (common.RERA, "rera_qr", "QR code", "rera-qr.webp", "UP RERA QR code for M3M Jacob & Co. Residences"),
     (RESIDENCES, "res_main", "Large picture (first of the slideshow)", "residence-balcony.jpg",
      "Living room opening to a private balcony over green views, artistic impression"),
     (RESIDENCES, "res_side", "Small picture", "balcony-golf-view.jpg",
@@ -291,18 +293,18 @@ RES_PILLARS = (
 )
 
 DRIVE_TIMES = (
-    ("Mall of Noida", "3", "Shopping", "Mall of Noida, Noida"),
+    ("Mall of Noida", "4", "Shopping", "Mall of Noida, Noida"),
     ("Noida Expressway", "4", "Expressway", ""),
-    ("Amity University", "8", "Education", "Amity University, Sector 125, Noida"),
-    ("Botanical Garden Metro Station", "10", "Metro", "Botanical Garden Metro Station, Noida"),
-    ("Radisson Blu MBD Hotel", "16", "Hospitality", "Radisson Blu MBD Hotel, Noida"),
+    ("Amity University", "9", "Education", "Amity University, Sector 125, Noida"),
+    ("Botanical Garden Metro Station", "12", "Metro", "Botanical Garden Metro Station, Noida"),
+    ("Radisson Blu MBD Hotel", "19", "Hospitality", "Radisson Blu MBD Hotel, Noida"),
 )
 
 PL_CHOICES = (
     ("Price & payment plan", "Launch pricing, privately", "the launch price and payment plan"),
     ("Floor plans & sizes", "Every layout, in full", "the floor plans and sizes"),
     ("A private site visit", "Chauffeured, at your time", "a private site visit"),
-    ("Investment outlook", "Growth, rentals and returns", "an investment outlook"),
+    ("Investment details", "Pricing, plans and paperwork", "the investment details"),
 )
 
 PERKS = (
@@ -339,7 +341,7 @@ ITEMS = {
     "trust": [
         {"title": label, "text": value}
         for label, value in (
-            ("Developer", "M3M India"),
+            ("Promoter", "Mayfairsky Estates Pvt Ltd"),
             ("Residences", "3, 4 & 5 BHK"),
             ("Towers", "1, 2 & 3"),
             ("Location", "Sector 97, Noida"),

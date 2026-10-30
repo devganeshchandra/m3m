@@ -1,59 +1,78 @@
 {% load landing_tags %}
 {% comment %}
-  Billionaire Block: the research story, from the plan to the sources.
+  Billionaire Block: the research story, from the plan to the sources. Light and dark sections alternate.
   Every text, image and list comes from the admin (Ad landing pages → Billionaire Block); the slots
   and their starting content are in projects/landing_pages/billionaire.py. Every image is an
-  AI-generated concept or artistic impression, never an official render.
+  AI-generated concept or artistic impression, never an official render. The interactive parts
+  (fact tabs, gold points, circles, accordion, destinations, checklist) are in billionaire.js and
+  every one of them still reads in full without JavaScript.
 {% endcomment %}
 
-{# ---------- 1. The plan: carousel and the four headline facts ---------- #}
+{# ---------- 1. The plan: four facts as tabs that play through a cinematic picture (light) ---------- #}
 <section class="bbx-plan" id="overview" aria-labelledby="bbx-plan-title">
   <header class="bbx-plan__head">
     <p class="bbx-eyebrow">{{ t.plan_eyebrow }}</p>
     <h2 class="bbx-display" id="bbx-plan-title" data-bb-lines>{{ t.plan_title|em }}</h2>
+    {% if t.plan_lead %}<p class="bbx-lead">{{ t.plan_lead }}</p>{% endif %}
   </header>
 
-  <div class="bbx-carousel" data-bbx-carousel aria-roledescription="carousel" aria-label="Concept images of the township">
-    <ul class="bbx-carousel__slides">
-      {% for slide in lists.plan_slides %}
-        <li class="bbx-carousel__slide{% if forloop.first %} is-active{% endif %}" aria-roledescription="slide"
-          aria-label="{{ forloop.counter }} of {{ lists.plan_slides|length }}: {{ slide.title }}" {% if not forloop.first %}aria-hidden="true"{% endif %}>
-          <img src="{{ slide.image|src:1920 }}"
-            srcset="{{ slide.image|src:1200 }} 1200w, {{ slide.image|src:1920 }} 1920w"
-            sizes="100vw" alt="{{ slide.image_alt }}" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
-          <p class="bbx-carousel__caption"><span>{{ forloop.counter|stringformat:"02d" }}</span>{{ slide.title }}</p>
-        </li>
+  <div class="bbx-stage" data-bbx-stage>
+    <div class="bbx-stage__frame">
+      {% for fact in lists.facts %}
+        <figure class="bbx-stage__slide{% if forloop.first %} is-active{% endif %}" id="bbx-fact-{{ forloop.counter }}" role="tabpanel"
+          aria-labelledby="bbx-fact-tab-{{ forloop.counter }}"{% if not forloop.first %} hidden{% endif %}>
+          {% if fact.image %}
+            <img src="{{ fact.image|src:1920 }}" srcset="{{ fact.image|src:1200 }} 1200w, {{ fact.image|src:1920 }} 1920w" sizes="100vw"
+              alt="{{ fact.image_alt }}" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
+          {% endif %}
+          <figcaption class="bbx-stage__caption">
+            <span class="bbx-stage__no">{{ forloop.counter|stringformat:"02d" }} / {{ lists.facts|length|stringformat:"02d" }}</span>
+            <span class="bbx-stage__label">{{ fact.title }}</span>
+            <strong class="bbx-stage__value">{{ fact.value }}{% if fact.group %} <small>{{ fact.group }}</small>{% endif %}</strong>
+            <span class="bbx-stage__text">{{ fact.text }}</span>
+          </figcaption>
+          {% if fact.group %}
+            <svg class="bbx-stage__ring" viewBox="0 0 120 120" aria-hidden="true" data-bbx-ring="{{ fact.value }}">
+              <circle cx="60" cy="60" r="52" pathLength="100"></circle>
+              <circle cx="60" cy="60" r="52" pathLength="100" data-bbx-ring-fill></circle>
+              <text x="60" y="58" text-anchor="middle">{{ fact.value }}</text>
+              <text x="60" y="76" text-anchor="middle" class="bbx-stage__ring-unit">{{ fact.group }}</text>
+            </svg>
+          {% endif %}
+        </figure>
       {% endfor %}
-    </ul>
-    <div class="bbx-carousel__controls">
-      <button class="bbx-carousel__arrow" type="button" data-bbx-step="-1" aria-label="Previous image">‹</button>
-      <div class="bbx-carousel__dots" role="group" aria-label="Choose an image">
-        {% for slide in lists.plan_slides %}
-          <button type="button" data-bbx-dot="{{ forloop.counter0 }}" aria-label="Show image {{ forloop.counter }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"><span></span></button>
-        {% endfor %}
-      </div>
-      <button class="bbx-carousel__arrow" type="button" data-bbx-step="1" aria-label="Next image">›</button>
+      <span class="bbx-stage__corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      {% if t.plan_note %}<p class="bbx-stage__note">{{ t.plan_note }}</p>{% endif %}
     </div>
-    {% if t.plan_note %}<p class="bbx-carousel__note">{{ t.plan_note }}</p>{% endif %}
-  </div>
 
-  <dl class="bbx-facts">
-    {% for fact in lists.facts %}
-      <div>
-        <dt>{{ fact.title }}</dt>
-        <dd><strong>{% if fact.group %}<span data-count="{{ fact.value }}">{{ fact.value }}</span> {{ fact.group }}{% else %}{{ fact.value }}{% endif %}</strong><span>{{ fact.text }}</span></dd>
-      </div>
-    {% endfor %}
-  </dl>
+    <div class="bbx-tabs" role="tablist" aria-label="{{ t.plan_eyebrow }}">
+      {% for fact in lists.facts %}
+        <button class="bbx-tab" type="button" role="tab" id="bbx-fact-tab-{{ forloop.counter }}" aria-controls="bbx-fact-{{ forloop.counter }}"
+          aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" {% if not forloop.first %}tabindex="-1"{% endif %} data-bbx-tab>
+          <span class="bbx-tab__label"><b>{{ forloop.counter|stringformat:"02d" }}</b>{{ fact.title }}</span>
+          <strong class="bbx-tab__value">{% if fact.group %}<span data-count="{{ fact.value }}">{{ fact.value }}</span> {{ fact.group }}{% else %}{{ fact.value }}{% endif %}</strong>
+          <span class="bbx-tab__text">{{ fact.text }}</span>
+          <span class="bbx-tab__bar" aria-hidden="true"><i></i></span>
+        </button>
+      {% endfor %}
+    </div>
+  </div>
   {% if t.plan_footnote %}<p class="bbx-footnote">{{ t.plan_footnote }}</p>{% endif %}
 </section>
 
-{# ---------- 2. Signature Residences by ELIE SAAB ---------- #}
+{# ---------- 2. Signature Residences by ELIE SAAB: a layered gallery and the headline figures (dark) ---------- #}
 <section class="bbx-brand" id="residences" aria-labelledby="bbx-brand-title">
+  {% if t.brand_monogram %}<span class="bbx-brand__monogram" aria-hidden="true">{{ t.brand_monogram }}</span>{% endif %}
   <div class="bbx-brand__media">
     {% if imgs.brand_main.image %}
       <figure class="bbx-brand__main" data-bb-clip>
         <img src="{{ imgs.brand_main.image|src:1920 }}" alt="{{ imgs.brand_main.alt }}" loading="lazy" decoding="async">
+        {% if t.brand_caption %}<figcaption>{{ t.brand_caption }}</figcaption>{% endif %}
+      </figure>
+    {% endif %}
+    {% if imgs.brand_detail.image %}
+      <figure class="bbx-brand__detail" data-bb-clip>
+        <img src="{{ imgs.brand_detail.image|src:1200 }}" alt="{{ imgs.brand_detail.alt }}" loading="lazy" decoding="async">
       </figure>
     {% endif %}
     {% if imgs.brand_inset.image %}
@@ -61,108 +80,191 @@
         <img src="{{ imgs.brand_inset.image|src:1200 }}" alt="{{ imgs.brand_inset.alt }}" loading="lazy" decoding="async">
       </figure>
     {% endif %}
+    <svg class="bbx-seal" viewBox="0 0 160 160" aria-hidden="true">
+      <defs><path id="bbx-seal-path" d="M80 80m-62 0a62 62 0 1 1 124 0a62 62 0 1 1-124 0"/></defs>
+      <text><textPath href="#bbx-seal-path">Signature Residences · ELIE SAAB · Gurugram ·</textPath></text>
+      <circle cx="80" cy="80" r="40"></circle>
+      <text class="bbx-seal__mark" x="80" y="90" text-anchor="middle">{{ t.brand_monogram|default:"ES" }}</text>
+    </svg>
   </div>
   <div class="bbx-brand__copy">
     <p class="bbx-eyebrow">{{ t.brand_eyebrow }}</p>
     <h2 class="bbx-display" id="bbx-brand-title" data-bb-lines>{{ t.brand_title|em }}</h2>
     <p class="bbx-lead">{{ t.brand_lead|em }}</p>
-    <ul class="bbx-chips">
+    <ul class="bbx-figures">
       {% for chip in lists.brand_chips %}
-        <li>{% if chip.value %}<span data-count="{{ chip.value }}">{{ chip.value }}</span>{% if chip.title != chip.value %} {{ chip.title }}{% endif %}{% else %}{{ chip.title }}{% endif %}</li>
+        <li>
+          {% if chip.value %}
+            <strong data-count="{{ chip.value }}">{{ chip.value }}</strong>
+            {% if chip.title != chip.value %}<span>{{ chip.title }}</span>{% endif %}
+          {% else %}
+            <strong>{{ chip.title }}</strong>
+          {% endif %}
+        </li>
       {% endfor %}
     </ul>
-    <a class="bb-button bb-button--gold" href="#private-viewing" data-magnetic>{{ t.brand_button }}</a>
+    <div class="bbx-brand__actions">
+      <a class="bb-button bb-button--gold" href="#private-viewing" data-magnetic>{{ t.brand_button }}</a>
+      {% if t.details_hint %}<a class="bbx-text-link" href="#couture">{{ t.details_hint }} <i aria-hidden="true">↓</i></a>{% endif %}
+    </div>
   </div>
 </section>
 
-{# ---------- 3. Announced details ---------- #}
-<section class="bbx-details" aria-labelledby="bbx-details-title">
-  <header class="bbx-details__head">
-    <p class="bbx-eyebrow">{{ t.details_eyebrow }}</p>
-    <h2 class="bbx-display" id="bbx-details-title" data-bb-lines>{{ t.details_title|em }}</h2>
+{# ---------- 3. The couture residence: a room to explore through gold points, and its dossier (light) ---------- #}
+<section class="bbx-couture" id="couture" aria-labelledby="bbx-couture-title">
+  <header class="bbx-couture__head">
+    <div>
+      <p class="bbx-eyebrow">{{ t.details_eyebrow }}</p>
+      <h2 class="bbx-display" id="bbx-couture-title" data-bb-lines>{{ t.details_title|em }}</h2>
+    </div>
+    {% if t.details_lead %}<p class="bbx-lead">{{ t.details_lead }}</p>{% endif %}
   </header>
-  <dl class="bbx-spec">
-    {% for detail in lists.announced_details %}
-      <div><dt>{{ detail.title }}</dt><dd>{{ detail.subtitle }}</dd></div>
-    {% endfor %}
-  </dl>
-  {% if t.details_footnote %}<p class="bbx-footnote">{{ t.details_footnote }}</p>{% endif %}
+
+  <div class="bbx-couture__stage">
+    {% if imgs.details_image.image %}
+      <figure class="bbx-couture__room" data-bbx-spots>
+        <img src="{{ imgs.details_image.image|src:1920 }}" srcset="{{ imgs.details_image.image|src:1200 }} 1200w, {{ imgs.details_image.image|src:1920 }} 1920w"
+          sizes="(max-width: 900px) 100vw, 64vw" alt="{{ imgs.details_image.alt }}" loading="lazy" decoding="async">
+        {% if t.details_hint %}<figcaption class="bbx-couture__hint"><span aria-hidden="true"></span>{{ t.details_hint }}</figcaption>{% endif %}
+        {% for point in lists.hotspots %}
+          <div class="bbx-spot" style="{{ point.value|spot }}">
+            <button class="bbx-spot__dot" type="button" aria-expanded="false" aria-controls="bbx-spot-{{ forloop.counter }}" data-bbx-spot>
+              <span class="visually-hidden">{{ point.title }}</span>
+            </button>
+            <p class="bbx-spot__card" id="bbx-spot-{{ forloop.counter }}">
+              <strong>{{ point.title }}</strong>{{ point.text }}
+            </p>
+          </div>
+        {% endfor %}
+      </figure>
+    {% endif %}
+
+    <aside class="bbx-dossier" aria-label="{{ t.details_card_label }}">
+      <p class="bbx-dossier__top"><span>{{ t.details_card_label }}</span><span>{{ t.details_card_no }}</span></p>
+      <dl class="bbx-dossier__list">
+        {% for detail in lists.announced_details %}
+          <div{% if forloop.first %} class="is-lead"{% endif %}><dt>{{ detail.title }}</dt><dd>{{ detail.subtitle }}</dd></div>
+        {% endfor %}
+      </dl>
+      <a class="bb-button bb-button--gold bbx-dossier__button" href="#private-viewing" data-magnetic>{{ t.details_button }}</a>
+      {% if t.details_footnote %}<p class="bbx-footnote">{{ t.details_footnote }}</p>{% endif %}
+    </aside>
+  </div>
 </section>
 
-{# ---------- 4. Community ---------- #}
+{# ---------- 4. Community: the enclave as a circle inside the township; choose a circle (dark) ---------- #}
 <section class="bbx-community" id="community" aria-labelledby="bbx-community-title">
-  <header class="bbx-section-head">
+  <header class="bbx-section-head bbx-section-head--center">
     <p class="bbx-eyebrow">{{ t.community_eyebrow }}</p>
     <h2 class="bbx-display" id="bbx-community-title" data-bb-lines>{{ t.community_title|em }}</h2>
     <p class="bbx-lead">{{ t.community_lead|em }}</p>
   </header>
-  <div class="bbx-community__grid">
-    {% for card in lists.community %}
-      <article class="bbx-community__card">
-        <figure data-bb-clip>
-          <img src="{{ card.image|src:1200 }}" alt="{{ card.image_alt }}" loading="lazy" decoding="async">
-          <span class="bbx-community__letter">{{ card.value }}</span>
-        </figure>
-        <h3>{{ card.title }}</h3>
-        <ul class="bbx-ticks">
-          {% for point in card.lines %}<li>{{ point }}</li>{% endfor %}
-        </ul>
-      </article>
-    {% endfor %}
+
+  <div class="bbx-circles" data-bbx-circles>
+    <div class="bbx-circles__diagram">
+      <div class="bbx-circles__orbit" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="bbx-circles__rings" role="tablist" aria-label="{{ t.community_eyebrow }}">
+        {% for card in lists.community %}
+          <button class="bbx-ring bbx-ring--{% if forloop.first %}inner{% else %}outer{% endif %}" type="button" role="tab"
+            id="bbx-circle-tab-{{ forloop.counter }}" aria-controls="bbx-circle-{{ forloop.counter }}"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" {% if not forloop.first %}tabindex="-1"{% endif %} data-bbx-circle-tab>
+            <span class="bbx-ring__letter">{{ card.value }}</span>
+            <span class="bbx-ring__name">{{ card.title|before:" — " }}</span>
+            {% if card.subtitle %}<span class="bbx-ring__area">{{ card.subtitle }}</span>{% endif %}
+          </button>
+        {% endfor %}
+      </div>
+      {% if t.community_hint %}<p class="bbx-circles__hint">{{ t.community_hint }}</p>{% endif %}
+    </div>
+
+    <div class="bbx-circles__panels">
+      {% for card in lists.community %}
+        <article class="bbx-circle{% if forloop.first %} is-active{% endif %}" id="bbx-circle-{{ forloop.counter }}" role="tabpanel"
+          aria-labelledby="bbx-circle-tab-{{ forloop.counter }}" data-bbx-circle>
+          <figure>
+            <img src="{{ card.image|src:1200 }}" alt="{{ card.image_alt }}" loading="lazy" decoding="async">
+            <span class="bbx-circle__letter" aria-hidden="true">{{ card.value }}</span>
+          </figure>
+          <div class="bbx-circle__copy">
+            {% if card.subtitle %}<p class="bbx-circle__area">{{ card.subtitle }}</p>{% endif %}
+            <h3>{{ card.title }}</h3>
+            <ul class="bbx-ticks">
+              {% for point in card.lines %}<li style="--i: {{ forloop.counter0 }}">{{ point }}</li>{% endfor %}
+            </ul>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
   </div>
   {% if t.community_footnote %}<p class="bbx-footnote">{{ t.community_footnote }}</p>{% endif %}
 </section>
 
-{# ---------- 5. Amenities ---------- #}
+{# ---------- 5. Amenities: an accordion of pictures that opens on hover, focus or tap (light) ---------- #}
 <section class="bbx-amenities" id="amenities" aria-labelledby="bbx-amenities-title">
-  <header class="bbx-section-head bbx-section-head--light">
-    <p class="bbx-eyebrow">{{ t.amenities_eyebrow }}</p>
-    <h2 class="bbx-display" id="bbx-amenities-title" data-bb-lines>{{ t.amenities_title|em }}</h2>
+  <header class="bbx-section-head bbx-section-head--split">
+    <div>
+      <p class="bbx-eyebrow">{{ t.amenities_eyebrow }}</p>
+      <h2 class="bbx-display" id="bbx-amenities-title" data-bb-lines>{{ t.amenities_title|em }}</h2>
+    </div>
+    {% if t.amenities_lead %}<p class="bbx-lead">{{ t.amenities_lead }}</p>{% endif %}
   </header>
-  <ul class="bbx-amenities__grid">
+  <ul class="bbx-accordion" data-bbx-accordion>
     {% for amenity in lists.amenities %}
-      <li class="bbx-amenity">
+      <li class="bbx-acc{% if forloop.first %} is-open{% endif %}" tabindex="0" data-bbx-acc>
         <img src="{{ amenity.image|src:1200 }}" alt="{{ amenity.image_alt }}" loading="lazy" decoding="async">
-        <div class="bbx-amenity__copy">
-          <span>{{ forloop.counter|stringformat:"02d" }}</span>
+        <span class="bbx-acc__no">{{ forloop.counter|stringformat:"02d" }}</span>
+        <h3 class="bbx-acc__spine" aria-hidden="true">{{ amenity.title }}</h3>
+        <div class="bbx-acc__copy">
           <h3>{{ amenity.title }}</h3>
           <p>{{ amenity.text }}</p>
         </div>
       </li>
     {% endfor %}
   </ul>
-  {% if t.amenities_footnote %}<p class="bbx-footnote bbx-footnote--light">{{ t.amenities_footnote }}</p>{% endif %}
+  {% if t.amenities_footnote %}<p class="bbx-footnote">{{ t.amenities_footnote }}</p>{% endif %}
 </section>
 
-{# ---------- 6. Towers, blocks and layouts ---------- #}
+{# ---------- 6. Towers, blocks and layouts: a blueprint, levels that stack like floors (dark) ---------- #}
 <section class="bbx-towers" id="towers" aria-labelledby="bbx-towers-title">
+  <div class="bbx-towers__grid" aria-hidden="true"></div>
   {% if imgs.towers_image.image %}
     <figure class="bbx-towers__image" data-bb-clip>
-      <img src="{{ imgs.towers_image.image|src:1920 }}" alt="{{ imgs.towers_image.alt }}" loading="lazy" decoding="async">
+      <img src="{{ imgs.towers_image.image|src:1200 }}" alt="{{ imgs.towers_image.alt }}" loading="lazy" decoding="async">
+      <span class="bbx-towers__scan" aria-hidden="true"></span>
+      <span class="bbx-towers__measure" aria-hidden="true"><i></i></span>
     </figure>
   {% endif %}
   <div class="bbx-towers__copy">
     <p class="bbx-eyebrow">{{ t.towers_eyebrow }}</p>
     <h2 class="bbx-display" id="bbx-towers-title" data-bb-lines>{{ t.towers_title|em }}</h2>
     <h3 class="bbx-mini">{{ t.towers_established }}</h3>
-    <ul class="bbx-ticks">
+    <ol class="bbx-levels" reversed>
       {% for point in lists.towers_established %}
-        <li><strong>{{ point.title }}</strong> {{ point.text }}</li>
+        <li>
+          <span class="bbx-levels__tag">{{ t.towers_level }} {{ forloop.revcounter|stringformat:"02d" }}</span>
+          <p><strong>{{ point.title }}</strong> {{ point.text }}</p>
+        </li>
       {% endfor %}
-    </ul>
+    </ol>
     <h3 class="bbx-mini">{{ t.towers_pending }}</h3>
-    <ul class="bbx-pending">
-      {% for point in lists.towers_pending %}<li>{{ point.title }}</li>{% endfor %}
+    <ul class="bbx-locked">
+      {% for point in lists.towers_pending %}
+        <li>
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path d="M7 11V8a5 5 0 0 1 10 0v3M5.5 11h13v9.5h-13z" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+          <strong>{{ point.title }}</strong>
+          {% if t.towers_pending_tag %}<small>{{ t.towers_pending_tag }}</small>{% endif %}
+        </li>
+      {% endfor %}
     </ul>
   </div>
   {% if imgs.towers_model.image %}
     <figure class="bbx-towers__model" data-bb-clip>
-      <img src="{{ imgs.towers_model.image|src:1200 }}" alt="{{ imgs.towers_model.alt }}" loading="lazy" decoding="async">
+      <img src="{{ imgs.towers_model.image|src:1920 }}" alt="{{ imgs.towers_model.alt }}" loading="lazy" decoding="async">
     </figure>
   {% endif %}
 </section>
 
-{# ---------- 7. Strategy ---------- #}
+{# ---------- 7. Strategy (light) ---------- #}
 <section class="bbx-strategy" id="strategy" aria-labelledby="bbx-strategy-title">
   <header class="bbx-section-head">
     <p class="bbx-eyebrow">{{ t.strategy_eyebrow }}</p>
@@ -180,65 +282,169 @@
   </ol>
 </section>
 
-{# ---------- 8. Location and connectivity ---------- #}
+{# ---------- 8. Location: choose a destination and its picture takes the stage (dark) ---------- #}
 <section class="bbx-location" id="location" aria-labelledby="bbx-location-title">
-  {% if imgs.location_image.image %}
-    <figure class="bbx-location__image" data-bb-clip>
-      <img src="{{ imgs.location_image.image|src:1920 }}" alt="{{ imgs.location_image.alt }}" loading="lazy" decoding="async">
-      {% if t.location_caption %}<figcaption>{{ t.location_caption }}</figcaption>{% endif %}
-    </figure>
-  {% endif %}
-  <div class="bbx-location__panel">
-    <p class="bbx-eyebrow">{{ t.location_eyebrow }}</p>
-    <h2 class="bbx-display" id="bbx-location-title" data-bb-lines>{{ t.location_title|em }}</h2>
+  <header class="bbx-location__head">
+    <div>
+      <p class="bbx-eyebrow">{{ t.location_eyebrow }}</p>
+      <h2 class="bbx-display" id="bbx-location-title" data-bb-lines>{{ t.location_title|em }}</h2>
+    </div>
     <p class="bbx-lead">{{ t.location_lead|em }}</p>
-    <ul class="bbx-routes">
-      {% for route in lists.routes %}<li>{{ route.title }}</li>{% endfor %}
-    </ul>
-    {% if t.location_footnote %}<p class="bbx-footnote">{{ t.location_footnote }}</p>{% endif %}
+  </header>
+
+  <div class="bbx-loc" data-bbx-location>
+    <div class="bbx-loc__stage">
+      {% for route in lists.routes %}
+        <figure class="bbx-loc__slide{% if forloop.first %} is-active{% endif %}" id="bbx-route-{{ forloop.counter }}" role="tabpanel"
+          aria-labelledby="bbx-route-tab-{{ forloop.counter }}"{% if not forloop.first %} hidden{% endif %}>
+          {% if route.image %}
+            <img src="{{ route.image|src:1920 }}" srcset="{{ route.image|src:1200 }} 1200w, {{ route.image|src:1920 }} 1920w"
+              sizes="(max-width: 900px) 100vw, 60vw" alt="{{ route.image_alt }}" loading="lazy" decoding="async">
+          {% endif %}
+          <figcaption class="bbx-loc__caption">
+            <span class="bbx-loc__path" aria-hidden="true"><i></i></span>
+            <span class="bbx-loc__from">{{ t.location_from }}</span>
+            {% if route.subtitle %}<span class="bbx-loc__kind">{{ route.subtitle }}</span>{% endif %}
+            <strong>{{ route.title }}</strong>
+            {% if route.value %}<span class="bbx-loc__time"><b>{{ route.value }}</b> {{ t.location_unit }}</span>{% endif %}
+            {% if route.link %}
+              <a class="bbx-loc__route" href="https://www.google.com/maps/dir/?api=1&amp;origin={{ t.location_origin|urlencode }}&amp;destination={{ route.link|urlencode }}"
+                target="_blank" rel="noopener noreferrer">{{ t.location_route }} <i aria-hidden="true">↗</i></a>
+            {% endif %}
+          </figcaption>
+        </figure>
+      {% endfor %}
+      {% if t.location_caption %}<p class="bbx-loc__badge"><span aria-hidden="true"></span>{{ t.location_caption }}</p>{% endif %}
+    </div>
+
+    <div class="bbx-loc__list" role="tablist" aria-label="{{ t.location_eyebrow }}" aria-orientation="vertical">
+      {% for route in lists.routes %}
+        <button class="bbx-dest" type="button" role="tab" id="bbx-route-tab-{{ forloop.counter }}" aria-controls="bbx-route-{{ forloop.counter }}"
+          aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" {% if not forloop.first %}tabindex="-1"{% endif %} data-bbx-dest>
+          <span class="bbx-dest__no">{{ forloop.counter|stringformat:"02d" }}</span>
+          <span class="bbx-dest__body">
+            {% if route.subtitle %}<small>{{ route.subtitle }}</small>{% endif %}
+            <strong>{{ route.title }}</strong>
+            {% if route.text %}<span class="bbx-dest__text">{{ route.text }}</span>{% endif %}
+          </span>
+          {% if route.value %}<span class="bbx-dest__time"><b>{{ route.value }}</b>{{ t.location_unit }}</span>{% else %}<span class="bbx-dest__arrow" aria-hidden="true">→</span>{% endif %}
+          <span class="bbx-dest__bar" aria-hidden="true"></span>
+        </button>
+      {% endfor %}
+    </div>
   </div>
+  {% if t.location_footnote %}<p class="bbx-footnote">{{ t.location_footnote }}</p>{% endif %}
 </section>
 
-{# ---------- 9. Launch timeline, investment and legal checks ---------- #}
+{# ---------- 9. Timeline, investment and legal checks: a timeline, the figures and a checklist to tick (light) ---------- #}
 <section class="bbx-checks" id="before-you-buy" aria-labelledby="bbx-checks-title">
-  <div class="bbx-checks__intro">
+  <header class="bbx-section-head bbx-section-head--center">
     <p class="bbx-eyebrow">{{ t.checks_eyebrow }}</p>
     <h2 class="bbx-display" id="bbx-checks-title" data-bb-lines>{{ t.checks_title|em }}</h2>
-    <dl class="bbx-checks__figures">
-      {% for figure in lists.figures %}
-        <div><dt data-count="{{ figure.title }}">{{ figure.title }}</dt><dd>{{ figure.text }}</dd></div>
-      {% endfor %}
-    </dl>
-    {% if imgs.checks_image.image %}
-      <figure class="bbx-checks__image" data-bb-clip>
-        <img src="{{ imgs.checks_image.image|src:1200 }}" alt="{{ imgs.checks_image.alt }}" loading="lazy" decoding="async">
-      </figure>
-    {% endif %}
-  </div>
-  <div class="bbx-checks__list">
-    <h3 class="bbx-mini">{{ t.checks_list_title }}</h3>
-    <ol>
-      {% for check in lists.legal_checks %}<li>{{ check.title }}</li>{% endfor %}
-    </ol>
-    {% if t.checks_callout %}<p class="bbx-callout">{{ t.checks_callout }}</p>{% endif %}
+  </header>
+
+  {% if lists.milestones %}
+    <div class="bbx-timeline" data-bbx-timeline>
+      {% if t.checks_timeline_title %}<h3 class="bbx-mini">{{ t.checks_timeline_title }}</h3>{% endif %}
+      <ol>
+        {% for step in lists.milestones %}
+          <li class="bbx-timeline__step{% if step.group == 'done' %} is-done{% endif %}" style="--i: {{ forloop.counter0 }}">
+            <span class="bbx-timeline__dot" aria-hidden="true"></span>
+            <p class="bbx-timeline__when">{{ step.title }}</p>
+            <h4>{{ step.subtitle }}</h4>
+            {% if step.text %}<p>{{ step.text }}</p>{% endif %}
+          </li>
+        {% endfor %}
+      </ol>
+    </div>
+  {% endif %}
+
+  <div class="bbx-checks__body">
+    <div class="bbx-checks__side">
+      <dl class="bbx-ledger">
+        {% for figure in lists.figures %}
+          <div><dt data-count="{{ figure.title }}">{{ figure.title }}</dt><dd>{{ figure.text }}</dd></div>
+        {% endfor %}
+      </dl>
+      {% if imgs.checks_image.image %}
+        <figure class="bbx-checks__image" data-bb-clip>
+          <img src="{{ imgs.checks_image.image|src:1200 }}" alt="{{ imgs.checks_image.alt }}" loading="lazy" decoding="async">
+          {% if t.checks_callout %}<figcaption class="bbx-callout">{{ t.checks_callout }}</figcaption>{% endif %}
+        </figure>
+      {% elif t.checks_callout %}
+        <p class="bbx-callout">{{ t.checks_callout }}</p>
+      {% endif %}
+    </div>
+
+    <div class="bbx-verify" data-bbx-checklist data-progress="{{ t.checks_progress }}">
+      <div class="bbx-verify__head">
+        <h3 class="bbx-mini">{{ t.checks_list_title }}</h3>
+        <p class="bbx-verify__progress" aria-live="polite" data-bbx-progress-text></p>
+        <span class="bbx-verify__meter" aria-hidden="true"><i data-bbx-progress-bar></i></span>
+        {% if t.checks_hint %}<p class="bbx-verify__hint">{{ t.checks_hint }}</p>{% endif %}
+      </div>
+      <ol class="bbx-verify__list">
+        {% for check in lists.legal_checks %}
+          <li>
+            <label>
+              <input type="checkbox" data-bbx-check>
+              <span class="bbx-verify__box" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span>
+              <span class="bbx-verify__no" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
+              <span class="bbx-verify__text">{{ check.title }}</span>
+            </label>
+          </li>
+        {% endfor %}
+      </ol>
+    </div>
   </div>
 </section>
 
-{# ---------- 10. Sources ---------- #}
+{# ---------- 10. Sources: a moving line of names, the featured announcement and the other sources (dark) ---------- #}
 <section class="bbx-sources" id="sources" aria-labelledby="bbx-sources-title">
-  <header class="bbx-section-head">
-    <p class="bbx-eyebrow">{{ t.sources_eyebrow }}</p>
-    <h2 class="bbx-display" id="bbx-sources-title" data-bb-lines>{{ t.sources_title|em }}</h2>
+  {% if t.sources_ticker %}
+    <div class="bbx-ticker" aria-hidden="true">
+      <div class="bbx-ticker__track">
+        {# Two copies, so the line loops without a gap. #}
+        <span>{{ t.sources_ticker }} · </span><span>{{ t.sources_ticker }} · </span>
+      </div>
+    </div>
+  {% endif %}
+  <header class="bbx-section-head bbx-section-head--split">
+    <div>
+      <p class="bbx-eyebrow">{{ t.sources_eyebrow }}</p>
+      <h2 class="bbx-display" id="bbx-sources-title" data-bb-lines>{{ t.sources_title|em }}</h2>
+    </div>
+    {% if t.sources_lead %}<p class="bbx-lead">{{ t.sources_lead }}</p>{% endif %}
   </header>
-  <ul class="bbx-sources__grid">
-    {% for source in lists.sources %}
-      <li>
-        <a href="{{ source.link }}" target="_blank" rel="noopener noreferrer">
-          <h3>{{ source.title }}</h3>
-          <p>{{ source.text }}</p>
-          <span>{{ source.subtitle }} <i aria-hidden="true">↗</i></span>
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
+
+  <div class="bbx-press">
+    {% for source in lists.sources %}{% if source.group == "featured" %}
+      <a class="bbx-press__featured" href="{{ source.link }}" target="_blank" rel="noopener noreferrer">
+        {% if imgs.sources_image.image %}<img src="{{ imgs.sources_image.image|src:1920 }}" alt="{{ imgs.sources_image.alt }}" loading="lazy" decoding="async">{% endif %}
+        <span class="bbx-press__shade" aria-hidden="true"></span>
+        <span class="bbx-press__badge">{{ t.sources_featured }}</span>
+        {% if t.sources_featured_quote %}<blockquote>“{{ t.sources_featured_quote }}”</blockquote>{% endif %}
+        <span class="bbx-press__meta">
+          <strong>{{ source.title }}</strong>
+          <span>{{ source.text }}</span>
+          <span class="bbx-press__link">{{ source.subtitle }} <i aria-hidden="true">↗</i></span>
+        </span>
+      </a>
+    {% endif %}{% endfor %}
+
+    <ul class="bbx-press__list">
+      {% for source in lists.sources %}{% if source.group != "featured" %}
+        <li>
+          <a href="{{ source.link }}" target="_blank" rel="noopener noreferrer">
+            <span class="bbx-press__mono" aria-hidden="true">{{ source.title|make_list|first }}</span>
+            <span class="bbx-press__body">
+              <h3>{{ source.title }}</h3>
+              <p>{{ source.text }}</p>
+              <span class="bbx-press__link">{{ source.subtitle }} <i aria-hidden="true">↗</i></span>
+            </span>
+          </a>
+        </li>
+      {% endif %}{% endfor %}
+    </ul>
+  </div>
 </section>

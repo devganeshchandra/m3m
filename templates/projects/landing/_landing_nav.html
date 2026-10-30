@@ -1,7 +1,8 @@
 {% load static %}
 {% comment %}
   The header on project ad landing pages, in place of the site menu: the project name, links to
-  the page's own sections, a call link and an enquiry button. Expects: theme (jl / cl / tt) and
+  the page's own sections, a call link, a WhatsApp button and an enquiry button. The numbers are the
+  page's own (Contact numbers in its admin; projects/landing.py with_page_contact). Expects: theme (jl / cl / tt) and
   open_attr (the attribute the page's script uses to open its lead popup, e.g. "data-jl-open").
   The name, links and labels come from the page's landing content (t.brand, lists.nav, t.nav_*).
   A page with a logo in its admin images (imgs.brand_logo) shows the logo in place of the name.
@@ -24,6 +25,11 @@
     <a class="lnav__call" href="tel:{{ site.phone_dial }}" aria-label="Call {{ site.phone_display }}">
       <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
       <span>{{ site.phone_display }}</span>
+    </a>
+    <a class="lnav__whatsapp" href="https://wa.me/{{ site.whatsapp_number }}?text={{ t.whatsapp_message|urlencode }}%20{{ project.name|urlencode }}"
+      target="_blank" rel="noopener" aria-label="{{ t.whatsapp_label|default:'Get details on' }} WhatsApp">
+      <span>{{ t.whatsapp_label|default:"Get details on" }}</span>
+      {% include "icons/whatsapp.html" %}
     </a>
     <button class="lnav__cta" type="button" {{ open_attr }}="{{ t.nav_cta_popup }}">{{ t.nav_cta }}</button>
     <button class="lnav__toggle" type="button" aria-expanded="false" aria-controls="lnav-links" data-lnav-toggle>

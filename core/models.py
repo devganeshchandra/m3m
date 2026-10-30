@@ -144,7 +144,7 @@ class HomePage(SingletonModel):
     projects_title_line_2 = models.CharField(max_length=80, default="Delhi NCR.")
     projects_intro = models.TextField(
         default=(
-            "66 iconic projects across Gurugram, Delhi NCR, Noida and Panipat, from delivered landmarks "
+            "66 iconic projects across Gurugram, Delhi, Noida and Panipat, from delivered landmarks "
             "to the addresses now taking shape. Find the one that feels like yours."
         )
     )

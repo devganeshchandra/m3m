@@ -9,6 +9,7 @@ on any machine); context() hands them to the page's template as:
     lists.<key>          the published items of a list, in order
 """
 
+import copy
 from pathlib import Path
 
 from django.apps import apps as django_apps
@@ -16,9 +17,9 @@ from django.conf import settings
 from django.core.files import File
 from django.core.files.storage import default_storage
 
-from projects.landing_pages import billionaire, cullinan, jacob, trump
+from projects.landing_pages import billionaire, cullinan, jacob, site, trump
 
-PAGES = {module.SLUG: module for module in (jacob, cullinan, trump, billionaire)}
+PAGES = {module.SLUG: module for module in (jacob, cullinan, trump, billionaire, site)}
 
 
 def list_choices(slug=None):
@@ -135,3 +136,20 @@ def context(slug, rera=""):
         "imgs": {image.key: image for image in page.images.all()},
         "lists": lists,
     }
+
+
+def with_page_contact(site, texts):
+    """The site settings with this page's own phone and WhatsApp numbers, when it has them, so every
+    call and WhatsApp link on the page (header, buttons, mobile bar, footer, search-engine data) uses them.
+    A page's own number is not the toll-free line, so the footer calls it plain “Call”."""
+    numbers = {key: texts.get(key, "").strip() for key in ("phone_display", "phone_dial", "whatsapp_number")}
+    if not any(numbers.values()):
+        return site
+    site = copy.copy(site)
+    for key, value in numbers.items():
+        if value:
+            setattr(site, key, value)
+    if numbers["phone_dial"]:
+        site.phone_international = numbers["phone_dial"]
+        site.phone_label = "Call"
+    return site

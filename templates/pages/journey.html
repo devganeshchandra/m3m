@@ -1,4 +1,5 @@
 {% extends "inner_base.html" %}
+{% load landing_tags %}
 {% load site_tags %}
 
 {% block hero_stats %}
@@ -54,10 +55,10 @@
   <div class="ip-section__inner">
     <div class="ip-section__header">
       <div>
-        <p class="ip-label"><span aria-hidden="true"></span>What guides us</p>
-        <h2 class="ip-heading" id="values-title">Four principles, <em>every address.</em></h2>
+        <p class="ip-label"><span aria-hidden="true"></span>{{ st.journey_values_label }}</p>
+        <h2 class="ip-heading" id="values-title">{{ st.journey_values_title|em }}</h2>
       </div>
-      <p>The ideas that shape how we design, build and stay in conversation with the people who choose M3M.</p>
+      <p>{{ st.journey_values_text }}</p>
     </div>
     <ol class="values__grid">
       {% for principle in principles %}
@@ -77,8 +78,8 @@
   <div class="ip-section__inner">
     <div class="ip-section__header">
       <div>
-        <p class="ip-label"><span aria-hidden="true"></span>Milestones</p>
-        <h2 class="ip-heading" id="timeline-title">The journey <em>so far.</em></h2>
+        <p class="ip-label"><span aria-hidden="true"></span>{{ st.journey_milestones_label }}</p>
+        <h2 class="ip-heading" id="timeline-title">{{ st.journey_milestones_title|em }}</h2>
       </div>
     </div>
     <ol class="timeline__list">
@@ -96,7 +97,7 @@
       {% endfor %}
     </ol>
     {% if home.journey_link_url %}
-      <p class="ip-footnote">Figures as published on the <a href="{{ home.journey_link_url }}" rel="noreferrer" target="_blank">M3M India website</a>.</p>
+      <p class="ip-footnote">{{ st.journey_source }} <a href="{{ home.journey_link_url }}" rel="noreferrer" target="_blank">{{ st.journey_source_link }}</a>.</p>
     {% endif %}
   </div>
 </section>
@@ -107,11 +108,11 @@
   <div class="ip-section__inner">
     <div class="ip-section__header">
       <div>
-        <p class="ip-label"><span aria-hidden="true"></span>The work</p>
-        <h2 class="ip-heading" id="signature-title">Signature <em>addresses.</em></h2>
+        <p class="ip-label"><span aria-hidden="true"></span>{{ st.journey_work_label }}</p>
+        <h2 class="ip-heading" id="signature-title">{{ st.journey_work_title|em }}</h2>
       </div>
       <a class="ip-button ip-button--outline" href="{% url 'projects:list' %}">
-        <span>Explore all projects</span>
+        <span>{{ st.journey_work_link }}</span>
         {% include "icons/arrow.html" %}
       </a>
     </div>

@@ -12,7 +12,7 @@ Gunicorn (runs the Python app, 3 workers)           ← only on the Linux server
    ▼
 Django 6.1 (Python): pages, admin panel, enquiry API
    ▼
-Database: SQLite file (default) or PostgreSQL       + media/ folder for uploads
+Database: PostgreSQL                               + media/ folder for uploads
 ```
 
 ## Frontend (what runs in the visitor's browser)
@@ -75,11 +75,10 @@ No longer used: Node.js, Next.js, React, Framer Motion and the Tailwind build.
 
 ## Database
 
-- **Default: SQLite**, a single file `db.sqlite3` in the project folder. It
-  needs no setup and is fine for this site (many readers, a few editors).
-- **Option: PostgreSQL**, recommended for larger traffic or several servers.
-  Set `DB_ENGINE=postgres` and `DB_NAME/USER/PASSWORD/HOST/PORT` in `.env`,
-  and install `psycopg[binary]` (the line is already in `requirements.txt`).
+- **PostgreSQL** (version 14 or newer; 18 in development). Connection settings are the `DB_*` lines in
+  `.env`; `setup.sh` installs and configures it on Ubuntu/Debian. Full guide, including the leads table,
+  backups and direct access: [DATABASE.md](DATABASE.md).
+- SQLite (`db.sqlite3`) is only a fallback for a laptop without PostgreSQL (`DB_ENGINE=sqlite`).
 - **Uploaded files** (images, brochures, floor plans) are not in the
   database. They are in the `media/` folder. Back up both.
 

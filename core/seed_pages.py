@@ -7,16 +7,20 @@ edited afterwards in the admin.
 import datetime
 
 # Which collection each starter project appears in, and the three shown on
-# the homepage. PLACEHOLDERS: confirm each project's real status in the admin.
+# the homepage. M3M lists The Line under ongoing projects, and Smartworld Sector 98 is RERA-registered and
+# launched, so none of these is a delivered landmark yet.
+# The ELIE SAAB residences' registration with Haryana RERA (haryanarera.gov.in, project 3680).
+BILLIONAIRE_RERA = "HRERA Gurugram GGM/992/724/2025/95 (16.10.2025)"
+
 PROJECT_STATUS = {
     "m3m-jacob-co-residences": "current",
     "m3m-jacob-jewel-crest-noida": "current",
-    "m3m-the-line-retail-shops": "delivered",
-    "m3m-the-line-pentsuites": "delivered",
+    "m3m-the-line-retail-shops": "current",
+    "m3m-the-line-pentsuites": "current",
     "m3m-the-cullinan-residential": "current",
     "m3m-the-cullinan-avenue": "current",
-    "smartworld-noida-residential": "upcoming",
-    "smartworld-noida-commercial": "upcoming",
+    "smartworld-noida-residential": "current",
+    "smartworld-noida-commercial": "current",
     "m3m-trump-tower-noida": "current",
 }
 FEATURED_PROJECTS = {"m3m-jacob-co-residences", "m3m-the-cullinan-residential", "m3m-trump-tower-noida"}

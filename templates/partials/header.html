@@ -35,7 +35,7 @@
                   <span>{{ child.note }}</span>
                 </a>
               {% endfor %}
-              <a class="nav-drop__all" href="{{ item.href }}">View all projects →</a>
+              <a class="nav-drop__all" href="{{ item.href }}">{{ st.header_all_projects }}</a>
             </div>
           </div>
         {% else %}
@@ -50,7 +50,7 @@
         {% include "icons/whatsapp.html" %}
       </a>
       <button aria-haspopup="dialog" class="header-consultation" data-enquiry-open type="button">
-        <span>Private consultation</span>
+        <span>{{ st.header_cta }}</span>
         {% include "icons/arrow.html" %}
       </button>
     </div>

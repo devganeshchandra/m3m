@@ -38,6 +38,8 @@ FORM = "Forms"
 TEXTS = [
     (common.HEADER, "brand", "Project name in the header", "The Cullinan"),
     *common.TEXTS,
+    *common.contact_texts(),
+    *common.rera_texts(extra="Agent RERA: UPRERAAGT10202"),
     (HERO, "hero_kicker", "Small line above the title", "Sector 94 · Noida Expressway"),
     (HERO, "hero_title_small", "Title: small line", "M3M"),
     (HERO, "hero_title_the", "Title: first word (thin)", "The"),
@@ -46,7 +48,6 @@ TEXTS = [
     (HERO, "hero_form_title", "Form title", "Get the price list"),
     (HERO, "hero_form_title_more", "Form title: lighter ending", "& floor plans"),
     (HERO, "hero_form_button", "Form button", "Get price list"),
-    (HERO, "hero_caption_rera", "Picture caption: RERA", "UP RERA {rera}"),
     (HERO, "hero_caption", "Picture caption", "Artistic impression"),
     (RESIDENCES, "tour_kicker", "Small label", "The residences"),
     (RESIDENCES, "tour_title", "Heading", "An emblem of *grace and grandeur.*"),
@@ -65,13 +66,13 @@ TEXTS = [
         CERT,
         "cert_lead",
         "Intro",
-        "A diamond is graded by its 4Cs. Grade your home in four taps: choose the carat, the cut and the moment "
-        "we call, and your private certificate fills in as you go.",
+        "Inspired by how a diamond is graded. Choose your residence, what we prepare and when we call, and your "
+        "private certificate fills in as you go.",
     ),
     (CERT, "cert_step_1", "Step 1: question", "Carat · Choose your residence"),
     (CERT, "cert_step_2", "Step 2: question", "Cut · What shall we prepare for you?"),
     (CERT, "cert_step_3", "Step 3: question", "Clarity · When is a good time to talk?"),
-    (CERT, "cert_step_4", "Step 4: question", "Certify · Where shall we reach you?"),
+    (CERT, "cert_step_4", "Step 4: question", "Certificate · Where shall we reach you?"),
     (CERT, "cert_next", "Button: next step", "Continue"),
     (CERT, "cert_back", "Button: back", "Back"),
     (CERT, "cert_choose_error", "Message when nothing is chosen", "Choose one to continue."),
@@ -112,10 +113,10 @@ TEXTS = [
     (LOCATION, "loc_title", "Heading", "Minutes from *everything you need.*"),
     (LOCATION, "loc_lead", "Intro", "Tap a place to see the route from The Cullinan."),
     (LOCATION, "loc_unit", "Unit after each travel time", "min"),
-    (LOCATION, "loc_origin", "Where the routes start (as typed in Google Maps)", "Sector 94, Noida, Uttar Pradesh"),
+    (LOCATION, "loc_origin", "Where the routes start (as typed in Google Maps)", "M3M The Cullinan, Sector 94, Noida"),
     (LOCATION, "loc_live", "Map tab: live map", "Live map"),
     (LOCATION, "loc_plan", "Map tab: location plan", "Location plan"),
-    (LOCATION, "loc_note", "Note", "*Travel times as stated by M3M India; they vary with route and traffic."),
+    (LOCATION, "loc_note", "Note", "*Drive times as Google Maps shows them from the project for the fastest route; live traffic can change them."),
     (LOCATION, "loc_button", "Button", "Book a site visit"),
     (LOCATION, "loc_popup", "Button: popup title", "Book a site visit"),
     (LOCATION, "loc_map_title", "Live map description (for screen readers)", "Google map of Sector 94, Noida"),
@@ -173,9 +174,10 @@ TEXTS = [
 IMAGES = [
     (common.HEADER, "brand_logo", "Logo (on the dark header; PNG or WebP with transparency)", "cullinan-logo.webp",
      "M3M The Cullinan, everything imagined"),
+    (common.RERA, "rera_qr", "QR code", "rera-qr.webp", "UP RERA QR code for M3M The Cullinan"),
     (HERO, "hero_image", "Main picture", "hero-aerial.jpg", ""),
     (AVENUE_SECTION, "avenue_a", "Collage: large picture", "avenue-facade.jpg", "The Cullinan Avenue retail façade at dusk, artistic impression"),
-    (AVENUE_SECTION, "avenue_b", "Collage: second picture", "avenue-skylight.jpg", "Multi-level atrium under a skylight, artistic impression"),
+    (AVENUE_SECTION, "avenue_b", "Collage: second picture", "avenue-skylight.jpg", "A multi-level retail hub, artistic impression"),
     (AVENUE_SECTION, "avenue_c", "Collage: third picture", "avenue-cafe.jpg", "Café and dining at the Avenue, artistic impression"),
     (LOCATION, "location_map", "Location map", "location-map.jpg", "Location map of M3M The Cullinan, Sector 94, Noida"),
     (EXTRAS, "dialog_image", "Popup: picture", "living.jpg", ""),
@@ -217,20 +219,22 @@ LISTS = {
 
 IMPRESSION = ", artistic impression"
 
+# Drive times Google Maps shows from the project (fastest route, weekday afternoon), so the number
+# matches the route the map draws: (minutes, place, kind, map query)
 CONNECTIVITY = (
-    ("2", "Amity University", "Education", "Amity University, Sector 125, Noida"),
-    ("5", "Max Healthcare", "Hospital", "Max Super Speciality Hospital, Patparganj"),
-    ("5", "Jasola Business Park", "Business", "Jasola District Centre, New Delhi"),
-    ("10", "Apollo Hospital", "Hospital", "Indraprastha Apollo Hospital, Sarita Vihar"),
-    ("12", "Ansal Plaza", "Shopping", "Ansal Plaza, Khel Gaon Marg, New Delhi"),
-    ("12", "Radisson Blu, Sector 18", "Hospitality", "Radisson Blu MBD Hotel, Noida"),
+    ("7", "Amity University", "Education", "Amity University, Sector 125, Noida"),
+    ("31", "Max Healthcare", "Hospital", "Max Super Speciality Hospital, Patparganj"),
+    ("12", "Jasola Business Park", "Business", "Jasola District Centre, New Delhi"),
+    ("17", "Apollo Hospital", "Hospital", "Indraprastha Apollo Hospital, Sarita Vihar"),
+    ("35", "Ansal Plaza", "Shopping", "Ansal Plaza, Khel Gaon Marg, New Delhi"),
+    ("13", "Radisson Blu, Sector 18", "Hospitality", "Radisson Blu MBD Hotel, Noida"),
 )
 
 CERT_CUTS = (
     ("Price & payment plan", "Launch pricing, privately"),
     ("Floor plans & sizes", "Every layout, in full"),
     ("A private site visit", "At a time that suits you"),
-    ("Investment outlook", "Growth, rentals and returns"),
+    ("Investment details", "Pricing, plans and paperwork"),
 )
 
 CERT_SLOTS = (
@@ -264,7 +268,7 @@ ITEMS = {
     "hero_stats": [
         {"value": "3 · 4 · 5", "title": "BHK residences"},
         {"value": "Infinity", "title": "pool & clubhouse"},
-        {"value": "2 min", "title": "to Amity University*"},
+        {"value": "7 min", "title": "to Amity University*"},
     ],
     "ticker": [
         {"title": title}
@@ -317,7 +321,7 @@ ITEMS = {
             ("amenity-community", "Community centre", "Family"),
         )
     ],
-    "avenue_tags": [{"title": title} for title in ("Luxury boutiques", "Fine dining", "Lounges", "Multi-level atrium")],
+    "avenue_tags": [{"title": title} for title in ("Luxury boutiques", "Fine dining", "Lounges", "Multi-level hub")],
     "slides": [
         {"image": f"{name}.jpg", "title": caption, "image_alt": caption + IMPRESSION}
         for name, caption in (
@@ -329,7 +333,6 @@ ITEMS = {
             ("billiards-lounge", "The billiards lounge"),
         )
     ],
-    # (minutes, place) as stated on the official project page
     "connectivity": [
         {"value": minutes, "title": place, "subtitle": kind, "link": query}
         for minutes, place, kind, query in CONNECTIVITY

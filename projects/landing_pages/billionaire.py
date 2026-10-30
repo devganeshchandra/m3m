@@ -42,11 +42,16 @@ TEXTS = [
     (HERO, "hero_enquire", "First button", "Enquire Now"),
     (HERO, "hero_explore", "Second button", "Explore Residences"),
     (HERO, "hero_caption", "Caption at the bottom", "Artistic impression"),
-    (HERO, "hero_scroll", "Scroll hint", "Scroll"),
-    (HERO, "hero_scroll_aria", "Scroll hint, for screen readers", "Scroll to discover"),
+    (HERO, "hero_badge", "Small badge above the title", "By invitation"),
     (PLAN, "plan_eyebrow", "Small label", "The plan"),
     (PLAN, "plan_title", "Heading", "What exactly is *M3M* planning to develop?"),
-    (PLAN, "plan_note", "Note under the slideshow", "AI-generated concepts, not official renders"),
+    (
+        PLAN,
+        "plan_lead",
+        "Intro",
+        "One address, four defining facts. Choose one to see it, or let the story play.",
+    ),
+    (PLAN, "plan_note", "Note on the picture", "AI-generated concepts, not official renders"),
     (
         PLAN,
         "plan_footnote",
@@ -58,8 +63,20 @@ TEXTS = [
     (BRAND, "brand_title", "Heading", "Signature Residences *by ELIE SAAB*"),
     (BRAND, "brand_lead", "Intro", "Four-bedroom homes, waterfront views and the couture house’s own Maison furnishings."),
     (BRAND, "brand_button", "Button", "Request Project Details"),
-    (DETAILS, "details_eyebrow", "Small label", "Announced details"),
-    (DETAILS, "details_title", "Heading", "A clearly defined *luxury* residence."),
+    (BRAND, "brand_monogram", "Large faint letters behind the section", "ES"),
+    (BRAND, "brand_caption", "Caption on the large picture", "The couture salon · AI-generated concept"),
+    (DETAILS, "details_eyebrow", "Small label", "The couture residence"),
+    (DETAILS, "details_title", "Heading", "A residence *tailored* like haute couture."),
+    (
+        DETAILS,
+        "details_lead",
+        "Intro",
+        "Everything announced so far, in one room. Touch the gold points to explore it.",
+    ),
+    (DETAILS, "details_card_label", "Card: small label", "Residence dossier"),
+    (DETAILS, "details_card_no", "Card: reference shown at the top", "ES · 111"),
+    (DETAILS, "details_button", "Card: button", "Reserve a private presentation"),
+    (DETAILS, "details_hint", "Hint on the picture", "Explore the residence"),
     (
         DETAILS,
         "details_footnote",
@@ -69,6 +86,7 @@ TEXTS = [
     (COMMUNITY, "community_eyebrow", "Small label", "Community"),
     (COMMUNITY, "community_title", "Heading", "What type of society is *M3M* trying to create?"),
     (COMMUNITY, "community_lead", "Intro", "Two levels: a private enclave, inside a complete township."),
+    (COMMUNITY, "community_hint", "Hint beside the rings", "Choose a circle"),
     (
         COMMUNITY,
         "community_footnote",
@@ -79,15 +97,23 @@ TEXTS = [
     (AMENITIES, "amenities_title", "Heading", "What amenities are they *planning* to deliver?"),
     (
         AMENITIES,
+        "amenities_lead",
+        "Intro",
+        "Seven worlds of resort living, planned for residents. Hover or tap to open each.",
+    ),
+    (
+        AMENITIES,
         "amenities_footnote",
         "Footnote",
-        "Named in the ELIE SAAB project announcement. Final specifications follow the approved plans. Images are "
-        "representative.",
+        "As described in the ELIE SAAB project announcement. Final specifications follow the approved plans. Images "
+        "are representative.",
     ),
     (TOWERS, "towers_eyebrow", "Small label", "Towers & layouts"),
     (TOWERS, "towers_title", "Heading", "What type of towers, blocks and *layouts*?"),
     (TOWERS, "towers_established", "First list: heading", "What is established"),
-    (TOWERS, "towers_pending", "Second list: heading", "Awaiting the sanctioned master plan"),
+    (TOWERS, "towers_pending", "Second list: heading", "To be confirmed in the sale documents"),
+    (TOWERS, "towers_pending_tag", "Label on each awaited item", "To be announced"),
+    (TOWERS, "towers_level", "Word before each level number", "Level"),
     (STRATEGY, "strategy_eyebrow", "Small label", "Strategy"),
     (STRATEGY, "strategy_title", "Heading", "What is M3M’s broader *development strategy*?"),
     (STRATEGY, "strategy_number", "Word before each number", "Strategy"),
@@ -95,15 +121,22 @@ TEXTS = [
     (LOCATION, "location_eyebrow", "Small label", "Location"),
     (LOCATION, "location_title", "Heading", "Location & *connectivity*"),
     (LOCATION, "location_lead", "Intro", "Sector 111, Gurugram, within SCDA and along the Dwarka Expressway corridor."),
+    (LOCATION, "location_origin", "Starting point for routes (as typed in Google Maps)", "Sector 111, Gurugram, Haryana"),
+    (LOCATION, "location_from", "Label before the starting point", "From Billionaire Block"),
+    (LOCATION, "location_route", "Link to the route in Google Maps", "See the route"),
+    (LOCATION, "location_unit", "Word after a travel time", "min"),
     (
         LOCATION,
         "location_footnote",
         "Footnote",
-        "From the project announcement. Travel times depend on the entrance, route and traffic.",
+        "Indicative connectivity. Travel times depend on the entrance, route and traffic.",
     ),
     (CHECKS, "checks_eyebrow", "Small label", "Timeline, investment & legal"),
     (CHECKS, "checks_title", "Heading", "Launch timeline, investment *& legal checks*"),
     (CHECKS, "checks_list_title", "Checklist: heading", "Before treating any specification as final, verify"),
+    (CHECKS, "checks_timeline_title", "Timeline: heading", "The road to 2030"),
+    (CHECKS, "checks_progress", "Checklist: progress ({done} and {total} are filled in)", "{done} of {total} verified"),
+    (CHECKS, "checks_hint", "Checklist: hint", "Tick each point as you verify it."),
     (
         CHECKS,
         "checks_callout",
@@ -113,6 +146,16 @@ TEXTS = [
     ),
     (SOURCES, "sources_eyebrow", "Small label", "Sources"),
     (SOURCES, "sources_title", "Heading", "Sources for *further research*"),
+    (
+        SOURCES,
+        "sources_lead",
+        "Intro",
+        "The announcement that put Gurugram on the couture map, and where to check every detail for yourself.",
+    ),
+    (SOURCES, "sources_ticker", "Moving line of names (separate with ·)", "Outlook Luxe · Business Today · M3M India · Haryana RERA · ELIE SAAB"),
+    (SOURCES, "sources_featured", "Label on the featured source", "Featured announcement"),
+    (SOURCES, "sources_featured_quote", "Quote on the featured source", "The brand’s first branded residential developments in the country."),
+    (SOURCES, "sources_read", "Link text on each card", "Read"),
     (FORM, "form_steps_title", "“What happens next” heading", "What happens next"),
     (FORM, "form_call", "Call card: label", "Call us"),
     (FORM, "form_message", "WhatsApp card: label", "Message us"),
@@ -125,6 +168,19 @@ TEXTS = [
     (FORM, "field_message", "Field: message", "Message"),
     (FORM, "field_optional", "Word after “Message”", "(optional)"),
     (FORM, "field_chauffeur", "Chauffeur tick box", "Arrange a chauffeur pickup for my viewing"),
+    (FORM, "field_chauffeur_note", "Chauffeur: small line under it", "Complimentary, from anywhere in Delhi NCR"),
+    (FORM, "field_mode", "Field: how to meet", "How would you like to meet?"),
+    (FORM, "field_purpose", "Field: purpose", "You are considering it as"),
+    (FORM, "field_day", "Field: day", "Choose a day"),
+    (FORM, "field_time", "Field: time", "Preferred time"),
+    (FORM, "field_guests", "Field: guests", "Guests attending"),
+    (FORM, "field_day_more", "Day tiles: button for a later date", "Later date"),
+    (FORM, "form_pass_label", "Invitation card: title", "Private viewing invitation"),
+    (FORM, "form_admit", "Invitation card: small line above the title", "Billionaire Block · by M3M"),
+    (FORM, "form_pass_no", "Invitation card: letters before the number", "BB"),
+    (FORM, "form_step_choose", "Invitation card: first step", "Your viewing"),
+    (FORM, "form_step_details", "Invitation card: second step", "Your details"),
+    (FORM, "form_confirmed", "Stamp shown after sending", "Invited"),
     (FORM, "form_submit", "Send button", "Request Invitation"),
     (FORM, "form_reset", "After sending: button", "Send another request"),
     (FOOTER, "footer_brochure", "Footer: brochure button", "Download brochure"),
@@ -155,8 +211,8 @@ IMAGES = [
         BRAND,
         "brand_main",
         "Large picture",
-        "living-room.jpg",
-        "Couture-inspired living room opening to a terrace and lake at sunset, AI-generated concept",
+        "salon.jpg",
+        "Double-height salon with a crystal chandelier and city views at sunset, AI-generated concept",
     ),
     (
         BRAND,
@@ -164,6 +220,34 @@ IMAGES = [
         "Small picture",
         "deck-jacuzzi.jpg",
         "Wrap-around deck with a private jacuzzi above a lake at dusk, AI-generated concept",
+    ),
+    (
+        BRAND,
+        "brand_detail",
+        "Third picture",
+        "suite.jpg",
+        "Master suite with floor-to-ceiling windows at sunset, AI-generated concept",
+    ),
+    (
+        DETAILS,
+        "details_image",
+        "Large picture with the gold points",
+        "living-room.jpg",
+        "Couture-inspired living room opening to a terrace and lake at sunset, AI-generated concept",
+    ),
+    (
+        SOURCES,
+        "sources_image",
+        "Picture on the featured source",
+        "sky-villa.jpg",
+        "Double-height sky villa living room above the clouds, AI-generated concept",
+    ),
+    (
+        FORM,
+        "form_image",
+        "Picture beside the invitation",
+        "private-terrace.jpg",
+        "Resident on a private terrace overlooking greenery, AI-generated concept",
     ),
     (
         TOWERS,
@@ -202,27 +286,130 @@ LISTS = {
         "Group: 2 or 3 hides the link on smaller screens (3 hides it first).",
     ),
     "menu": ("Menu links (phones)", "Title: the link text. Link: the section it jumps to, e.g. #community."),
-    "plan_slides": ("The plan: slideshow", "Image, Title: its caption, Image description."),
+    "hero_stats": ("Hero: figures along the bottom", "Value: the bold figure. Title: the line under it."),
     "facts": (
         "The plan: four facts",
         "Title: small label. Value: the bold figure. Group: a unit after the figure (e.g. acres), which makes the "
-        "figure count up. Text: the line under it.",
+        "figure count up. Text: the line under it. Image: the picture shown when the fact is chosen.",
     ),
     "brand_chips": (
         "ELIE SAAB Residences: figures",
         "Value: a number that counts up (optional). Title: the words after it, or the same number to show the number alone.",
     ),
     "announced_details": ("Announced details", "Title: the label. Subtitle: the detail."),
-    "community": ("Community cards", "Value: the letter. Title, Image, Image description. Text: one point per line."),
+    "hotspots": (
+        "Couture residence: gold points on the picture",
+        "Title, Text. Value: where the point sits, as across,down in percent (e.g. 22,55).",
+    ),
+    "community": (
+        "Community circles",
+        "Value: the letter. Title. Subtitle: the area (e.g. 170 acres). Image, Image description. "
+        "Text: one point per line. The first is the inner circle.",
+    ),
     "amenities": ("Amenities", "Title, Text: one line, Image, Image description."),
     "towers_established": ("Towers: what is established", "Title: the bold start. Text: the rest of the sentence."),
     "towers_pending": ("Towers: awaiting the master plan", "Title only."),
     "strategies": ("Strategies", "Title, Text, Image, Image description."),
-    "routes": ("Location: connections", "Title only."),
+    "routes": (
+        "Location: destinations",
+        "Title. Subtitle: small line above it. Text: one sentence. Value: travel time in minutes (optional). "
+        "Link: the destination as typed in Google Maps. Image: the picture shown when it is chosen.",
+    ),
     "figures": ("Timeline & investment figures", "Title: the figure. Text: what it means."),
+    "milestones": ("Timeline", "Title: the date. Subtitle: the milestone. Text: one line. Group: done or next."),
     "legal_checks": ("Before you buy, verify", "Title only."),
-    "sources": ("Sources", "Title, Text: one line. Subtitle: the link text. Link: the web address."),
+    "sources": (
+        "Sources",
+        "Title, Text: one line. Subtitle: the link text. Link: the web address. Group: featured puts it in the "
+        "large card.",
+    ),
+    "visit_modes": ("Private viewing: ways to meet", "Title. Subtitle: small line under it."),
+    "visit_purposes": ("Private viewing: purposes", "Title only."),
+    "visit_slots": (
+        "Private viewing: times",
+        "Title. Subtitle: the hours. Value: morning, afternoon, evening or flexible.",
+    ),
 }
+
+# The plan: label, figure, unit, line, picture, picture description.
+FACTS = (
+    (
+        "Location",
+        "Sector 111, Gurugram",
+        "",
+        "Dwarka Expressway, within SCDA",
+        "expressway-night.jpg",
+        "Illuminated towers beside an expressway at blue hour, AI-generated concept",
+    ),
+    (
+        "Billionaire’s Block",
+        "170",
+        "acres",
+        "Planned branded-residence enclave",
+        "enclave-drone.jpg",
+        "Top-down view of a landscaped enclave with a lake and garden avenues, AI-generated concept",
+    ),
+    (
+        "The township",
+        "SCDA",
+        "",
+        "Smart City Delhi Airport, M3M’s mixed-use master development",
+        "township-aerial.jpg",
+        "Aerial view of an integrated township with towers, offices, a lake and an expressway, AI-generated concept",
+    ),
+    (
+        "First announced branded project",
+        "ELIE SAAB Residences",
+        "",
+        "300 planned residences in Gurugram",
+        "branded-towers.jpg",
+        "Three slender residential towers beside a reflecting lake at dusk, AI-generated concept",
+    ),
+)
+
+# Location: destination, kind, one line, Google Maps query, picture, picture description.
+ROUTES = (
+    (
+        "Delhi and the NCR",
+        "The capital region",
+        "Across the Dwarka Expressway into Delhi and the wider NCR.",
+        "Dwarka, New Delhi",
+        "expressway-night.jpg",
+        "Expressway into the city at blue hour, representative image",
+    ),
+    (
+        "Indira Gandhi International Airport",
+        "International gateway",
+        "India’s busiest airport, along the same expressway corridor.",
+        "Indira Gandhi International Airport, New Delhi",
+        "airport-corridor.jpg",
+        "Expressway corridor with flyovers leading to an airport, representative image",
+    ),
+    (
+        "The Aerocity area",
+        "Hospitality district",
+        "Five-star hotels, fine dining and business venues by the airport.",
+        "Aerocity, New Delhi",
+        "arrival.jpg",
+        "Five-star hotel arrival court at night, representative image",
+    ),
+    (
+        "Gurugram’s business districts",
+        "Corporate hubs",
+        "Cyber City, Golf Course Road and the city’s Grade-A offices.",
+        "Cyber City, Gurugram",
+        "township-concept.jpg",
+        "Offices and towers of a business district in morning light, representative image",
+    ),
+    (
+        "The wider SCDA development",
+        "Your own township",
+        "Offices, retail, hospitality and green walkways around the enclave.",
+        "",
+        "township-aerial.jpg",
+        "Aerial view of an integrated township with a lake, AI-generated concept",
+    ),
+)
 
 ITEMS = {
     "nav": [
@@ -252,45 +439,18 @@ ITEMS = {
             ("Enquire", "#private-viewing"),
         )
     ],
-    "plan_slides": [
-        {"image": f"{name}.jpg", "title": caption, "image_alt": alt}
-        for name, caption, alt in (
-            (
-                "township-aerial",
-                "Drone view of the whole township",
-                "Aerial view of an integrated township with towers, offices, a lake and an expressway, AI-generated concept",
-            ),
-            (
-                "branded-towers",
-                "Branded luxury residential concept",
-                "Three slender residential towers beside a reflecting lake at dusk, AI-generated concept",
-            ),
-            (
-                "township-concept",
-                "Wider integrated township concept",
-                "Mixed-use township with residences, offices, a hotel and green spines in morning mist, AI-generated concept",
-            ),
-            (
-                "enclave-drone",
-                "The enclave from above",
-                "Top-down view of a landscaped enclave with a lake and garden avenues, AI-generated concept",
-            ),
-            (
-                "expressway-night",
-                "Along the Dwarka Expressway corridor",
-                "Illuminated towers beside an expressway at blue hour, AI-generated concept",
-            ),
+    "hero_stats": [
+        {"value": value, "title": title}
+        for value, title in (
+            ("170 acres", "Branded-residence enclave"),
+            ("300", "ELIE SAAB residences"),
+            ("4,200+ sq ft", "Four-bedroom homes"),
+            ("2030", "Completion target"),
         )
     ],
     "facts": [
-        {"title": "Location", "value": "Sector 111, Gurugram", "text": "Dwarka Expressway, within SCDA"},
-        {"title": "Billionaire’s Block", "value": "170", "group": "acres", "text": "Planned branded-residence enclave"},
-        {"title": "Larger SCDA township", "value": "250", "group": "acres", "text": "Mixed-use master development"},
-        {
-            "title": "First announced branded project",
-            "value": "ELIE SAAB Residences",
-            "text": "300 planned residences in Gurugram",
-        },
+        {"title": title, "value": value, "group": group, "text": text, "image": image, "image_alt": alt}
+        for title, value, group, text, image, alt in FACTS
     ],
     "brand_chips": [
         {"value": "300", "title": "residences"},
@@ -312,10 +472,20 @@ ITEMS = {
             ("Expected completion", "2030, per the launch announcement"),
         )
     ],
+    "hotspots": [
+        {"title": title, "text": text, "value": where}
+        for title, text, where in (
+            ("ELIE SAAB Maison", "Furnishings and décor from the couture house’s own Maison.", "22,56"),
+            ("Waterfront views", "Residences planned with waterfront views.", "84,40"),
+            ("Wrap-around decks", "Generous outdoor decks, with private jacuzzis.", "62,49"),
+            ("Four bedrooms", "About 4,200–4,650 sq ft of living, in 300 residences.", "48,14"),
+        )
+    ],
     "community": [
         {
             "value": "A",
             "title": "Billionaire’s Block — exclusive luxury community",
+            "subtitle": "170 acres · the inner circle",
             "image": "enclave-courtyard.jpg",
             "image_alt": "Residents walking through a shaded garden courtyard with a water channel, AI-generated concept",
             "text": "Brand-led residential identity\n"
@@ -327,6 +497,7 @@ ITEMS = {
         {
             "value": "B",
             "title": "SCDA — integrated urban community",
+            "subtitle": "The township around it",
             "image": "township-boulevard.jpg",
             "image_alt": "Tree-lined boulevard with cafés, offices and a cycling lane at sunset, AI-generated concept",
             "text": "Luxury residential developments\n"
@@ -371,18 +542,22 @@ ITEMS = {
         )
     ],
     "routes": [
-        {"title": title}
-        for title in (
-            "Delhi and the NCR",
-            "Indira Gandhi International Airport",
-            "The Aerocity area",
-            "Gurugram’s business districts",
-            "The wider SCDA development",
-        )
+        {"title": title, "subtitle": kind, "text": line, "link": query, "image": image, "image_alt": alt}
+        for title, kind, line, query, image, alt in ROUTES
     ],
     "figures": [
         {"title": "₹3,500 cr", "text": "Combined investment, Gurugram and Noida ELIE SAAB projects"},
         {"title": "2030", "text": "Announced completion target"},
+    ],
+    "milestones": [
+        {"title": when, "subtitle": what, "text": line, "group": state}
+        for when, what, line, state in (
+            ("October 2025", "RERA registered", "Registered with HRERA Gurugram: GGM/992/724/2025/95.", "done"),
+            ("January 2026", "Announcement", "M3M India, Smartworld Developers and ELIE SAAB announce the residences.", "done"),
+
+            ("Next", "Construction", "The towers rise, with the schedule set out in the agreement.", "next"),
+            ("2030", "Completion target", "The completion year given at the announcement.", "next"),
+        )
     ],
     "legal_checks": [
         {"title": title}
@@ -399,32 +574,53 @@ ITEMS = {
     ],
     # Only pages that were opened and checked.
     "sources": [
-        {"title": title, "text": text, "subtitle": label, "link": url}
-        for title, text, label, url in (
+        {"title": title, "text": text, "subtitle": label, "link": url, "group": group}
+        for title, text, label, url, group in (
             (
                 "M3M India — official website",
                 "The developer’s projects, including SCDA and its luxury corridor.",
                 "Open m3mindia.com",
                 "https://m3mindia.com/",
+                "",
             ),
             (
                 "ELIE SAAB Signature Residences — announcement",
                 "Brand and interiors context, ELIE SAAB Maison and the launch details.",
                 "Read on Outlook Luxe",
                 "https://luxe.outlookindia.com/art-design/real-estate/m3m-india-and-smartworld-developers-launch-elie-saab-signature-residences-in-india",
+                "featured",
             ),
             (
                 "Launch figures — Business Today",
                 "Residences, sizes, pricing and investment as reported at launch.",
                 "Read on Business Today",
                 "https://www.businesstoday.in/real-estate/story/m3m-eyes-rs-8300-crore-from-elie-saab-branded-residences-in-gurugram-noida-510767-2026-01-13",
+                "",
             ),
             (
                 "Haryana RERA",
                 "Independent check of registration and statutory disclosures.",
                 "Open Haryana RERA",
                 "https://haryanarera.gov.in/",
+                "",
             ),
+        )
+    ],
+    "visit_modes": [
+        {"title": title, "subtitle": note}
+        for title, note in (
+            ("Site visit", "At the experience centre"),
+            ("Virtual presentation", "A live video walk-through"),
+            ("At your office", "We come to you"),
+        )
+    ],
+    "visit_purposes": [{"title": title} for title in ("My own residence", "An investment", "Both")],
+    "visit_slots": [
+        {"title": title, "subtitle": hours, "value": value}
+        for title, hours, value in (
+            ("Morning", "9 AM – 12 PM", "morning"),
+            ("Afternoon", "12 – 3 PM", "afternoon"),
+            ("Evening", "3 – 6 PM", "evening"),
         )
     ],
 }

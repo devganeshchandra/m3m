@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load landing_tags %}
 {% load site_tags %}
 
 {% block title %}{{ project.seo_title|default:project.name }} | {{ site.site_name }}{% endblock %}
@@ -34,7 +35,7 @@
     <div class="project-detail__hero-content">
       <a class="project-detail__back" href="{% url 'projects:list' %}">
         {% include "icons/arrow.html" %}
-        All projects
+        {{ st.project_all }}
       </a>
       <p class="project-detail__category">{{ project.category }}</p>
       <h1 id="project-detail-title">{{ project.name }}</h1>
@@ -56,12 +57,12 @@
       {% endif %}
       <div class="project-detail__cta-row">
         <button aria-haspopup="dialog" class="project-detail__enquire" data-enquiry-open data-project="{{ project.slug }}" data-project-name="{{ project.name }}" type="button">
-          <span>Enquire now</span>
+          <span>{{ st.project_enquire }}</span>
           {% include "icons/arrow.html" %}
         </button>
         {% if project.brochure %}
           <a class="project-detail__brochure" href="{{ project.brochure.url }}" target="_blank" rel="noopener">
-            <span>Download brochure</span>
+            <span>{{ st.project_brochure }}</span>
             {% include "icons/arrow.html" %}
           </a>
         {% endif %}
@@ -90,8 +91,8 @@
   {% if project.highlights.all %}
     <section class="project-section" aria-labelledby="project-highlights-title">
       <div class="project-section__inner">
-        <p class="section-label"><span class="section-label__rule"></span>Highlights</p>
-        <h2 class="project-section__title" id="project-highlights-title">What sets it apart.</h2>
+        <p class="section-label"><span class="section-label__rule"></span>{{ st.project_highlights_label }}</p>
+        <h2 class="project-section__title" id="project-highlights-title">{{ st.project_highlights_title }}</h2>
         <ol class="project-highlights">
           {% for highlight in project.highlights.all %}
             <li>
@@ -108,8 +109,8 @@
   {% if project.configurations.all %}
     <section class="project-section project-section--stone" aria-labelledby="project-configurations-title">
       <div class="project-section__inner">
-        <p class="section-label"><span class="section-label__rule"></span>Configurations</p>
-        <h2 class="project-section__title" id="project-configurations-title">Choose your space.</h2>
+        <p class="section-label"><span class="section-label__rule"></span>{{ st.project_configs_label }}</p>
+        <h2 class="project-section__title" id="project-configurations-title">{{ st.project_configs_title }}</h2>
         <div class="project-configurations">
           {% for config in project.configurations.all %}
             <article class="project-configuration">
@@ -122,7 +123,7 @@
               {% if config.size %}<p>{{ config.size }}</p>{% endif %}
               <p class="project-configuration__price">{{ config.price|default:"Price on request" }}</p>
               <button aria-haspopup="dialog" class="text-link project-configuration__enquire" data-enquiry-open data-project="{{ project.slug }}" data-project-name="{{ project.name }}" type="button">
-                <span>Request details</span>
+                <span>{{ st.project_request }}</span>
                 {% include "icons/arrow.html" %}
               </button>
             </article>
@@ -135,8 +136,8 @@
   {% if project.gallery.all %}
     <section class="project-section" aria-labelledby="project-gallery-title">
       <div class="project-section__inner">
-        <p class="section-label"><span class="section-label__rule"></span>Gallery</p>
-        <h2 class="project-section__title" id="project-gallery-title">A closer look.</h2>
+        <p class="section-label"><span class="section-label__rule"></span>{{ st.project_gallery_label }}</p>
+        <h2 class="project-section__title" id="project-gallery-title">{{ st.project_gallery_title }}</h2>
         <div class="media-gallery">
           {% for item in project.gallery.all %}
             <figure class="media-gallery__item">
@@ -155,7 +156,7 @@
   {% if project.map_embed_url %}
     <section class="project-section" aria-labelledby="project-map-title">
       <div class="project-section__inner">
-        <p class="section-label"><span class="section-label__rule"></span>Location</p>
+        <p class="section-label"><span class="section-label__rule"></span>{{ st.project_location_label }}</p>
         <h2 class="project-section__title" id="project-map-title">{{ project.location }}</h2>
         <div class="project-map">
           <iframe src="{{ project.map_embed_url }}" title="Map showing {{ project.name }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
@@ -170,10 +171,10 @@
         <div class="ip-section__header">
           <div>
             <p class="ip-label"><span aria-hidden="true"></span>{{ project.collection_name }}</p>
-            <h2 class="ip-heading" id="related-projects-title">More from <em>this collection.</em></h2>
+            <h2 class="ip-heading" id="related-projects-title">{{ st.project_related_title|em }}</h2>
           </div>
           <a class="ip-button ip-button--outline" href="{% url 'projects:list' %}#{{ project.status }}">
-            <span>View the collection</span>
+            <span>{{ st.project_related_link }}</span>
             {% include "icons/arrow.html" %}
           </a>
         </div>
@@ -188,7 +189,7 @@
 
   <div class="project-detail__footer-link">
     <a class="text-link" href="{% url 'projects:list' %}">
-      <span>Explore all M3M projects</span>
+      <span>{{ st.project_explore }}</span>
       {% include "icons/arrow.html" %}
     </a>
   </div>

@@ -9,34 +9,34 @@
         </a>
       </div>
       <div class="site-footer__address">
-        <p class="eyebrow">Corporate office</p>
+        <p class="eyebrow">{{ st.footer_office }}</p>
         <address>
           {{ site.address_line_1 }}
           <br>
           {{ site.address_line_2 }}
         </address>
-        <a href="tel:{{ site.phone_dial }}">Toll-free {{ site.phone_display }}</a>
+        <a href="tel:{{ site.phone_dial }}">{{ site.phone_label|default:"Toll-free" }} {{ site.phone_display }}</a>
       </div>
       <div class="site-footer__links">
-        <p class="eyebrow">Explore</p>
+        <p class="eyebrow">{{ st.footer_explore }}</p>
         {% for item in navigation %}
           <a href="{{ item.href }}">{{ item.label }}</a>
         {% endfor %}
       </div>
       <div class="site-footer__connect">
-        <p class="eyebrow">Connect</p>
-        <a href="{{ site.whatsapp_url }}" rel="noreferrer" target="_blank">WhatsApp</a>
-        <a href="tel:{{ site.phone_dial }}">Call M3M</a>
+        <p class="eyebrow">{{ st.footer_connect }}</p>
+        <a href="{{ site.whatsapp_url }}" rel="noreferrer" target="_blank">{{ st.footer_whatsapp }}</a>
+        <a href="tel:{{ site.phone_dial }}">{{ st.footer_call }}</a>
       </div>
     </div>
 
     <details class="footer-disclaimer">
-      <summary>Important information</summary>
+      <summary>{{ st.footer_legal }}</summary>
       <p>{{ site.footer_disclaimer }}</p>
     </details>
 
     <div class="site-footer__bottom">
-      <span>© {% now "Y" %} {{ site.site_name }}. All rights reserved.</span>
+      <span>© {% now "Y" %} {{ site.site_name }}. {{ st.footer_rights }}</span>
       <div>
         {% for page in legal_pages %}<a href="/{{ page.slug }}">{{ page.title }}</a>{% endfor %}
       </div>

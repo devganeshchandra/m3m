@@ -1491,6 +1491,7 @@ summary:focus-visible {
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.6rem;
   line-height: 1.25;
+  overflow-wrap: anywhere; /* A long RERA number wraps on small phones. */
 }
 .project-detail__footer-link {
   padding: 0 56px 80px;

@@ -86,8 +86,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# Database: SQLite by default; set DB_ENGINE=postgres (and install
-# "psycopg[binary]") to use PostgreSQL in production.
+# Database: PostgreSQL in production (DB_ENGINE=postgres and the DB_* settings in .env); SQLite only
+# when DB_ENGINE is not set, e.g. for a quick look on a laptop. See docs/DATABASE.md.
 if os.environ.get("DB_ENGINE", "sqlite").lower() in {"postgres", "postgresql"}:
     DATABASES = {
         "default": {
@@ -97,7 +97,15 @@ if os.environ.get("DB_ENGINE", "sqlite").lower() in {"postgres", "postgresql"}:
             "PASSWORD": os.environ.get("DB_PASSWORD", ""),
             "HOST": os.environ.get("DB_HOST", "localhost"),
             "PORT": os.environ.get("DB_PORT", "5432"),
-            "CONN_MAX_AGE": 60,
+            # Keep connections open between requests, and check one is alive before reusing it.
+            "CONN_MAX_AGE": int(os.environ.get("DB_CONN_MAX_AGE", "60")),
+            "CONN_HEALTH_CHECKS": True,
+            "OPTIONS": {
+                "connect_timeout": 10,
+                # "require" when the database is on another server (e.g. a managed cloud database).
+                "sslmode": os.environ.get("DB_SSLMODE", "prefer"),
+                "application_name": "m3m-website",
+            },
         }
     }
 else:
@@ -185,6 +193,17 @@ LOGGING = {
     "root": {"handlers": ["console"], "level": "INFO"},
 }
 
+def _site_map(name, *args):
+    """A sidebar link worked out when the page is shown (core/site_map.py), e.g. a landing page's edit screen."""
+
+    def link(request):
+        from core import site_map
+
+        return getattr(site_map, name)(*args)
+
+    return link
+
+
 UNFOLD = {
     "SITE_TITLE": "M3M India Admin",
     "SITE_HEADER": "M3M India",
@@ -211,49 +230,75 @@ UNFOLD = {
             "950": "oklch(26% .05 66)",
         },
     },
+    "DASHBOARD_CALLBACK": "core.site_map.dashboard",
+    # The sidebar follows the website itself: its pages, then the landing pages, then shared parts.
     "SIDEBAR": {
         "show_search": True,
-        "show_all_applications": True,
+        "show_all_applications": False,
         "navigation": [
             {
-                "title": "Enquiries",
+                "title": "Start here",
                 "items": [
-                    {"title": "All enquiries", "icon": "inbox", "link": reverse_lazy("admin:leads_enquiry_changelist")},
+                    {"title": "Website map (every page)", "icon": "map", "link": reverse_lazy("admin:index")},
+                    {"title": "Enquiries", "icon": "inbox", "link": reverse_lazy("admin:leads_enquiry_changelist")},
+                ],
+            },
+            {
+                "title": "Main website pages",
+                "items": [
+                    {"title": "Homepage", "icon": "home", "link": reverse_lazy("admin:core_homepage_changelist")},
+                    {"title": "Projects page", "icon": "apartment", "link": _site_map("inner_page_url", "projects")},
+                    {"title": "Our Journey page", "icon": "timeline", "link": _site_map("inner_page_url", "journey")},
+                    {"title": "Media Centre page", "icon": "collections", "link": _site_map("inner_page_url", "media")},
+                    {"title": "Insights page", "icon": "lightbulb", "link": _site_map("inner_page_url", "insights")},
+                    {"title": "Contact page", "icon": "call", "link": _site_map("inner_page_url", "contact")},
+                    {"title": "Legal pages (disclaimer, privacy…)", "icon": "description", "link": reverse_lazy("admin:core_page_changelist")},
+                ],
+            },
+            {
+                "title": "Project landing pages",
+                "items": [
+                    {"title": "Jacob & Co. Residences", "icon": "diamond", "link": _site_map("landing_page_url", "m3m-jacob-co-residences")},
+                    {"title": "The Cullinan", "icon": "diamond", "link": _site_map("landing_page_url", "m3m-the-cullinan-residential")},
+                    {"title": "Trump Tower Noida", "icon": "diamond", "link": _site_map("landing_page_url", "m3m-trump-tower-noida")},
+                    {"title": "Billionaire Block: banner & form", "icon": "workspace_premium", "link": reverse_lazy("admin:projects_billionaireblockpage_changelist")},
+                    {"title": "Billionaire Block: sections", "icon": "workspace_premium", "link": _site_map("landing_page_url", "billionaire-block")},
                 ],
             },
             {
                 "title": "Projects",
                 "items": [
-                    {"title": "Projects & landing pages", "icon": "apartment", "link": reverse_lazy("admin:projects_project_changelist")},
-                    {"title": "Ad landing pages (all content)", "icon": "campaign", "link": reverse_lazy("admin:projects_landingpage_changelist")},
-                    {"title": "Ad landing page lists", "icon": "format_list_bulleted", "link": reverse_lazy("admin:projects_landingitem_changelist")},
-                    {"title": "Billionaire Block page", "icon": "diamond", "link": reverse_lazy("admin:projects_billionaireblockpage_changelist")},
+                    {"title": "All projects (cards & project pages)", "icon": "domain", "link": reverse_lazy("admin:projects_project_changelist")},
+                    {"title": "Landing page list items (all)", "icon": "format_list_bulleted", "link": reverse_lazy("admin:projects_landingitem_changelist")},
                 ],
             },
             {
-                "title": "Website content",
+                "title": "Content libraries",
                 "items": [
-                    {"title": "Homepage text", "icon": "home", "link": reverse_lazy("admin:core_homepage_changelist")},
-                    {"title": "Menu pages (banners & text)", "icon": "web", "link": reverse_lazy("admin:core_innerpage_changelist")},
-                    {"title": "Hero banners", "icon": "photo_library", "link": reverse_lazy("admin:core_herobanner_changelist")},
-                    {"title": "Journey values", "icon": "timeline", "link": reverse_lazy("admin:content_journeyprinciple_changelist")},
-                    {"title": "Journey statistics", "icon": "bar_chart", "link": reverse_lazy("admin:content_journeystat_changelist")},
+                    {"title": "Homepage banner pictures", "icon": "photo_library", "link": reverse_lazy("admin:core_herobanner_changelist")},
+                    {"title": "Journey values", "icon": "star", "link": reverse_lazy("admin:content_journeyprinciple_changelist")},
+                    {"title": "Journey figures", "icon": "bar_chart", "link": reverse_lazy("admin:content_journeystat_changelist")},
                     {"title": "Journey milestones", "icon": "flag", "link": reverse_lazy("admin:content_milestone_changelist")},
-                    {"title": "Press / news", "icon": "newspaper", "link": reverse_lazy("admin:content_pressitem_changelist")},
-                    {"title": "Publications (news logos)", "icon": "verified", "link": reverse_lazy("admin:content_publication_changelist")},
-                    {"title": "Media gallery", "icon": "collections", "link": reverse_lazy("admin:content_mediaimage_changelist")},
-                    {"title": "Videos", "icon": "smart_display", "link": reverse_lazy("admin:content_video_changelist")},
-                    {"title": "Insights (articles)", "icon": "lightbulb", "link": reverse_lazy("admin:content_insight_changelist")},
-                    {"title": "FAQs (Contact page)", "icon": "help", "link": reverse_lazy("admin:core_faq_changelist")},
+                    {"title": "Press stories", "icon": "newspaper", "link": reverse_lazy("admin:content_pressitem_changelist")},
+                    {"title": "Publication logos", "icon": "verified", "link": reverse_lazy("admin:content_publication_changelist")},
+                    {"title": "Media pictures", "icon": "image", "link": reverse_lazy("admin:content_mediaimage_changelist")},
+                    {"title": "Films", "icon": "smart_display", "link": reverse_lazy("admin:content_video_changelist")},
+                    {"title": "Insight articles", "icon": "article", "link": reverse_lazy("admin:content_insight_changelist")},
+                    {"title": "Contact page questions (FAQ)", "icon": "help", "link": reverse_lazy("admin:core_faq_changelist")},
                 ],
             },
             {
-                "title": "Site",
+                "title": "On every page",
                 "items": [
-                    {"title": "Contact & site settings", "icon": "settings", "link": reverse_lazy("admin:core_sitesettings_changelist")},
-                    {"title": "Pages (privacy, disclaimer…)", "icon": "description", "link": reverse_lazy("admin:core_page_changelist")},
-                    {"title": "Users", "icon": "person", "link": reverse_lazy("admin:auth_user_changelist")},
-                    {"title": "Groups & permissions", "icon": "group", "link": reverse_lazy("admin:auth_group_changelist")},
+                    {"title": "Menu, footer & popup texts", "icon": "menu", "link": _site_map("landing_page_url", "website-texts")},
+                    {"title": "Phone, address & search settings", "icon": "settings", "link": reverse_lazy("admin:core_sitesettings_changelist")},
+                ],
+            },
+            {
+                "title": "Team",
+                "items": [
+                    {"title": "Users", "icon": "person", "link": reverse_lazy("admin:auth_user_changelist"), "permission": lambda request: request.user.is_superuser},
+                    {"title": "Groups & permissions", "icon": "group", "link": reverse_lazy("admin:auth_group_changelist"), "permission": lambda request: request.user.is_superuser},
                 ],
             },
         ],

@@ -24,6 +24,9 @@ class EnquiryForm(forms.Form):
     # Billionaire Block private viewing: folded into the message for the sales team.
     residence = forms.CharField(max_length=80, required=False)
     visit_date = forms.DateField(required=False)
+    visit_mode = forms.CharField(max_length=80, required=False)
+    purpose = forms.CharField(max_length=80, required=False)
+    guests = forms.IntegerField(min_value=1, max_value=12, required=False)
     chauffeur = forms.BooleanField(required=False)
     page_url = forms.CharField(max_length=1000, required=False)
     # Honeypot: real visitors never see or fill this field.
@@ -52,12 +55,12 @@ class EnquiryForm(forms.Form):
                 errors["interest"] = "Choose residential or commercial."
             if message := validation.validate_lead_email(data.get("email")):
                 errors["email"] = message
-            # Optional here: the private line on the Jacob & Co. page asks for it, the other forms don't.
-            if data.get("callTime") and data["callTime"] not in Enquiry.CallTime.values:
-                errors["callTime"] = "Choose a preferred time for your call."
         elif source != Enquiry.Source.GUIDED:
             if message := validation.validate_name(data.get("name")):
                 errors["name"] = message
+        # Optional on the other forms (the Jacob & Co. private line, the Billionaire Block invitation).
+        if data.get("callTime") and data["callTime"] not in Enquiry.CallTime.values:
+            errors.setdefault("callTime", "Choose a preferred time for your call.")
         if source in Enquiry.BANNER_FORMS and data.get("interest") not in Enquiry.Interest.values:
             errors["interest"] = "Choose residential or commercial."
 
@@ -108,8 +111,14 @@ class EnquiryForm(forms.Form):
         lines = []
         if data.get("residence"):
             lines.append(f"Preferred residence: {data['residence']}")
+        if data.get("visit_mode"):
+            lines.append(f"Meeting: {data['visit_mode']}")
         if data.get("visit_date"):
             lines.append(f"Preferred date: {data['visit_date']:%d %b %Y}")
+        if data.get("purpose"):
+            lines.append(f"Considering it as: {data['purpose']}")
+        if data.get("guests"):
+            lines.append(f"Guests attending: {data['guests']}")
         if data.get("chauffeur"):
             lines.append("Chauffeur pickup requested")
         if data["source"] == Enquiry.Source.BROCHURE:

@@ -369,11 +369,15 @@
   margin-top: 34px;
 }
 
-.jl-hero__rera {
-  margin: 22px 0 0;
-  color: rgb(246 242 234 / 60%);
-  font-size: 12px;
-  letter-spacing: 0.08em;
+/* The form card, with the RERA block above it at the right. */
+.jl-hero__side {
+  display: grid;
+  justify-items: end;
+  gap: 16px;
+}
+
+.jl-hero__side .jl-hero__card {
+  width: 100%;
 }
 
 /* Entrance: each hero element rises in turn. */
@@ -3048,6 +3052,13 @@
 .jl-dialog__body {
   padding: 34px 30px 28px;
   color: #1d1a16;
+}
+
+.jl-dialog__body .jl-card__title {
+  margin-bottom: 14px;
+  color: #1d1a16;
+  font-size: clamp(1.3rem, 1.7vw, 1.55rem);
+  line-height: 1.15;
 }
 
 .jl-dialog__body .jl-card__eyebrow {

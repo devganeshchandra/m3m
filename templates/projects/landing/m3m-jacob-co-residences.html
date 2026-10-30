@@ -84,9 +84,10 @@
           </button>
           <button class="jl-button jl-button--ghost" type="button" data-jl-open="{{ t.hero_popup_2 }}">{{ t.hero_button_2 }}</button>
         </div>
-        <p class="jl-hero__rera jl-rise">{{ t.hero_rera }}</p>
       </div>
 
+      <div class="jl-hero__side">
+      {% include "projects/landing/_rera_badge.html" with theme="jl" %}
       {# Heading letters quiver every few seconds and on hover, like the homepage form (site.js initQuiverTitle). #}
       <aside class="jl-hero__card jl-rise" aria-labelledby="jl-hero-form-title" data-quiver-box>
         <p class="jl-card__eyebrow"><span class="jl-dot" aria-hidden="true"></span>{{ t.card_eyebrow }}</p>
@@ -97,6 +98,7 @@
         {% if t.card_intro %}<p class="jl-card__intro">{{ t.card_intro }}</p>{% endif %}
         {% include "projects/landing/_lead_form.html" with prefix="hero" button=t.card_button %}
       </aside>
+      </div>
     </div>
 
     <ol class="jl-hero__dots" aria-hidden="true">{% for slide in lists.slides %}<li{% if forloop.first %} class="is-active"{% endif %}></li>{% endfor %}</ol>

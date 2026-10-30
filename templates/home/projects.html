@@ -1,3 +1,4 @@
+{% load landing_tags %}
 <section aria-labelledby="projects-title" class="projects-section" id="projects">
   <div class="projects-section__inner">
     <div class="projects-section__header">
@@ -17,7 +18,7 @@
 
     <div class="projects-section__divider" aria-hidden="true">
       <span></span>
-      <span>Explore the collection</span>
+      <span>{{ st.home_projects_link }}</span>
       <span></span>
     </div>
 
@@ -29,7 +30,7 @@
 
     <div class="section-more">
       <a class="ip-button ip-button--navy" href="{% url 'projects:list' %}">
-        <span>Explore all {{ project_total }} projects</span>
+        <span>{{ st.home_projects_all|count:project_total }}</span>
         {% include "icons/arrow.html" %}
       </a>
     </div>

@@ -1,4 +1,5 @@
 {% extends "inner_base.html" %}
+{% load landing_tags %}
 {% load site_tags %}
 
 {% block hero_actions %}
@@ -9,7 +10,7 @@
   </a>
   <a class="ip-button ip-button--ghost" href="{{ site.whatsapp_url }}" rel="noreferrer" target="_blank">
     {% include "icons/whatsapp.html" %}
-    <span>WhatsApp us</span>
+    <span>{{ st.contact_whatsapp_button }}</span>
   </a>
 </div>
 {% endblock %}
@@ -24,12 +25,12 @@
 
       <ul class="contact-methods">
         <li>
-          <span class="contact-methods__label">Call toll-free</span>
+          <span class="contact-methods__label">{{ st.contact_call_label }}</span>
           <a href="tel:{{ site.phone_dial }}">{{ site.phone_display }}</a>
         </li>
         <li>
           <span class="contact-methods__label">WhatsApp</span>
-          <a href="{{ site.whatsapp_url }}" rel="noreferrer" target="_blank">Chat with our team</a>
+          <a href="{{ site.whatsapp_url }}" rel="noreferrer" target="_blank">{{ st.contact_chat }}</a>
         </li>
         {% if site.email %}
           <li>
@@ -69,8 +70,8 @@
     </div>
 
     <div class="contact-form-card">
-      <h2 class="contact-form-card__title">Request a callback</h2>
-      <p class="contact-form-card__intro">Tell us a little about what you’re looking for. Fields marked * are required.</p>
+      <h2 class="contact-form-card__title">{{ st.contact_form_title }}</h2>
+      <p class="contact-form-card__intro">{{ st.contact_form_intro }}</p>
       <form class="contact-form" novalidate data-lead-form action="{% url 'submit_enquiry' %}" method="post">
         {% include "partials/form_tracking.html" with source="contact" %}
         <label class="contact-field">
@@ -118,12 +119,12 @@
         </label>
         <label class="contact-consent">
           <input data-error-id="contact-consent-error" name="consent" required type="checkbox" value="on" data-validate="consent">
-          <span>I agree to be contacted by M3M India about this enquiry. My details will not be used for unrelated marketing.</span>
+          <span>{{ st.contact_form_consent }}</span>
         </label>
         <span class="contact-field__error" id="contact-consent-error" hidden></span>
         <div aria-live="polite" class="contact-form__status" role="status" data-form-status></div>
         <button class="ip-button ip-button--navy ip-button--wide" type="submit">
-          <span>Request a callback</span>
+          <span>{{ st.contact_form_button }}</span>
           {% include "icons/arrow.html" %}
         </button>
       </form>
@@ -135,11 +136,11 @@
 <section class="contact-map" aria-label="Corporate office location">
   <iframe src="{{ site.map_embed_url }}" title="Map showing the M3M India corporate office" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
   <div class="contact-map__card">
-    <p class="ip-label"><span aria-hidden="true"></span>Visit us</p>
-    <h2>Corporate office</h2>
+    <p class="ip-label"><span aria-hidden="true"></span>{{ st.contact_visit_label }}</p>
+    <h2>{{ st.contact_visit_title }}</h2>
     <address>{{ site.address_line_1 }} {{ site.address_line_2 }}</address>
     <a class="text-link" href="https://www.google.com/maps/dir/?api=1&amp;destination={{ site.street_address|add:', '|add:site.city|add:' '|add:site.postal_code|urlencode }}" rel="noreferrer" target="_blank">
-      <span>Get directions</span>
+      <span>{{ st.contact_directions }}</span>
       {% include "icons/arrow.html" %}
     </a>
   </div>
@@ -150,8 +151,8 @@
 <section class="ip-section" aria-labelledby="faq-title">
   <div class="ip-section__inner faq">
     <div>
-      <p class="ip-label"><span aria-hidden="true"></span>Good to know</p>
-      <h2 class="ip-heading" id="faq-title">Frequently <em>asked.</em></h2>
+      <p class="ip-label"><span aria-hidden="true"></span>{{ st.contact_faq_label }}</p>
+      <h2 class="ip-heading" id="faq-title">{{ st.contact_faq_title|em }}</h2>
       {% if inner.faq_image %}
         <figure class="contact-picture contact-picture--faq">
           {% picture inner.faq_image sizes="(max-width: 900px) 92vw, 36vw" alt=inner.faq_image_alt %}

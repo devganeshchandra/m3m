@@ -13,7 +13,7 @@
         {% else %}
           {% picture bb.hero_image sizes="(max-width: 1000px) 100vw, 58vw" alt=bb.hero_image_alt css_class="bbt__video" %}
         {% endif %}
-        <span class="bbt__caption">Artistic impression</span>
+        <span class="bbt__caption">{{ st.home_bb_caption }}</span>
       </div>
       {% if bb.about_image %}
         <figure class="bbt__thumb bbt__thumb--one">
@@ -56,7 +56,7 @@
           <span>{{ bb.teaser_button }}</span>
           {% include "icons/arrow.html" %}
         </a>
-        <a class="bbt__link" href="{% url 'projects:billionaire_block' %}#private-viewing">Request a private viewing</a>
+        <a class="bbt__link" href="{% url 'projects:billionaire_block' %}#private-viewing">{{ st.home_bb_link }}</a>
       </div>
     </div>
   </div>

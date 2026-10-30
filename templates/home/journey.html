@@ -16,7 +16,7 @@
 
       {% if stats %}
         <aside class="journey-glance" aria-labelledby="journey-glance-title">
-          <p class="journey-glance__label" id="journey-glance-title">M3M India at a glance</p>
+          <p class="journey-glance__label" id="journey-glance-title">{{ st.home_glance }}</p>
           <ul class="journey-glance__stats">
             {% for stat in stats %}
               <li>
@@ -28,7 +28,7 @@
           {% if page.journey_stats_note %}
             <p class="journey-glance__note">
               {{ page.journey_stats_note }}
-              <a href="{{ page.journey_link_url }}" rel="noreferrer" target="_blank">M3M India website <span aria-hidden="true">↗</span></a>
+              <a href="{{ page.journey_link_url }}" rel="noreferrer" target="_blank">{{ st.home_journey_source }} <span aria-hidden="true">↗</span></a>
             </p>
           {% endif %}
         </aside>

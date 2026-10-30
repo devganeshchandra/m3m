@@ -70,7 +70,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="insight",
             name="slug",
-            field=models.SlugField(default="", max_length=160),
+            # No index yet: the AlterField below makes it unique (with its index). Indexing it here too made
+            # PostgreSQL create the same “_like” index twice.
+            field=models.SlugField(default="", max_length=160, db_index=False),
             preserve_default=False,
         ),
         migrations.AddField(

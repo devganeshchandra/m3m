@@ -1,14 +1,16 @@
 from django import forms
 from django.db import models
+from django.urls import reverse
 from django.contrib import admin
 from django.utils.html import format_html, format_html_join
+from django.utils.safestring import mark_safe
 from unfold.admin import ModelAdmin, StackedInline, TabularInline
 
+from core import site_map
 from core.admin import SingletonAdmin
 from projects import landing
 from projects.models import (
     BillionaireBlockPage,
-    BillionaireItem,
     BillionaireResidence,
     LandingImage,
     LandingItem,
@@ -48,6 +50,7 @@ class ProjectAdmin(ModelAdmin):
     search_fields = ["name", "category", "location", "rera"]
     prepopulated_fields = {"slug": ["name"]}
     inlines = [ProjectHighlightInline, ProjectConfigurationInline, ProjectImageInline]
+    readonly_fields = ["where_to_edit"]
     fieldsets = [
         (
             "Project card",
@@ -76,6 +79,29 @@ class ProjectAdmin(ModelAdmin):
         ("Search engines", {"fields": ["seo_title", "seo_description"], "classes": ["collapse"]}),
     ]
 
+    def get_fieldsets(self, request, obj=None):
+        if obj and obj.slug in landing.PAGES:
+            # Its page is an ad landing page: the standard page fields and tabs are not shown on the site.
+            return [
+                ("Where this project’s page is edited", {"fields": ["where_to_edit"]}),
+                self.fieldsets[0],
+                ("Search engines", {"fields": ["seo_title", "seo_description"], "classes": ["collapse"]}),
+            ]
+        return self.fieldsets
+
+    def get_inlines(self, request, obj):
+        return [] if obj and obj.slug in landing.PAGES else self.inlines
+
+    @admin.display(description="Page content")
+    def where_to_edit(self, obj):
+        return format_html(
+            "This project has its own landing page. Every text, picture and list on it, including its phone, "
+            "WhatsApp and RERA block, is edited in <a href=\"{}\" style=\"font-weight:700;text-decoration:underline\">"
+            "{} → all page content</a>. Here you edit the project card (name, RERA number, picture, stage) that "
+            "appears on the Projects page and in enquiries. <a href=\"{}\" target=\"_blank\">View the page ↗</a>",
+            site_map.landing_page_url(obj.slug), obj.name, obj.get_absolute_url(),
+        )
+
     @admin.display(description="")
     def thumbnail(self, obj):
         if not obj.image:
@@ -99,14 +125,15 @@ class BillionaireBlockPageAdmin(SingletonAdmin):
     # Only the fields the live page and homepage teaser use. Every other text, image and list on
     # /billionaire-block is under “Ad landing pages → Billionaire Block”.
     inlines = [BillionaireResidenceInline]
+    readonly_fields = ["where_to_edit"]
     fieldsets = [
+        ("Where each part of the page is edited", {"fields": ["where_to_edit"]}),
         (
             "Hero (top of the page)",
             {
                 "fields": ["hero_video", "hero_image", "hero_image_alt", "eyebrow", "title", "tagline"],
-                "description": "Every other text, picture and list on the page is under "
-                "“Ad landing pages → Billionaire Block”. The “Residence types” tab only fills the "
-                "“Preferred residence” choices in the viewing form.",
+                "description": "The “Residence types” tab only fills the “Preferred residence” choices in the "
+                "viewing form.",
             },
         ),
         (
@@ -146,14 +173,15 @@ class BillionaireBlockPageAdmin(SingletonAdmin):
         ("Search engines & sharing", {"fields": ["seo_title", "seo_description"]}),
     ]
 
-
-@admin.register(BillionaireItem)
-class BillionaireItemAdmin(ModelAdmin):
-    list_display = ["title", "section", "value", "order", "is_published"]
-    list_editable = ["order", "is_published"]
-    list_filter = ["section", "is_published"]
-    search_fields = ["title", "text"]
-    fields = ["section", "title", "value", "text", ("image", "image_alt"), ("order", "is_published")]
+    @admin.display(description="This page")
+    def where_to_edit(self, obj):
+        return format_html(
+            "Here: the banner at the top, the private viewing form and its residence choices, the brochure, the "
+            "RERA line in the footer and the homepage band. Every other section (the story, community, amenities, "
+            "towers, location, timeline, sources) is in <a href=\"{}\" style=\"font-weight:700;text-decoration:underline\">"
+            "Billionaire Block → all other content</a>. <a href=\"/billionaire-block\" target=\"_blank\">View the page ↗</a>",
+            site_map.landing_page_url("billionaire-block"),
+        )
 
 
 def _thumbnail(image):
@@ -217,21 +245,58 @@ class LandingItemInline(StackedInline):
 
 @admin.register(LandingPage)
 class LandingPageAdmin(ModelAdmin):
-    list_display = ["name", "slug"]
+    list_display = ["name", "address", "related"]
     inlines = [LandingTextInline, LandingImageInline, LandingItemInline]
+    readonly_fields = ["how_to_edit"]
+
+    class Media:
+        js = ["admin/landing-finder.js"]
+
+    @admin.display(description="Address on the website")
+    def address(self, obj):
+        if obj.slug == site_map.WEBSITE_TEXTS:
+            return "Every page (header, footer, popup, small headings)"
+        url = obj.get_absolute_url()
+        return format_html('<a href="{}" target="_blank">{} ↗</a>', url, url)
+
+    @admin.display(description="Also edited in")
+    def related(self, obj):
+        return self._related_links(obj) or "—"
+
+    def _related_links(self, obj):
+        if obj.slug == "billionaire-block":
+            return format_html('<a href="{}">Billionaire Block: banner, form & RERA</a>',
+                               reverse("admin:projects_billionaireblockpage_changelist"))
+        project = site_map.project_url(obj.slug)
+        if project:
+            return format_html('<a href="{}">Project card (name, RERA no., picture)</a> · <a href="{}">Enquiries</a>',
+                               project, site_map.project_enquiries_url(obj.slug))
+        return ""
+
+    @admin.display(description="How to edit this page")
+    def how_to_edit(self, obj):
+        if obj is None or obj.pk is None:
+            return ""
+        view = format_html('<a href="{}" target="_blank" style="font-weight:700">View the page ↗</a>',
+                           obj.get_absolute_url())
+        related = self._related_links(obj)
+        steps = mark_safe(
+            "<ol style=\"margin:6px 0 0 18px;list-style:decimal;line-height:1.7\">"
+            "<li><strong>Texts</strong> tab: every heading, line and button, grouped by section in page order.</li>"
+            "<li><strong>Pictures</strong> tab: every single picture; upload a new file to replace one.</li>"
+            "<li><strong>Lists</strong> tab: repeating items (slides, amenities, places, menu links, FAQs…). Add, "
+            "remove, reorder with “Order”, or untick “Show on site”.</li>"
+            "<li>Not sure where something is? Type a few words you see on the website into "
+            "<strong>Find on this page</strong> just above the tabs.</li>"
+            "<li>Put <em>*stars*</em> around words in a heading to show them in italics. Click <strong>Save</strong> "
+            "at the bottom, then view the page.</li></ol>"
+        )
+        extra = format_html(" · Also edited in: {}", related) if related else ""
+        return format_html("{}{}{}", view, extra, steps)
 
     def get_fieldsets(self, request, obj=None):
-        fieldsets = [
-            (
-                None,
-                {
-                    "fields": ["name"],
-                    "description": "Every text, picture and list on this page is in the tabs above. "
-                    "Put *stars* around words in a heading to show them in italics.",
-                },
-            )
-        ]
-        if obj and obj.slug != "billionaire-block":  # Its title and description are on “Billionaire Block page”.
+        fieldsets = [(None, {"fields": ["how_to_edit", "name"]})]
+        if obj and obj.slug not in ("billionaire-block", site_map.WEBSITE_TEXTS):  # Billionaire: on its own page.
             fieldsets.append(
                 (
                     "Search engines & sharing",

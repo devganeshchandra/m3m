@@ -313,6 +313,7 @@
     var form = $("form", dialog);
     var projectInput = $("[data-enquiry-project]", dialog);
     var projectName = $("[data-enquiry-project-name]", dialog);
+    var anyProject = projectName.textContent; // From the admin: “Website texts → Enquiry popup”.
     dialog.setAttribute("data-lenis-prevent", "");
 
     document.addEventListener("click", function (event) {
@@ -322,7 +323,7 @@
       initTracking();
       clearForm(form);
       projectInput.value = trigger.dataset.project || "";
-      projectName.textContent = trigger.dataset.projectName || "M3M residences";
+      projectName.textContent = trigger.dataset.projectName || anyProject;
       if (!dialog.open) dialog.showModal();
       pauseScroll(true);
     });

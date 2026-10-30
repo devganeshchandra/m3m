@@ -40,6 +40,8 @@ FORM = "Forms"
 TEXTS = [
     (common.HEADER, "brand", "Project name in the header", "Trump Tower Noida"),
     *common.TEXTS,
+    *common.contact_texts(),
+    *common.rera_texts(),
     (HERO, "hero_badge", "Badge", "Now launched · Sector 94, Noida"),
     (HERO, "hero_title_small", "Title: small line", "M3M"),
     (HERO, "hero_title", "Title", "Trump Tower"),
@@ -49,7 +51,7 @@ TEXTS = [
     (HERO, "card_title", "Form card & popup: title", "Get the price list"),
     (HERO, "card_sub", "Form card & popup: line", "Floor plans, payment plan & a site visit, sent to you."),
     (HERO, "card_button", "Form card: button", "Get price list"),
-    (HERO, "hero_legal", "Small print at the bottom", "UP RERA {rera} · Arrival court: artistic impression · Other images representative"),
+    (HERO, "hero_legal", "Small print at the bottom", "Arrival court: artistic impression · Other images representative"),
     (BAND, "band_1_title", "1st item: bold", "4 & 5 BHK"),
     (BAND, "band_1_text", "1st item: line", "Branded residences"),
     (BAND, "band_2_title", "2nd item: bold", "Sector 94"),
@@ -117,12 +119,12 @@ TEXTS = [
     (LOCATION, "loc_title", "Heading", "Sector 94, *at the heart of Noida.*"),
     (LOCATION, "loc_lead", "Intro", "Tap a destination on the board to see the route from Sector 94."),
     (LOCATION, "loc_unit", "Unit after each travel time", "min"),
-    (LOCATION, "loc_origin", "Where the routes start (as typed in Google Maps)", "Sector 94, Noida, Uttar Pradesh"),
+    (LOCATION, "loc_origin", "Where the routes start (as typed in Google Maps)", "Trump Towers Noida, Sector 94, Noida"),
     (LOCATION, "loc_board", "Board: title", "Departures · Sector 94"),
     (LOCATION, "loc_board_place", "Board: first column", "Destination"),
     (LOCATION, "loc_board_time", "Board: last column", "Drive"),
     (LOCATION, "loc_board_go", "Board: line on each place", "Show route"),
-    (LOCATION, "loc_note", "Note", "Travel times as stated by M3M India for its Sector 94 projects; they vary with route and traffic."),
+    (LOCATION, "loc_note", "Note", "Drive times as Google Maps shows them from the project for the fastest route; live traffic can change them."),
     (LOCATION, "loc_button", "Button", "Book a site visit"),
     (LOCATION, "loc_popup", "Button: popup title", "Book a site visit"),
     (LOCATION, "loc_map_title", "Map description (for screen readers)", "Map of Sector 94, Noida"),
@@ -177,6 +179,7 @@ TEXTS = [
 IMAGES = [
     (common.HEADER, "brand_logo", "Logo (on the dark header and popup; PNG or WebP with transparency)",
      "trump-logo.webp", "Trump Towers Delhi NCR, Tribeca and M3M"),
+    (common.RERA, "rera_qr", "QR code", "rera-qr.webp", "UP RERA QR code for M3M Trump Tower Noida"),
     (FINAL, "final_bg", "Background", "pool.jpg", ""),
     (EXTRAS, "slidein_image", "Slide-in offer: picture", "suite.jpg", ""),
 ]
@@ -219,20 +222,21 @@ LISTS = {
 
 REPRESENTATIVE = ", representative image"
 
-# Travel times M3M states for its Sector 94 projects (The Cullinan, same sector): (minutes, place, kind, map query)
+# Drive times Google Maps shows from the project (fastest route, weekday afternoon), so the number
+# matches the route the map draws: (minutes, place, kind, map query)
 CONNECTIVITY = (
-    ("2", "Amity University", "Education", "Amity University, Sector 125, Noida"),
-    ("5", "Max Healthcare", "Hospital", "Max Super Speciality Hospital, Patparganj"),
-    ("5", "Jasola Business Park", "Business", "Jasola District Centre, New Delhi"),
-    ("10", "Apollo Hospital", "Hospital", "Indraprastha Apollo Hospital, Sarita Vihar"),
-    ("12", "Ansal Plaza", "Shopping", "Ansal Plaza, Khel Gaon Marg, New Delhi"),
-    ("12", "Radisson Blu, Sector 18", "Hospitality", "Radisson Blu MBD Hotel, Noida"),
+    ("7", "Amity University", "Education", "Amity University, Sector 125, Noida"),
+    ("32", "Max Healthcare", "Hospital", "Max Super Speciality Hospital, Patparganj"),
+    ("12", "Jasola Business Park", "Business", "Jasola District Centre, New Delhi"),
+    ("16", "Apollo Hospital", "Hospital", "Indraprastha Apollo Hospital, Sarita Vihar"),
+    ("36", "Ansal Plaza", "Shopping", "Ansal Plaza, Khel Gaon Marg, New Delhi"),
+    ("14", "Radisson Blu, Sector 18", "Hospitality", "Radisson Blu MBD Hotel, Noida"),
 )
 
 SPECS = (
     ("Apartments", "4 & 5 BHK"),
     ("Price", "On request"),
-    ("Size", "4925 – 5685 sq.ft."),
+    ("Size", "On request"),
     ("Location", "Noida"),
 )
 

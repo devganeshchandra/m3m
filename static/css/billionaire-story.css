@@ -1,7 +1,8 @@
 /*
  * Billionaire Block: the research story (templates/projects/billionaire/story.html).
- * Uses the tokens from billionaire.css. Light and dark sections alternate; headings are bold
- * Cormorant with one italic gold phrase; text stays short.
+ * Uses the tokens from billionaire.css. Light and dark sections alternate, starting light after the
+ * hero: plan, couture residence, amenities, strategy and checks are light; ELIE SAAB, community,
+ * towers, location and sources are dark. Headings are Bodoni Moda with one italic gold phrase.
  */
 
 /* ---------- Shared ---------- */
@@ -13,7 +14,7 @@
   margin: 0 0 22px;
   color: var(--gold-text);
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0.3em;
   text-transform: uppercase;
 }
@@ -28,29 +29,61 @@
 .bbx-display {
   max-width: 18ch;
   margin: 0;
-  font-family: var(--serif);
-  font-size: clamp(2.6rem, 5.4vw, 5.4rem);
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  line-height: 1.02;
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 4.8vw, 4.8rem);
+  font-variation-settings: "opsz" 28;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.04;
 }
 
 .bbx-display em {
   color: var(--gold-text);
+  font-family: var(--serif);
+  font-size: 1.12em;
   font-style: italic;
   font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 .bbx-lead {
   max-width: 46ch;
   margin: 24px 0 0;
   color: var(--taupe-dark);
-  font-size: clamp(1.05rem, 1.3vw, 1.2rem);
-  line-height: 1.7;
+  font-size: clamp(1.02rem, 1.25vw, 1.15rem);
+  line-height: 1.75;
 }
 
 .bbx-section-head {
   margin-bottom: clamp(36px, 4.5vw, 64px);
+}
+
+.bbx-section-head--center {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.bbx-section-head--center .bbx-eyebrow::after {
+  width: 40px;
+  height: 1px;
+  background: currentColor;
+  content: "";
+}
+
+.bbx-section-head--center .bbx-display {
+  max-width: 22ch;
+}
+
+.bbx-section-head--split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  align-items: end;
+  gap: 24px clamp(32px, 6vw, 96px);
+}
+
+.bbx-section-head--split .bbx-lead {
+  margin: 0;
 }
 
 .bbx-footnote {
@@ -61,16 +94,12 @@
   opacity: 0.85;
 }
 
-.bbx-footnote--light {
-  color: var(--taupe);
-}
-
 .bbx-mini {
-  margin: 36px 0 14px;
+  margin: 36px 0 16px;
   color: var(--gold-text);
   font-family: var(--sans);
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
 }
@@ -101,8 +130,22 @@
   content: "";
 }
 
-.bbx-ticks strong {
-  font-weight: 600;
+.bbx-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid currentColor;
+  color: var(--gold-soft);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  transition: color 300ms ease;
+}
+
+.bbx-text-link:hover {
+  color: #fff;
 }
 
 figure[data-bb-clip] {
@@ -110,25 +153,66 @@ figure[data-bb-clip] {
   overflow: hidden;
 }
 
-.bbx-plan img,
 .bbx-brand img,
-.bbx-community img,
+.bbx-couture img,
+.bbx-circle img,
 .bbx-towers img,
 .bbx-strategy img,
-.bbx-location img,
-.bbx-checks img {
+.bbx-checks img,
+.bbx-press img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* ---------- 1. The plan ---------- */
+/* Dark sections: ivory text, gold accents. */
+.bbx-brand,
+.bbx-community,
+.bbx-towers,
+.bbx-location,
+.bbx-sources {
+  color: var(--ivory);
+  background:
+    radial-gradient(ellipse 50% 60% at 100% 0%, rgb(201 169 110 / 13%), transparent 70%),
+    radial-gradient(ellipse 40% 50% at 0% 100%, rgb(201 169 110 / 8%), transparent 70%),
+    #0d0b09;
+}
+
+:is(.bbx-brand, .bbx-community, .bbx-towers, .bbx-location, .bbx-sources) .bbx-eyebrow,
+:is(.bbx-brand, .bbx-community, .bbx-towers, .bbx-location, .bbx-sources) .bbx-mini {
+  color: var(--gold);
+}
+
+:is(.bbx-brand, .bbx-community, .bbx-towers, .bbx-location, .bbx-sources) .bbx-display em {
+  color: var(--gold-soft);
+}
+
+:is(.bbx-brand, .bbx-community, .bbx-towers, .bbx-location, .bbx-sources) .bbx-lead {
+  color: rgb(245 241 234 / 80%);
+}
+
+:is(.bbx-brand, .bbx-community, .bbx-towers, .bbx-location, .bbx-sources) .bbx-footnote {
+  color: var(--taupe);
+}
+
+/* Light sections: warm ivory. */
+.bbx-plan,
+.bbx-couture,
+.bbx-amenities,
+.bbx-strategy,
+.bbx-checks {
+  color: var(--ink);
+  background: var(--ivory);
+}
+
+/* ---------- 1. The plan: fact tabs over a cinematic picture ---------- */
 
 .bbx-plan {
   padding: var(--section) var(--pad) clamp(48px, 6vw, 88px);
-  color: var(--ink);
-  background: var(--ivory);
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgb(232 200 140 / 30%), transparent 70%),
+    var(--ivory);
 }
 
 .bbx-plan__head {
@@ -147,236 +231,395 @@ figure[data-bb-clip] {
 
 .bbx-plan__head .bbx-display {
   max-width: 16ch;
-  font-size: clamp(2.8rem, 6.4vw, 6.6rem);
+  font-size: clamp(2.6rem, 5.6vw, 5.6rem);
 }
 
-.bbx-carousel {
+.bbx-plan__head .bbx-lead {
+  text-align: center;
+}
+
+.bbx-stage {
   position: relative;
-  margin: 0 calc(-1 * var(--pad));
+}
+
+.bbx-stage__frame {
+  position: relative;
+  height: clamp(440px, 74vh, 820px);
   overflow: hidden;
-  background: var(--black);
+  border-radius: 28px;
+  background: #1a1612;
+  box-shadow: 0 40px 90px rgb(60 44 20 / 25%);
 }
 
-.bbx-carousel__slides {
-  position: relative;
-  height: clamp(420px, 72vh, 820px);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.bbx-carousel__slide {
+.bbx-stage__slide {
   position: absolute;
   inset: 0;
+  margin: 0;
   opacity: 0;
-  transition: opacity 1.4s var(--ease);
+  transition: opacity 1.2s var(--ease), visibility 0s 1.2s;
+  visibility: hidden;
 }
 
-.bbx-carousel__slide.is-active {
+/* Without JavaScript every fact is a picture of its own, one under the other. */
+html:not(.js) .bbx-stage__frame {
+  height: auto;
+}
+
+html:not(.js) .bbx-stage__slide {
+  position: relative;
+  height: 520px;
+  opacity: 1;
+  visibility: visible;
+}
+
+.bbx-stage__slide[hidden] {
+  display: block;
+}
+
+.bbx-stage__slide.is-active {
   z-index: 1;
   opacity: 1;
+  transition: opacity 1.2s var(--ease);
+  visibility: visible;
 }
 
-.bbx-carousel__slide img {
-  transform: scale(1.08);
-  transition: transform 7s linear;
+.bbx-stage__slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.1);
+  transition: transform 8s linear;
 }
 
-.bbx-carousel__slide.is-active img {
+.bbx-stage__slide.is-active img {
   transform: scale(1);
 }
 
-.bbx-carousel__slide::after {
+.bbx-stage__slide::after {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 55%, rgb(10 10 10 / 55%));
+  background:
+    linear-gradient(90deg, rgb(14 11 8 / 70%) 0%, rgb(14 11 8 / 20%) 45%, transparent 70%),
+    linear-gradient(180deg, transparent 50%, rgb(14 11 8 / 55%));
   content: "";
   pointer-events: none;
 }
 
-.bbx-carousel__caption {
+.bbx-stage__caption {
   position: absolute;
   z-index: 2;
-  bottom: clamp(110px, 12vw, 150px);
-  left: var(--pad);
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  margin: 0;
-  color: var(--ivory);
-  font-family: var(--serif);
-  font-size: clamp(1.3rem, 2.2vw, 2rem);
-  font-weight: 500;
-  text-shadow: 0 2px 18px rgb(0 0 0 / 45%);
+  top: 50%;
+  left: clamp(24px, 5vw, 72px);
+  display: grid;
+  max-width: min(560px, 80%);
+  gap: 10px;
+  color: #fff;
+  transform: translateY(-62%);
 }
 
-.bbx-carousel__caption span {
+.bbx-stage__caption > * {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 900ms ease, transform 1100ms var(--ease);
+}
+
+.bbx-stage__slide.is-active .bbx-stage__caption > * {
+  opacity: 1;
+  transform: none;
+}
+
+.bbx-stage__slide.is-active .bbx-stage__caption > :nth-child(2) { transition-delay: 120ms; }
+.bbx-stage__slide.is-active .bbx-stage__caption > :nth-child(3) { transition-delay: 240ms; }
+.bbx-stage__slide.is-active .bbx-stage__caption > :nth-child(4) { transition-delay: 360ms; }
+
+.bbx-stage__no {
   color: var(--gold-soft);
-  font-size: 0.6em;
-  letter-spacing: 0.2em;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
 }
 
-.bbx-carousel__controls {
+.bbx-stage__label {
+  color: rgb(255 248 234 / 85%);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.bbx-stage__value {
+  font-family: var(--display);
+  font-size: clamp(2.6rem, 6vw, 5.6rem);
+  font-weight: 500;
+  line-height: 1;
+  text-shadow: 0 6px 30px rgb(0 0 0 / 35%);
+}
+
+.bbx-stage__value small {
+  color: var(--gold-soft);
+  font-family: var(--serif);
+  font-size: 0.5em;
+  font-style: italic;
+}
+
+.bbx-stage__text {
+  color: rgb(255 248 234 / 92%);
+  font-family: var(--serif);
+  font-size: clamp(1.25rem, 1.8vw, 1.6rem);
+  font-style: italic;
+}
+
+/* For the acre facts: a gold ring shows the share of the township. */
+.bbx-stage__ring {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  right: clamp(24px, 6vw, 90px);
+  width: clamp(130px, 16vw, 220px);
+  height: auto;
+  overflow: visible;
+  transform: translateY(-62%);
+}
+
+.bbx-stage__ring circle {
+  fill: rgb(14 11 8 / 35%);
+  stroke: rgb(255 255 255 / 25%);
+  stroke-width: 3;
+}
+
+.bbx-stage__ring [data-bbx-ring-fill] {
+  fill: none;
+  stroke: var(--gold-soft);
+  stroke-dasharray: 0 100;
+  stroke-linecap: round;
+  stroke-width: 4;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dasharray 1.8s var(--ease) 300ms;
+  filter: drop-shadow(0 0 6px rgb(246 220 164 / 70%));
+}
+
+.bbx-stage__ring text {
+  fill: #fff;
+  font-family: var(--display);
+  font-size: 26px;
+}
+
+.bbx-stage__ring .bbx-stage__ring-unit {
+  fill: var(--gold-soft);
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.bbx-stage__corners i {
   position: absolute;
   z-index: 3;
-  right: var(--pad);
-  bottom: clamp(110px, 12vw, 150px);
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  width: 34px;
+  height: 34px;
+  border: 0 solid rgb(246 220 164 / 70%);
+  pointer-events: none;
 }
 
-.bbx-carousel__arrow {
-  display: grid;
-  width: 46px;
-  height: 46px;
-  place-items: center;
-  border: 1px solid rgb(245 241 234 / 45%);
-  border-radius: 50%;
-  color: var(--ivory);
-  background: rgb(10 10 10 / 25%);
-  font-size: 22px;
-  line-height: 1;
-  cursor: pointer;
-  backdrop-filter: blur(6px);
-  transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease;
-}
+.bbx-stage__corners i:nth-child(1) { top: 20px; left: 20px; border-width: 1px 0 0 1px; }
+.bbx-stage__corners i:nth-child(2) { top: 20px; right: 20px; border-width: 1px 1px 0 0; }
+.bbx-stage__corners i:nth-child(3) { bottom: 20px; left: 20px; border-width: 0 0 1px 1px; }
+.bbx-stage__corners i:nth-child(4) { right: 20px; bottom: 20px; border-width: 0 1px 1px 0; }
 
-.bbx-carousel__arrow:hover {
-  border-color: var(--gold);
-  color: var(--black);
-  background: var(--gold);
-}
-
-.bbx-carousel__dots {
-  display: flex;
-  gap: 4px;
-}
-
-.bbx-carousel__dots button {
-  display: grid;
-  width: 30px;
-  height: 30px;
-  place-items: center;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-
-.bbx-carousel__dots span {
-  width: 22px;
-  height: 2px;
-  background: rgb(245 241 234 / 45%);
-  transition: background-color 300ms ease, width 300ms ease;
-}
-
-.bbx-carousel__dots [aria-pressed="true"] span {
-  width: 30px;
-  background: var(--gold);
-}
-
-.bbx-carousel__note {
+.bbx-stage__note {
   position: absolute;
-  z-index: 2;
-  top: 20px;
-  right: var(--pad);
+  z-index: 3;
+  top: 26px;
+  right: 66px;
   margin: 0;
-  color: rgb(245 241 234 / 75%);
+  color: rgb(255 248 234 / 80%);
   font-size: 10px;
   letter-spacing: 0.24em;
   text-transform: uppercase;
 }
 
-.bbx-carousel :focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 3px;
-}
-
-/* The four facts sit on a card that overlaps the foot of the carousel. */
-.bbx-facts {
+/* The tabs sit on a white card that overlaps the picture; each fills a gold bar as it plays. */
+.bbx-tabs {
   position: relative;
   z-index: 4;
   display: grid;
+  width: calc(100% - clamp(32px, 6vw, 96px));
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin: calc(-1 * clamp(70px, 8vw, 100px)) auto 0;
+  margin: calc(-1 * clamp(64px, 7vw, 96px)) auto 0;
+  overflow: hidden;
+  border-radius: 22px;
   background: #fff;
-  box-shadow: 0 30px 70px rgb(27 25 21 / 18%);
+  box-shadow: 0 30px 70px rgb(60 44 20 / 18%);
 }
 
-.bbx-facts > div {
-  padding: clamp(22px, 2.4vw, 34px);
+.bbx-tab {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: clamp(20px, 2.2vw, 30px);
+  border: 0;
+  color: var(--ink);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 400ms ease;
 }
 
-.bbx-facts > div + div {
+.bbx-tab + .bbx-tab {
   border-left: 1px solid var(--line-light);
 }
 
-.bbx-facts dt {
+.bbx-tab:hover {
+  background: #fdfaf4;
+}
+
+.bbx-tab[aria-selected="true"] {
+  background: linear-gradient(180deg, #fff9ec, #fff);
+}
+
+.bbx-tab__label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   color: var(--gold-text);
   font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.22em;
+  font-weight: 700;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 
-.bbx-facts dd {
+.bbx-tab__label b {
   display: grid;
-  gap: 6px;
-  margin: 12px 0 0;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgb(155 125 72 / 40%);
+  border-radius: 50%;
+  font-size: 10px;
+  letter-spacing: 0;
+  transition: background-color 400ms ease, color 400ms ease;
 }
 
-.bbx-facts strong {
-  font-family: var(--serif);
-  font-size: clamp(1.5rem, 2.4vw, 2.3rem);
-  font-weight: 600;
-  line-height: 1.05;
+.bbx-tab[aria-selected="true"] .bbx-tab__label b {
+  border-color: transparent;
+  color: #fff;
+  background: linear-gradient(135deg, #d9bb7f, #9b7d48);
 }
 
-.bbx-facts span {
+.bbx-tab__value {
+  font-family: var(--display);
+  font-size: clamp(1.35rem, 2vw, 1.9rem);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.bbx-tab__text {
   color: var(--taupe-dark);
   font-size: 14px;
   line-height: 1.45;
 }
 
-/* ---------- 2. M3M Residences by ELIE SAAB ---------- */
+.bbx-tab__bar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: rgb(155 125 72 / 12%);
+}
+
+.bbx-tab__bar i {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #e3cfa6, #9b7d48);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.bbx-tab[aria-selected="true"] .bbx-tab__bar i {
+  transform: scaleX(1);
+}
+
+.bbx-stage.is-playing .bbx-tab[aria-selected="true"] .bbx-tab__bar i {
+  animation: bbx-tab-fill var(--bbx-tab-time, 6s) linear forwards;
+}
+
+@keyframes bbx-tab-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.bbx-plan .bbx-footnote {
+  text-align: center;
+}
+
+/* ---------- 2. Signature Residences by ELIE SAAB ---------- */
 
 .bbx-brand {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   align-items: center;
-  gap: clamp(40px, 6vw, 104px);
+  gap: clamp(48px, 6vw, 104px);
   padding: var(--section) var(--pad);
-  color: var(--ivory);
-  background:
-    radial-gradient(ellipse 50% 60% at 100% 0%, rgb(201 169 110 / 14%), transparent 70%),
-    var(--black);
+  overflow: hidden;
 }
 
-.bbx-brand .bbx-eyebrow,
-.bbx-amenities .bbx-eyebrow,
-.bbx-location .bbx-eyebrow {
-  color: var(--gold);
-}
-
-.bbx-brand .bbx-display em,
-.bbx-amenities .bbx-display em,
-.bbx-location .bbx-display em {
-  color: var(--gold-soft);
-}
-
-.bbx-brand .bbx-lead,
-.bbx-location .bbx-lead {
-  color: rgb(245 241 234 / 78%);
+/* The monogram, huge and hollow, behind everything. */
+.bbx-brand__monogram {
+  position: absolute;
+  top: 50%;
+  right: -6vw;
+  color: transparent;
+  font-family: var(--display);
+  font-size: clamp(14rem, 34vw, 34rem);
+  font-style: italic;
+  line-height: 0.8;
+  -webkit-text-stroke: 1px rgb(201 169 110 / 10%);
+  transform: translateY(-50%);
+  pointer-events: none;
+  user-select: none;
 }
 
 .bbx-brand__media {
   position: relative;
-  padding: 0 clamp(40px, 6vw, 90px) clamp(60px, 7vw, 110px) 0;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 18px;
+  padding-bottom: clamp(70px, 8vw, 120px);
 }
 
 .bbx-brand__main {
-  aspect-ratio: 4 / 3.4;
+  grid-row: span 2;
+  min-height: clamp(420px, 46vw, 640px);
+  border-radius: 200px 200px 18px 18px;
+  box-shadow: 0 40px 80px rgb(0 0 0 / 45%);
+}
+
+.bbx-brand__main figcaption {
+  position: absolute;
+  bottom: 18px;
+  left: 22px;
+  color: rgb(255 248 234 / 85%);
+  font-size: 10.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 10px rgb(0 0 0 / 60%);
+}
+
+.bbx-brand__main {
+  position: relative;
+}
+
+.bbx-brand__detail {
+  align-self: end;
+  aspect-ratio: 4 / 5;
+  border-radius: 18px;
 }
 
 .bbx-brand__inset {
@@ -385,253 +628,972 @@ figure[data-bb-clip] {
   bottom: 0;
   width: 52%;
   aspect-ratio: 3 / 2;
-  border: 6px solid var(--black);
-  box-shadow: 0 30px 60px rgb(0 0 0 / 45%);
+  border: 6px solid #0d0b09;
+  border-radius: 18px;
+  box-shadow: 0 30px 60px rgb(0 0 0 / 55%);
 }
 
-.bbx-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 32px 0 40px;
+/* A seal of words that turns slowly. */
+.bbx-seal {
+  position: absolute;
+  top: clamp(10px, 4vw, 40px);
+  right: calc(40% - 70px);
+  width: clamp(110px, 11vw, 150px);
+  overflow: visible;
+  animation: bbx-spin 24s linear infinite;
+}
+
+.bbx-seal text {
+  fill: var(--gold-soft);
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.bbx-seal circle {
+  fill: rgb(13 11 9 / 85%);
+  stroke: var(--gold);
+  stroke-width: 1;
+}
+
+.bbx-seal .bbx-seal__mark {
+  fill: var(--gold-soft);
+  font-family: var(--display);
+  font-size: 30px;
+  font-style: italic;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+@keyframes bbx-spin {
+  to { transform: rotate(360deg); }
+}
+
+.bbx-brand__copy {
+  position: relative;
+}
+
+.bbx-figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 36px 0 40px;
   padding: 0;
+  border-top: 1px solid var(--line-dark);
   list-style: none;
 }
 
-.bbx-chips li {
-  padding: 10px 18px;
-  border: 1px solid var(--line-dark);
-  color: var(--gold-soft);
-  font-family: var(--serif);
-  font-size: 1.15rem;
-  font-weight: 500;
-}
-
-/* ---------- 3. Announced details ---------- */
-
-.bbx-details {
+.bbx-figures li {
   display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  gap: clamp(32px, 6vw, 96px);
-  padding: var(--section) var(--pad);
-  color: var(--ink);
-  background: var(--ivory-deep);
+  align-content: start;
+  gap: 4px;
+  padding: 22px 18px 22px 0;
+  border-bottom: 1px solid var(--line-dark);
 }
 
-.bbx-details .bbx-footnote {
-  grid-column: 2;
-  margin-top: 0;
+.bbx-figures li:nth-child(even) {
+  padding-left: 22px;
+  border-left: 1px solid var(--line-dark);
 }
 
-.bbx-spec {
-  margin: 0;
-  border-top: 1px solid var(--gold);
-}
-
-.bbx-spec > div {
-  display: grid;
-  grid-template-columns: minmax(130px, 0.6fr) minmax(0, 1.4fr);
-  gap: 20px;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--line-light);
-}
-
-.bbx-spec dt {
-  color: var(--gold-text);
-  font-size: 11.5px;
+.bbx-figures strong {
+  background: linear-gradient(120deg, #fff6df, #e3cfa6 55%, #c9a96e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-family: var(--display);
+  font-size: clamp(1.7rem, 2.6vw, 2.5rem);
   font-weight: 500;
+  line-height: 1.1;
+  -webkit-text-fill-color: transparent;
+}
+
+.bbx-figures span {
+  color: var(--taupe);
+  font-size: 12px;
+  font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 
-.bbx-spec dd {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: clamp(1.2rem, 1.6vw, 1.45rem);
-  font-weight: 500;
-  line-height: 1.3;
+.bbx-brand__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px 32px;
 }
 
-/* ---------- 4. Community ---------- */
+/* ---------- 3. The couture residence ---------- */
 
-.bbx-community {
+.bbx-couture {
   padding: var(--section) var(--pad);
-  color: var(--ink);
-  background: var(--ivory);
+  background:
+    radial-gradient(ellipse 50% 40% at 0% 0%, rgb(232 200 140 / 32%), transparent 70%),
+    linear-gradient(180deg, #f7f1e6, #efe5d3);
 }
 
-.bbx-community__grid {
+.bbx-couture__head {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(24px, 3vw, 48px);
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  align-items: end;
+  gap: 24px clamp(32px, 6vw, 96px);
+  margin-bottom: clamp(36px, 4.5vw, 60px);
 }
 
-.bbx-community__card figure {
+.bbx-couture__head .bbx-lead {
+  margin: 0;
+}
+
+.bbx-couture__stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.9fr) minmax(320px, 0.85fr);
+  align-items: center;
+}
+
+.bbx-couture__room {
   position: relative;
   aspect-ratio: 3 / 2;
-  margin-bottom: 28px;
-}
-
-.bbx-community__card img {
-  transition: transform 1.4s var(--ease);
-}
-
-.bbx-community__card:hover img {
-  transform: scale(1.04);
-}
-
-.bbx-community__letter {
-  position: absolute;
-  top: 18px;
-  left: 18px;
-  display: grid;
-  width: 52px;
-  height: 52px;
-  place-items: center;
-  color: var(--black);
-  background: var(--gold);
-  font-family: var(--serif);
-  font-size: 1.6rem;
-  font-weight: 600;
-}
-
-.bbx-community__card h3 {
-  margin: 0 0 18px;
-  font-size: clamp(1.5rem, 2.2vw, 2rem);
-  font-weight: 600;
-  line-height: 1.15;
-}
-
-.bbx-community .bbx-ticks li {
-  color: var(--taupe-dark);
-}
-
-/* ---------- 5. Amenities ---------- */
-
-.bbx-amenities {
-  padding: var(--section) var(--pad);
-  color: var(--ivory);
-  background: var(--black);
-}
-
-/* Seven tiles fill two rows of four: the first spans two columns. */
-.bbx-amenities__grid {
-  display: grid;
-  grid-auto-rows: clamp(280px, 26vw, 400px);
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
   margin: 0;
-  padding: 0;
-  list-style: none;
+  border-radius: 28px;
+  box-shadow: 0 40px 90px rgb(60 44 20 / 28%);
 }
 
-.bbx-amenity:first-child {
-  grid-column: span 2;
+.bbx-couture__room > img {
+  border-radius: inherit;
 }
 
-.bbx-amenity {
-  position: relative;
-  overflow: hidden;
-  background: var(--black-soft);
-}
-
-.bbx-amenity img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 1.4s var(--ease);
-}
-
-.bbx-amenity:hover img {
-  transform: scale(1.06);
-}
-
-.bbx-amenity::after {
+.bbx-couture__hint {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 40%, rgb(10 10 10 / 85%));
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgb(14 11 8 / 45%);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.bbx-couture__hint span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  animation: bbx-pulse 2s ease-out infinite;
+}
+
+/* The gold points: a pulsing dot that opens a card. */
+.bbx-spot {
+  position: absolute;
+  z-index: 2;
+  width: 0;
+  height: 0;
+}
+
+.bbx-spot__dot {
+  position: absolute;
+  top: -22px;
+  left: -22px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+}
+
+.bbx-spot__dot::before,
+.bbx-spot__dot::after {
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
   content: "";
 }
 
-.bbx-amenity__copy {
+.bbx-spot__dot::before {
+  border: 2px solid #fff;
+  background: radial-gradient(circle, #f6dca4 0 30%, #c9a96e 31%);
+  box-shadow: 0 0 0 4px rgb(255 255 255 / 25%), 0 4px 14px rgb(0 0 0 / 35%);
+  transition: transform 400ms var(--ease);
+}
+
+.bbx-spot__dot::after {
+  inset: 6px;
+  border: 1px solid rgb(246 220 164 / 90%);
+  animation: bbx-pulse 2.4s ease-out infinite;
+}
+
+.bbx-spot__dot:hover::before,
+.bbx-spot__dot[aria-expanded="true"]::before {
+  transform: scale(1.25) rotate(45deg);
+}
+
+@keyframes bbx-pulse {
+  0% { opacity: 1; transform: scale(0.6); }
+  100% { opacity: 0; transform: scale(2); }
+}
+
+.bbx-spot__card {
   position: absolute;
-  z-index: 1;
-  right: 22px;
-  bottom: 22px;
-  left: 22px;
+  bottom: 30px;
+  left: 50%;
+  display: grid;
+  width: 240px;
+  gap: 4px;
+  margin: 0;
+  padding: 16px 18px;
+  border: 1px solid rgb(201 169 110 / 50%);
+  border-radius: 16px;
+  color: var(--taupe-dark);
+  background: rgb(255 252 246 / 96%);
+  box-shadow: 0 24px 50px rgb(0 0 0 / 30%);
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0;
+  transform: translate(-50%, 10px) scale(0.96);
+  transition: opacity 300ms ease, transform 500ms var(--ease);
+  pointer-events: none;
 }
 
-.bbx-amenity__copy span {
-  color: var(--gold);
-  font-family: var(--serif);
-  font-size: 1rem;
-  letter-spacing: 0.14em;
+.bbx-spot__card strong {
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 500;
 }
 
-.bbx-amenity__copy h3 {
-  margin: 6px 0 4px;
-  font-size: clamp(1.35rem, 1.9vw, 1.8rem);
+/* Points near the edges open their card inwards (billionaire.js sets the classes). */
+.bbx-spot.is-right .bbx-spot__card {
+  left: auto;
+  right: -20px;
+  transform: translate(0, 10px) scale(0.96);
+}
+
+.bbx-spot.is-top .bbx-spot__card {
+  top: 30px;
+  bottom: auto;
+}
+
+.bbx-spot__dot:hover + .bbx-spot__card,
+.bbx-spot__dot:focus-visible + .bbx-spot__card,
+.bbx-spot__dot[aria-expanded="true"] + .bbx-spot__card {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+.bbx-spot.is-right .bbx-spot__dot:is(:hover, :focus-visible, [aria-expanded="true"]) + .bbx-spot__card {
+  transform: translate(0, 0) scale(1);
+}
+
+/* The dossier: a couture label in ivory and gold, overlapping the room. */
+.bbx-dossier {
+  position: relative;
+  z-index: 3;
+  margin-left: calc(-1 * clamp(40px, 6vw, 110px));
+  padding: clamp(26px, 3vw, 40px);
+  border-radius: 24px;
+  background: #fffdf8;
+  box-shadow:
+    0 0 0 1px rgb(201 169 110 / 55%),
+    0 0 0 7px #fffdf8,
+    0 0 0 8px rgb(201 169 110 / 30%),
+    0 40px 80px rgb(60 44 20 / 22%);
+}
+
+.bbx-dossier__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgb(155 125 72 / 30%);
+  color: var(--gold-text);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.bbx-dossier__list {
+  display: grid;
+  margin: 0 0 20px;
+}
+
+.bbx-dossier__list > div {
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  gap: 14px;
+  align-items: baseline;
+  padding: 7px 0;
+  border-bottom: 1px dashed rgb(155 125 72 / 25%);
+}
+
+.bbx-dossier__list dt {
+  color: var(--taupe-dark);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.bbx-dossier__list dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 14px;
   font-weight: 600;
+  line-height: 1.35;
+}
+
+.bbx-dossier__list .is-lead {
+  display: block;
+  padding: 0 0 14px;
+  border-bottom: 1px solid rgb(155 125 72 / 30%);
+}
+
+.bbx-dossier__list .is-lead dt {
+  margin-bottom: 4px;
+}
+
+.bbx-dossier__list .is-lead dd {
+  font-family: var(--display);
+  font-size: clamp(1.4rem, 1.9vw, 1.75rem);
+  font-weight: 500;
   line-height: 1.15;
 }
 
-.bbx-amenity__copy p {
-  margin: 0;
-  color: rgb(245 241 234 / 78%);
-  font-size: 14px;
-  line-height: 1.5;
+.bbx-dossier__button {
+  width: 100%;
+  border-radius: 12px;
 }
 
-/* ---------- 6. Towers and layouts ---------- */
+.bbx-dossier .bbx-footnote {
+  margin-top: 16px;
+}
 
-.bbx-towers {
-  display: grid;
-  grid-template-areas:
-    "image copy"
-    "image model";
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(28px, 4vw, 56px) clamp(40px, 6vw, 96px);
+/* ---------- 4. Community: two circles ---------- */
+
+.bbx-community {
   padding: var(--section) var(--pad);
-  color: var(--ink);
-  background: var(--ivory);
+  overflow: hidden;
 }
 
-.bbx-towers__image {
-  grid-area: image;
-  min-height: 560px;
+.bbx-circles {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(40px, 6vw, 96px);
 }
 
-.bbx-towers__copy {
-  grid-area: copy;
+.bbx-circles__diagram {
+  position: relative;
+  display: grid;
+  justify-items: center;
 }
 
-.bbx-towers__model {
-  grid-area: model;
-  aspect-ratio: 16 / 7;
+.bbx-circles__rings {
+  position: relative;
+  width: min(100%, 520px);
+  aspect-ratio: 1;
 }
 
-.bbx-pending {
+.bbx-ring {
+  position: absolute;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 1px solid rgb(201 169 110 / 40%);
+  border-radius: 50%;
+  color: var(--ivory);
+  background: none;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 500ms ease, background-color 500ms ease, box-shadow 600ms ease;
+}
+
+.bbx-ring--outer {
+  inset: 0;
+  align-content: start;
+  padding-top: 7%;
+  background: radial-gradient(circle, transparent 54%, rgb(201 169 110 / 6%) 55%, rgb(201 169 110 / 3%) 100%);
+}
+
+.bbx-ring--inner {
+  z-index: 1;
+  inset: 26%;
+  background: radial-gradient(circle at 35% 30%, rgb(246 220 164 / 22%), rgb(201 169 110 / 6%) 70%);
+}
+
+.bbx-ring[aria-selected="true"] {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold), 0 0 60px rgb(201 169 110 / 25%), inset 0 0 50px rgb(201 169 110 / 12%);
+}
+
+.bbx-ring--outer[aria-selected="true"] {
+  background: radial-gradient(circle, transparent 54%, rgb(201 169 110 / 16%) 55%, rgb(201 169 110 / 8%) 100%);
+}
+
+.bbx-ring--inner[aria-selected="true"] {
+  background: radial-gradient(circle at 35% 30%, rgb(246 220 164 / 45%), rgb(201 169 110 / 14%) 70%);
+}
+
+.bbx-ring__letter {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 50%;
+  color: #0d0b09;
+  background: linear-gradient(135deg, #f0dcae, #b8945a);
+  font-family: var(--display);
+  font-size: 1.2rem;
+}
+
+.bbx-ring__name {
+  max-width: 14ch;
+  font-family: var(--display);
+  font-size: clamp(1.15rem, 1.7vw, 1.55rem);
+  line-height: 1.15;
+}
+
+.bbx-ring__area {
+  color: var(--gold-soft);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* Rotating dashed orbits and three travelling lights. */
+.bbx-circles__orbit {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(100%, 520px);
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.bbx-circles__orbit::before,
+.bbx-circles__orbit::after {
+  position: absolute;
+  border: 1px dashed rgb(201 169 110 / 35%);
+  border-radius: 50%;
+  content: "";
+  animation: bbx-spin 60s linear infinite;
+}
+
+.bbx-circles__orbit::before {
+  inset: -6%;
+}
+
+.bbx-circles__orbit::after {
+  inset: 13%;
+  animation-direction: reverse;
+  animation-duration: 45s;
+}
+
+.bbx-circles__orbit i {
+  position: absolute;
+  inset: 0;
+  animation: bbx-spin 16s linear infinite;
+}
+
+.bbx-circles__orbit i::before {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f6dca4;
+  box-shadow: 0 0 14px 4px rgb(246 220 164 / 70%);
+  content: "";
+}
+
+.bbx-circles__orbit i:nth-child(2) {
+  inset: 26%;
+  animation-duration: 11s;
+  animation-direction: reverse;
+}
+
+.bbx-circles__orbit i:nth-child(3) {
+  inset: -6%;
+  animation-duration: 28s;
+  animation-delay: -9s;
+}
+
+.bbx-circles__hint {
+  margin: 22px 0 0;
+  color: var(--taupe);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.bbx-circles__panels {
+  display: grid;
+}
+
+.bbx-circle {
+  grid-area: 1 / 1;
+  overflow: hidden;
+  border: 1px solid var(--line-dark);
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgb(255 255 255 / 5%), rgb(255 255 255 / 2%));
+  opacity: 0;
+  transform: translateY(24px) scale(0.98);
+  transition: opacity 700ms ease, transform 900ms var(--ease), visibility 0s 700ms;
+  visibility: hidden;
+}
+
+.bbx-circle.is-active {
+  opacity: 1;
+  transform: none;
+  transition: opacity 700ms ease, transform 900ms var(--ease);
+  visibility: visible;
+}
+
+html:not(.js) .bbx-circle {
+  grid-area: auto;
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+}
+
+.bbx-circle figure {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  margin: 0;
+  overflow: hidden;
+}
+
+.bbx-circle img {
+  transform: scale(1.08);
+  transition: transform 6s ease-out;
+}
+
+.bbx-circle.is-active img {
+  transform: scale(1);
+}
+
+.bbx-circle__letter {
+  position: absolute;
+  bottom: 18px;
+  left: 22px;
+  color: rgb(255 248 234 / 90%);
+  font-family: var(--display);
+  font-size: 4.4rem;
+  font-style: italic;
+  line-height: 1;
+  text-shadow: 0 4px 24px rgb(0 0 0 / 50%);
+}
+
+.bbx-circle__copy {
+  padding: clamp(24px, 3vw, 36px);
+}
+
+.bbx-circle__area {
+  margin: 0 0 8px;
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.bbx-circle h3 {
+  margin: 0 0 20px;
+  font-family: var(--display);
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.bbx-circle .bbx-ticks {
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+}
+
+.bbx-circle .bbx-ticks li {
+  color: rgb(245 241 234 / 85%);
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: opacity 600ms ease, transform 700ms var(--ease);
+  transition-delay: calc(250ms + var(--i) * 80ms);
+}
+
+.bbx-circle.is-active .bbx-ticks li,
+html:not(.js) .bbx-circle .bbx-ticks li {
+  opacity: 1;
+  transform: none;
+}
+
+.bbx-community > .bbx-footnote {
+  text-align: center;
+}
+
+/* ---------- 5. Amenities: an accordion of pictures ---------- */
+
+.bbx-amenities {
+  padding: var(--section) var(--pad);
+  background:
+    radial-gradient(ellipse 50% 40% at 100% 0%, rgb(232 200 140 / 28%), transparent 70%),
+    var(--ivory);
+}
+
+.bbx-accordion {
   display: flex;
-  flex-wrap: wrap;
+  height: clamp(480px, 62vh, 640px);
   gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.bbx-pending li {
-  padding: 9px 16px;
-  border: 1px dashed rgb(155 125 72 / 60%);
-  color: var(--taupe-dark);
-  font-size: 13.5px;
+.bbx-acc {
+  position: relative;
+  min-width: 0;
+  flex: 1 1 0;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #1a1612;
+  cursor: pointer;
+  transition: flex-grow 900ms var(--ease), box-shadow 600ms ease;
+}
+
+.bbx-acc.is-open {
+  flex-grow: 5;
+  box-shadow: 0 30px 60px rgb(60 44 20 / 28%);
+}
+
+.bbx-acc img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.12);
+  transition: transform 1.6s var(--ease), filter 900ms ease;
+  filter: saturate(0.8) brightness(0.85);
+}
+
+.bbx-acc.is-open img {
+  transform: scale(1);
+  filter: none;
+}
+
+.bbx-acc::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(14 11 8 / 25%) 0%, transparent 30%, transparent 45%, rgb(14 11 8 / 85%) 100%);
+  content: "";
+}
+
+.bbx-acc:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.bbx-acc__no {
+  position: absolute;
+  z-index: 1;
+  top: 18px;
+  left: 50%;
+  color: var(--gold-soft);
+  font-family: var(--display);
+  font-size: 1.05rem;
+  transform: translateX(-50%);
+  transition: left 900ms var(--ease), transform 900ms var(--ease);
+}
+
+.bbx-acc.is-open .bbx-acc__no {
+  left: 24px;
+  transform: none;
+}
+
+/* Closed panels show their name upright along the spine. */
+.bbx-acc__spine {
+  position: absolute;
+  z-index: 1;
+  bottom: 24px;
+  left: 50%;
+  margin: 0;
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translateX(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  transition: opacity 400ms ease;
+}
+
+.bbx-acc.is-open .bbx-acc__spine {
+  opacity: 0;
+}
+
+.bbx-acc__copy {
+  position: absolute;
+  z-index: 1;
+  right: 28px;
+  bottom: 28px;
+  left: 28px;
+  max-width: 440px;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 500ms ease, transform 800ms var(--ease);
+}
+
+.bbx-acc.is-open .bbx-acc__copy {
+  opacity: 1;
+  transform: none;
+  transition-delay: 350ms;
+}
+
+.bbx-acc__copy h3 {
+  margin: 0 0 8px;
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 2.4vw, 2.3rem);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.bbx-acc__copy p {
+  margin: 0;
+  color: rgb(255 248 234 / 88%);
+  font-size: 15.5px;
+}
+
+/* ---------- 6. Towers: a blueprint ---------- */
+
+.bbx-towers {
+  position: relative;
+  display: grid;
+  grid-template-areas:
+    "image copy"
+    "model model";
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(32px, 4vw, 64px) clamp(40px, 6vw, 96px);
+  padding: var(--section) var(--pad);
+  overflow: hidden;
+  background: #0b1016;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 30%, rgb(201 169 110 / 14%), transparent 70%),
+    linear-gradient(180deg, #0c1117, #0d0b09);
+}
+
+/* A drafting grid behind the section. */
+.bbx-towers__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(201 169 110 / 7%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(201 169 110 / 7%) 1px, transparent 1px),
+    linear-gradient(rgb(201 169 110 / 4%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(201 169 110 / 4%) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000, transparent);
+  pointer-events: none;
+}
+
+.bbx-towers > :not(.bbx-towers__grid) {
+  position: relative;
+}
+
+.bbx-towers__image {
+  grid-area: image;
+  min-height: 600px;
+  border: 1px solid rgb(201 169 110 / 40%);
+  border-radius: 200px 200px 16px 16px;
+}
+
+/* A line of light that scans down the tower. */
+.bbx-towers__scan {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 120px;
+  background: linear-gradient(180deg, transparent, rgb(246 220 164 / 28%), transparent);
+  mix-blend-mode: screen;
+  animation: bbx-scan 6s ease-in-out infinite;
+}
+
+@keyframes bbx-scan {
+  0% { top: -120px; }
+  100% { top: 100%; }
+}
+
+/* A dimension line up the side, as on a drawing. */
+.bbx-towers__measure {
+  position: absolute;
+  top: 12%;
+  bottom: 6%;
+  left: 16px;
+  width: 1px;
+  background: rgb(246 220 164 / 70%);
+}
+
+.bbx-towers__measure::before,
+.bbx-towers__measure::after {
+  position: absolute;
+  left: -6px;
+  width: 13px;
+  height: 1px;
+  background: rgb(246 220 164 / 90%);
+  content: "";
+}
+
+.bbx-towers__measure::before { top: 0; }
+.bbx-towers__measure::after { bottom: 0; }
+
+.bbx-towers__copy {
+  grid-area: copy;
+  align-self: center;
+}
+
+/* Established facts stack like floors: the top one is the highest level. */
+.bbx-levels {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bbx-levels li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 20px;
+  overflow: hidden;
+  border: 1px solid rgb(201 169 110 / 22%);
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgb(201 169 110 / 8%), rgb(255 255 255 / 2%));
+  transition: border-color 400ms ease, background-color 400ms ease, transform 600ms var(--ease);
+}
+
+.bbx-levels li::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #f6dca4, #9b7d48);
+  transform: scaleY(0);
+  transition: transform 500ms var(--ease);
+  content: "";
+}
+
+.bbx-levels li:hover {
+  border-color: var(--gold);
+  transform: translateX(8px);
+}
+
+.bbx-levels li:hover::before {
+  transform: scaleY(1);
+}
+
+.bbx-levels__tag {
+  color: var(--gold);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.bbx-levels p {
+  margin: 0;
+  color: rgb(245 241 234 / 85%);
+  font-size: 15.5px;
+  line-height: 1.5;
+}
+
+.bbx-levels strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Awaited details: locked tiles with a slow sheen. */
+.bbx-locked {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bbx-locked li {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  overflow: hidden;
+  border: 1px dashed rgb(201 169 110 / 45%);
+  border-radius: 12px;
+  color: var(--gold-soft);
+}
+
+.bbx-locked li::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgb(246 220 164 / 14%) 50%, transparent 70%);
+  background-size: 250% 100%;
+  animation: bbx-sheen 4s ease-in-out infinite;
+  content: "";
+}
+
+.bbx-locked li:nth-child(2)::after { animation-delay: 0.4s; }
+.bbx-locked li:nth-child(3)::after { animation-delay: 0.8s; }
+.bbx-locked li:nth-child(4)::after { animation-delay: 1.2s; }
+
+@keyframes bbx-sheen {
+  from { background-position: 150% 0; }
+  to { background-position: -100% 0; }
+}
+
+.bbx-locked strong {
+  color: #fff;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.bbx-locked small {
+  color: var(--taupe);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.bbx-towers__model {
+  grid-area: model;
+  aspect-ratio: 21 / 8;
+  border: 1px solid rgb(201 169 110 / 30%);
+  border-radius: 22px;
 }
 
 /* ---------- 7. Strategy ---------- */
 
 .bbx-strategy {
   padding: var(--section) var(--pad);
-  color: var(--ink);
   background: var(--ivory-deep);
 }
 
@@ -647,7 +1609,9 @@ figure[data-bb-clip] {
 .bbx-strategy__item figure {
   margin: 0 0 22px;
   overflow: hidden;
+  border-radius: 18px;
   aspect-ratio: 4 / 5;
+  transition: box-shadow 500ms ease;
 }
 
 .bbx-strategy__item img {
@@ -658,20 +1622,25 @@ figure[data-bb-clip] {
   transform: scale(1.05);
 }
 
+.bbx-strategy__item:hover figure {
+  box-shadow: 0 0 0 1px var(--gold), 0 24px 50px rgb(27 25 21 / 22%);
+}
+
 .bbx-strategy__number {
   margin: 0;
   color: var(--gold-text);
   font-size: 11.5px;
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
 }
 
 .bbx-strategy__item h3 {
   margin: 10px 0;
-  font-size: clamp(1.35rem, 1.8vw, 1.7rem);
-  font-weight: 600;
-  line-height: 1.15;
+  font-family: var(--display);
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.2;
 }
 
 .bbx-strategy__item > p:last-child {
@@ -681,248 +1650,1056 @@ figure[data-bb-clip] {
   line-height: 1.6;
 }
 
-/* ---------- 8. Location ---------- */
+/* ---------- 8. Location: destinations and their pictures ---------- */
 
 .bbx-location {
-  display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-  color: var(--ivory);
-  background: var(--black);
-}
-
-.bbx-location__image {
-  position: relative;
-  min-height: 640px;
-}
-
-.bbx-location__image figcaption {
-  position: absolute;
-  bottom: 24px;
-  left: var(--pad);
-  color: rgb(245 241 234 / 85%);
-  font-size: 11px;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  text-shadow: 0 2px 14px rgb(0 0 0 / 60%);
-}
-
-.bbx-location__panel {
-  align-self: center;
   padding: var(--section) var(--pad);
 }
 
-.bbx-routes {
-  margin: 34px 0 0;
-  padding: 0;
-  border-top: 1px solid var(--line-dark);
-  list-style: none;
+.bbx-location__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  align-items: end;
+  gap: 24px clamp(32px, 6vw, 96px);
+  margin-bottom: clamp(36px, 4.5vw, 60px);
 }
 
-.bbx-routes li {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--line-dark);
-  font-family: var(--serif);
-  font-size: clamp(1.15rem, 1.5vw, 1.35rem);
-  font-weight: 500;
+.bbx-location__head .bbx-lead {
+  margin: 0;
 }
 
-.bbx-routes li::before {
-  width: 26px;
-  height: 1px;
-  flex: 0 0 auto;
-  background: var(--gold);
+.bbx-loc {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 1fr);
+  gap: clamp(20px, 3vw, 40px);
+  align-items: stretch;
+}
+
+.bbx-loc__stage {
+  position: relative;
+  min-height: clamp(460px, 62vh, 640px);
+  overflow: hidden;
+  border: 1px solid var(--line-dark);
+  border-radius: 28px;
+  background: #1a1612;
+}
+
+.bbx-loc__slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  transition: opacity 900ms ease, visibility 0s 900ms;
+  visibility: hidden;
+}
+
+.bbx-loc__slide[hidden] {
+  display: block;
+}
+
+.bbx-loc__slide.is-active {
+  opacity: 1;
+  transition: opacity 900ms ease;
+  visibility: visible;
+}
+
+html:not(.js) .bbx-loc__stage {
+  min-height: 0;
+}
+
+html:not(.js) .bbx-loc__slide {
+  position: relative;
+  height: 420px;
+  opacity: 1;
+  visibility: visible;
+}
+
+.bbx-loc__slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.15);
+  transition: transform 7s cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+
+.bbx-loc__slide.is-active img {
+  transform: scale(1);
+}
+
+.bbx-loc__slide::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(14 11 8 / 35%) 0%, transparent 30%, transparent 45%, rgb(14 11 8 / 88%) 100%);
   content: "";
 }
 
-.bbx-location .bbx-footnote {
+.bbx-loc__caption {
+  position: absolute;
+  z-index: 1;
+  right: clamp(22px, 3vw, 40px);
+  bottom: clamp(22px, 3vw, 40px);
+  left: clamp(22px, 3vw, 40px);
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+}
+
+.bbx-loc__caption > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 700ms ease, transform 900ms var(--ease);
+}
+
+.bbx-loc__slide.is-active .bbx-loc__caption > * {
+  opacity: 1;
+  transform: none;
+}
+
+.bbx-loc__slide.is-active .bbx-loc__caption > :nth-child(3) { transition-delay: 100ms; }
+.bbx-loc__slide.is-active .bbx-loc__caption > :nth-child(4) { transition-delay: 200ms; }
+.bbx-loc__slide.is-active .bbx-loc__caption > :nth-child(5) { transition-delay: 300ms; }
+.bbx-loc__slide.is-active .bbx-loc__caption > :nth-child(6) { transition-delay: 400ms; }
+
+/* A gold route line that draws itself from the enclave to the destination. */
+.bbx-loc__path {
+  position: relative;
+  width: min(260px, 60%);
+  height: 18px;
+  margin-bottom: 4px;
+}
+
+.bbx-loc__path::before,
+.bbx-loc__path::after {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  content: "";
+  transform: translateY(-50%);
+}
+
+.bbx-loc__path::before {
+  left: 0;
+  background: var(--gold-soft);
+  box-shadow: 0 0 12px rgb(246 220 164 / 80%);
+}
+
+.bbx-loc__path::after {
+  right: 0;
+  border: 2px solid var(--gold-soft);
+}
+
+.bbx-loc__path i {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  left: 12px;
+  height: 0;
+  border-top: 2px dashed var(--gold-soft);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.bbx-loc__slide.is-active .bbx-loc__path i {
+  transform: scaleX(1);
+  transition: transform 1.4s var(--ease) 300ms;
+}
+
+.bbx-loc__from,
+.bbx-loc__kind {
+  color: var(--gold-soft);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.bbx-loc__from {
+  color: rgb(255 248 234 / 70%);
+}
+
+.bbx-loc__caption strong {
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(1.9rem, 3.6vw, 3.4rem);
+  font-weight: 500;
+  line-height: 1.05;
+  text-shadow: 0 4px 24px rgb(0 0 0 / 40%);
+}
+
+.bbx-loc__time {
+  color: rgb(255 248 234 / 85%);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.bbx-loc__time b {
+  color: var(--gold-soft);
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.bbx-loc__route {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px 18px;
+  border: 1px solid rgb(255 255 255 / 50%);
+  border-radius: 999px;
+  color: #fff;
+  background: rgb(255 255 255 / 12%);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+.bbx-loc__route:hover {
+  color: #0d0b09;
+  background: #fff;
+}
+
+.bbx-loc__badge {
+  position: absolute;
+  z-index: 2;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 9px 16px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgb(14 11 8 / 50%);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.bbx-loc__badge span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  animation: bbx-pulse 2s ease-out infinite;
+}
+
+.bbx-loc__list {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.bbx-dest {
+  position: relative;
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  overflow: hidden;
+  border: 1px solid var(--line-dark);
+  border-radius: 16px;
+  color: var(--ivory);
+  background: rgb(255 255 255 / 3%);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 400ms ease, background-color 400ms ease, transform 500ms var(--ease);
+}
+
+.bbx-dest:hover {
+  border-color: rgb(201 169 110 / 60%);
+  transform: translateX(-4px);
+}
+
+.bbx-dest[aria-selected="true"] {
+  border-color: var(--gold);
+  background: linear-gradient(90deg, rgb(201 169 110 / 18%), rgb(201 169 110 / 4%));
+}
+
+.bbx-dest__no {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid var(--line-dark);
+  border-radius: 50%;
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 700;
+  transition: background-color 400ms ease, color 400ms ease;
+}
+
+.bbx-dest[aria-selected="true"] .bbx-dest__no {
+  border-color: transparent;
+  color: #0d0b09;
+  background: linear-gradient(135deg, #f0dcae, #b8945a);
+}
+
+.bbx-dest__body {
+  display: grid;
+  gap: 2px;
+}
+
+.bbx-dest__body small {
+  color: var(--gold);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.bbx-dest__body strong {
+  font-family: var(--display);
+  font-size: clamp(1.1rem, 1.4vw, 1.3rem);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* The line under the name opens on the chosen destination. */
+.bbx-dest__text {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
   color: var(--taupe);
+  font-size: 13.5px;
+  line-height: 1.5;
+  opacity: 0;
+  transition: grid-template-rows 600ms var(--ease), opacity 500ms ease, margin 600ms var(--ease);
+}
+
+.bbx-dest[aria-selected="true"] .bbx-dest__text,
+html:not(.js) .bbx-dest__text {
+  grid-template-rows: 1fr;
+  margin-top: 4px;
+  opacity: 1;
+}
+
+.bbx-dest__arrow {
+  color: var(--gold);
+  font-size: 20px;
+  transition: transform 400ms var(--ease);
+}
+
+.bbx-dest[aria-selected="true"] .bbx-dest__arrow,
+.bbx-dest:hover .bbx-dest__arrow {
+  transform: translateX(4px);
+}
+
+.bbx-dest__time {
+  display: grid;
+  justify-items: end;
+  color: var(--taupe);
+  font-size: 11px;
+}
+
+.bbx-dest__time b {
+  color: var(--gold-soft);
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+.bbx-dest__bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #e3cfa6, #9b7d48);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.bbx-dest[aria-selected="true"] .bbx-dest__bar {
+  transform: scaleX(1);
+  transition: transform 900ms var(--ease);
 }
 
 /* ---------- 9. Timeline, investment and legal checks ---------- */
 
 .bbx-checks {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  gap: clamp(40px, 6vw, 96px);
   padding: var(--section) var(--pad);
-  color: var(--ink);
+  background:
+    radial-gradient(ellipse 50% 40% at 50% 0%, rgb(232 200 140 / 30%), transparent 70%),
+    var(--ivory);
+}
+
+.bbx-timeline {
+  margin-bottom: clamp(40px, 5vw, 72px);
+}
+
+.bbx-timeline .bbx-mini {
+  margin-top: 0;
+  text-align: center;
+}
+
+.bbx-timeline ol {
+  position: relative;
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 24px;
+  margin: 0;
+  padding: 34px 0 0;
+  list-style: none;
+}
+
+/* The rail, and a gold line that draws along it. */
+.bbx-timeline ol::before,
+.bbx-timeline ol::after {
+  position: absolute;
+  top: 41px;
+  right: 0;
+  left: 0;
+  height: 2px;
+  content: "";
+}
+
+.bbx-timeline ol::before {
+  background: repeating-linear-gradient(90deg, rgb(155 125 72 / 40%) 0 6px, transparent 6px 12px);
+}
+
+.bbx-timeline ol::after {
+  right: auto;
+  width: var(--bbx-progress, 12%);
+  background: linear-gradient(90deg, #9b7d48, #e3cfa6);
+  transition: width 2s var(--ease);
+}
+
+.bbx-timeline__step {
+  position: relative;
+  padding-top: 26px;
+}
+
+.bbx-timeline__dot {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
   background: var(--ivory);
 }
 
-.bbx-checks__figures {
+.bbx-timeline__step.is-done .bbx-timeline__dot {
+  background: var(--gold);
+  box-shadow: 0 0 0 6px rgb(201 169 110 / 22%);
+}
+
+.bbx-timeline__step:last-child .bbx-timeline__dot {
+  width: 22px;
+  height: 22px;
+  top: -4px;
+  border-width: 0;
+  background: linear-gradient(135deg, #f0dcae, #9b7d48);
+  box-shadow: 0 0 0 6px rgb(201 169 110 / 18%);
+  animation: bbx-glow 2.6s ease-in-out infinite;
+}
+
+@keyframes bbx-glow {
+  50% { box-shadow: 0 0 0 12px rgb(201 169 110 / 8%); }
+}
+
+.bbx-timeline__when {
+  margin: 0;
+  color: var(--gold-text);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.bbx-timeline__step h4 {
+  margin: 6px 0;
+  font-family: var(--display);
+  font-size: clamp(1.25rem, 1.7vw, 1.6rem);
+  font-weight: 500;
+}
+
+.bbx-timeline__step p:last-child {
+  max-width: 30ch;
+  margin: 0;
+  color: var(--taupe-dark);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.bbx-checks__body {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+}
+
+/* The investment figures on a dark gold card. */
+.bbx-ledger {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin: 36px 0;
-  border-top: 1px solid var(--gold);
+  margin: 0 0 20px;
+  overflow: hidden;
+  border-radius: 22px;
+  color: #fff8ea;
+  background:
+    radial-gradient(ellipse 70% 120% at 0% 0%, rgb(201 169 110 / 40%), transparent 70%),
+    linear-gradient(135deg, #2a2118, #120f0c);
+  box-shadow: 0 30px 60px rgb(40 30 15 / 30%);
 }
 
-.bbx-checks__figures > div {
-  padding: 20px 20px 0 0;
+.bbx-ledger > div {
+  padding: clamp(22px, 2.6vw, 34px);
 }
 
-.bbx-checks__figures > div + div {
-  padding-left: 20px;
-  border-left: 1px solid var(--line-light);
+.bbx-ledger > div + div {
+  border-left: 1px solid rgb(201 169 110 / 30%);
 }
 
-.bbx-checks__figures dt {
-  font-family: var(--serif);
-  font-size: clamp(2.2rem, 3.6vw, 3.4rem);
-  font-weight: 600;
+.bbx-ledger dt {
+  background: linear-gradient(120deg, #fff6df, #e3cfa6 55%, #c9a96e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-family: var(--display);
+  font-size: clamp(1.9rem, 2.8vw, 2.7rem);
   line-height: 1;
+  white-space: nowrap;
+  -webkit-text-fill-color: transparent;
 }
 
-.bbx-checks__figures dd {
-  margin: 10px 0 0;
-  color: var(--taupe-dark);
+.bbx-ledger dd {
+  margin: 12px 0 0;
+  color: rgb(255 248 234 / 78%);
   font-size: 13.5px;
   line-height: 1.5;
 }
 
 .bbx-checks__image {
-  aspect-ratio: 3 / 2;
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 22px;
 }
 
-.bbx-checks__list .bbx-mini {
-  margin-top: 0;
-}
-
-.bbx-checks__list ol {
+.bbx-checks__image .bbx-callout {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
   margin: 0;
-  padding: 0;
-  border-top: 1px solid var(--line-light);
-  list-style: none;
-  counter-reset: check;
-}
-
-.bbx-checks__list li {
-  display: grid;
-  grid-template-columns: 44px 1fr;
-  align-items: baseline;
-  padding: 15px 0;
-  border-bottom: 1px solid var(--line-light);
-  font-family: var(--serif);
-  font-size: clamp(1.1rem, 1.4vw, 1.3rem);
-  font-weight: 500;
-  line-height: 1.35;
-  counter-increment: check;
-}
-
-.bbx-checks__list li::before {
-  color: var(--gold-text);
-  font-family: var(--sans);
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  content: counter(check, decimal-leading-zero);
 }
 
 .bbx-callout {
-  margin: 30px 0 0;
-  padding: 20px 24px;
-  border-left: 2px solid var(--gold);
+  margin: 20px 0 0;
+  padding: 18px 20px;
+  border-left: 3px solid var(--gold);
+  border-radius: 12px;
+  color: var(--ink);
+  background: rgb(255 252 246 / 94%);
+  font-size: 14px;
+  line-height: 1.6;
+  box-shadow: 0 16px 30px rgb(0 0 0 / 18%);
+  backdrop-filter: blur(6px);
+}
+
+/* The checklist: tick each point; a gold meter fills. */
+.bbx-verify {
+  padding: clamp(24px, 3vw, 40px);
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgb(201 169 110 / 40%), 0 30px 70px rgb(60 44 20 / 14%);
+}
+
+.bbx-verify__head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 8px 16px;
+  margin-bottom: 14px;
+}
+
+.bbx-verify__head .bbx-mini {
+  max-width: 28ch;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.bbx-verify__progress {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
+
+.bbx-verify__meter {
+  position: relative;
+  grid-column: 1 / -1;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #f1e9da;
+}
+
+.bbx-verify__meter i {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #e3cfa6, #9b7d48);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 700ms var(--ease);
+}
+
+html:not(.js) .bbx-verify__meter,
+html:not(.js) .bbx-verify__hint {
+  display: none;
+}
+
+.bbx-verify__hint {
+  grid-column: 1 / -1;
+  margin: 0;
   color: var(--taupe-dark);
-  background: var(--ivory-deep);
+  font-size: 13px;
+}
+
+.bbx-verify__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bbx-verify__list label {
+  display: grid;
+  grid-template-columns: 26px 30px 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 10px;
+  border-bottom: 1px solid var(--line-light);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 300ms ease;
+}
+
+.bbx-verify__list label:hover {
+  background: #fbf6ec;
+}
+
+.bbx-verify__list input {
+  position: absolute;
+  opacity: 0;
+}
+
+.bbx-verify__box {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 1.5px solid rgb(155 125 72 / 55%);
+  border-radius: 7px;
+  transition: background-color 300ms ease, border-color 300ms ease;
+}
+
+.bbx-verify__box svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: #fff;
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.2;
+  transition: stroke-dashoffset 400ms ease 100ms;
+}
+
+.bbx-verify__list input:checked + .bbx-verify__box {
+  border-color: transparent;
+  background: linear-gradient(135deg, #d9bb7f, #9b7d48);
+}
+
+.bbx-verify__list input:checked + .bbx-verify__box svg {
+  stroke-dashoffset: 0;
+}
+
+.bbx-verify__list input:focus-visible + .bbx-verify__box {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.bbx-verify__no {
+  color: var(--gold-text);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.bbx-verify__text {
   font-size: 15px;
-  line-height: 1.65;
+  font-weight: 500;
+  line-height: 1.45;
+  transition: color 300ms ease;
+}
+
+.bbx-verify__list input:checked ~ .bbx-verify__text {
+  color: var(--taupe-dark);
+  text-decoration: line-through;
+  text-decoration-color: rgb(155 125 72 / 60%);
 }
 
 /* ---------- 10. Sources ---------- */
 
 .bbx-sources {
-  padding: var(--section) var(--pad);
-  color: var(--ink);
-  background: var(--ivory-deep);
+  padding: 0 var(--pad) var(--section);
+  overflow: hidden;
 }
 
-.bbx-sources__grid {
+/* The names of the sources glide past in large hollow type. */
+.bbx-ticker {
+  margin: 0 calc(-1 * var(--pad)) clamp(48px, 6vw, 88px);
+  padding: clamp(22px, 3vw, 34px) 0;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line-dark);
+  white-space: nowrap;
+}
+
+.bbx-ticker__track {
+  display: inline-flex;
+  animation: bbx-ticker 40s linear infinite;
+}
+
+.bbx-ticker span {
+  padding-right: 0.3em;
+  color: transparent;
+  font-family: var(--display);
+  font-size: clamp(2.6rem, 6vw, 5.6rem);
+  font-style: italic;
+  line-height: 1.1;
+  -webkit-text-stroke: 1px rgb(201 169 110 / 55%);
+}
+
+@keyframes bbx-ticker {
+  to { transform: translateX(-50%); }
+}
+
+.bbx-press {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(18px, 2.4vw, 32px);
+}
+
+/* The featured announcement: the dream project, framed by a moving gold edge. */
+.bbx-press__featured {
+  position: relative;
+  display: grid;
+  min-height: 560px;
+  align-content: end;
+  gap: 22px;
+  padding: clamp(28px, 3.4vw, 48px);
+  overflow: hidden;
+  border-radius: 28px;
+  isolation: isolate;
+}
+
+.bbx-press__featured::before {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--bbx-angle, 0deg), transparent 0 70%, #f6dca4 80%, transparent 90%);
+  content: "";
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: bbx-edge 6s linear infinite;
+  pointer-events: none;
+}
+
+@property --bbx-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes bbx-edge {
+  to { --bbx-angle: 360deg; }
+}
+
+.bbx-press__featured img {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  transition: transform 1.6s var(--ease);
+}
+
+.bbx-press__featured:hover img {
+  transform: scale(1.05);
+}
+
+.bbx-press__shade {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(13 11 9 / 30%) 0%, rgb(13 11 9 / 20%) 35%, rgb(13 11 9 / 92%) 100%);
+}
+
+.bbx-press__badge {
+  position: absolute;
+  top: clamp(22px, 3vw, 32px);
+  left: clamp(22px, 3vw, 32px);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  color: #0d0b09;
+  background: linear-gradient(120deg, #f6dca4, #c9a96e);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.bbx-press__badge::before {
+  content: "★";
+  font-size: 11px;
+}
+
+.bbx-press__featured blockquote {
+  max-width: 24ch;
+  margin: 0;
+  color: #fff;
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 2.8vw, 2.6rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.2;
+  text-shadow: 0 4px 24px rgb(0 0 0 / 40%);
+}
+
+.bbx-press__meta {
+  display: grid;
+  gap: 6px;
+  padding-top: 20px;
+  border-top: 1px solid rgb(246 220 164 / 35%);
+}
+
+.bbx-press__meta strong {
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+  font-weight: 500;
+}
+
+.bbx-press__meta > span:not(.bbx-press__link) {
+  color: rgb(255 248 234 / 80%);
+  font-size: 14.5px;
+}
+
+.bbx-press__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  color: var(--gold-soft);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.bbx-press__link i {
+  font-style: normal;
+  transition: transform 400ms var(--ease);
+}
+
+.bbx-press a:hover .bbx-press__link i {
+  transform: translate(4px, -4px);
+}
+
+.bbx-press__list {
+  display: grid;
+  gap: clamp(14px, 1.6vw, 20px);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.bbx-sources__grid a {
-  display: flex;
+.bbx-press__list a {
+  position: relative;
+  display: grid;
   height: 100%;
-  flex-direction: column;
-  gap: 12px;
-  padding: 28px 26px;
-  border: 1px solid var(--line-light);
-  background: var(--ivory);
-  transition: border-color 400ms ease, transform 400ms var(--ease), box-shadow 400ms ease;
+  grid-template-columns: 64px 1fr;
+  gap: 20px;
+  align-items: start;
+  padding: clamp(22px, 2.4vw, 30px);
+  overflow: hidden;
+  border: 1px solid var(--line-dark);
+  border-radius: 22px;
+  background: linear-gradient(160deg, rgb(255 255 255 / 6%), rgb(255 255 255 / 2%));
+  transition: border-color 500ms ease, transform 600ms var(--ease);
+  isolation: isolate;
 }
 
-.bbx-sources__grid a:hover,
-.bbx-sources__grid a:focus-visible {
+/* A gold wash rises from the bottom on hover. */
+.bbx-press__list a::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(0deg, rgb(201 169 110 / 22%), transparent);
+  content: "";
+  transform: translateY(100%);
+  transition: transform 700ms var(--ease);
+}
+
+.bbx-press__list a:hover {
   border-color: var(--gold);
-  box-shadow: 0 20px 40px rgb(27 25 21 / 10%);
-  transform: translateY(-3px);
+  transform: translateY(-4px);
 }
 
-.bbx-sources__grid h3 {
+.bbx-press__list a:hover::before {
+  transform: none;
+}
+
+.bbx-press__mono {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  color: var(--gold-soft);
+  font-family: var(--display);
+  font-size: 1.7rem;
+  font-style: italic;
+}
+
+.bbx-press__body {
+  display: grid;
+  gap: 6px;
+}
+
+.bbx-press__body h3 {
   margin: 0;
-  font-size: 1.35rem;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-.bbx-sources__grid p {
-  flex: 1;
-  margin: 0;
-  color: var(--taupe-dark);
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.bbx-sources__grid span {
-  color: var(--gold-text);
-  font-size: 11.5px;
+  font-family: var(--display);
+  font-size: clamp(1.15rem, 1.5vw, 1.35rem);
   font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  line-height: 1.25;
+}
+
+.bbx-press__body p {
+  margin: 0;
+  color: var(--taupe);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+/* ---------- Hero and invitation on smaller screens (their base styles are in billionaire.css) ---------- */
+
+@media (max-width: 900px) {
+  .bb-hero__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bb-hero__stats li:nth-child(3) {
+    border-left: 0;
+  }
+
+  .bb-hero__stats li:nth-child(n + 3) {
+    border-top: 1px solid rgb(246 220 164 / 22%);
+  }
+
+  .bb-days {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .bb-choice__options--cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Narrow phones: the two ledger figures stack, so “₹3,500 cr” keeps to one line. */
+@media (max-width: 420px) {
+  .bbx-ledger {
+    grid-template-columns: 1fr;
+  }
+
+  .bbx-ledger > div + div {
+    border-top: 1px solid rgb(201 169 110 / 30%);
+    border-left: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .bb-hero__stats li {
+    padding: 12px;
+  }
+
+  .bb-hero__stats span {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+
+  .bb-pass__head {
+    grid-template-columns: auto 1fr;
+  }
+
+  .bb-pass__no {
+    display: none;
+  }
+
+  .bb-pass .bb-phone {
+    grid-template-columns: 112px 1fr;
+  }
 }
 
 /* ---------- Responsive ---------- */
 
 @media (max-width: 1100px) {
-  .bbx-facts,
-  .bbx-strategy__list,
-  .bbx-sources__grid {
+  .bbx-tabs,
+  .bbx-strategy__list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .bbx-facts > div:nth-child(3) {
+  .bbx-tab:nth-child(3) {
     border-left: 0;
   }
 
-  .bbx-facts > div:nth-child(n + 3) {
+  .bbx-tab:nth-child(n + 3) {
     border-top: 1px solid var(--line-light);
   }
 
-  .bbx-amenities__grid {
+  .bbx-locked {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bbx-couture__stage {
+    grid-template-columns: 1fr;
+  }
+
+  .bbx-dossier {
+    width: min(100%, 560px);
+    margin: calc(-1 * clamp(40px, 8vw, 90px)) auto 0;
   }
 }
 
 @media (max-width: 900px) {
   .bbx-brand,
-  .bbx-details,
-  .bbx-checks,
-  .bbx-location {
-    grid-template-columns: 1fr;
-  }
-
-  .bbx-details .bbx-footnote {
-    grid-column: 1;
-  }
-
-  .bbx-community__grid {
-    grid-template-columns: 1fr;
+  .bbx-circles,
+  .bbx-loc,
+  .bbx-press,
+  .bbx-checks__body,
+  .bbx-section-head--split,
+  .bbx-couture__head,
+  .bbx-location__head {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .bbx-towers {
@@ -938,71 +2715,196 @@ figure[data-bb-clip] {
     aspect-ratio: 4 / 5;
   }
 
-  .bbx-location__image {
-    min-height: 0;
-    aspect-ratio: 4 / 3;
+  .bbx-stage__ring {
+    display: none;
   }
 
-  .bbx-carousel__caption,
-  .bbx-carousel__controls {
-    bottom: 96px;
+  .bbx-stage__caption {
+    top: auto;
+    bottom: clamp(90px, 14vw, 120px);
+    transform: none;
+  }
+
+  /* The accordion turns into a column of panels on tablets and phones. */
+  .bbx-accordion {
+    height: auto;
+    flex-direction: column;
+  }
+
+  .bbx-acc {
+    flex: 0 0 96px;
+    transition: flex-basis 900ms var(--ease);
+  }
+
+  .bbx-acc.is-open {
+    flex-basis: 380px;
+  }
+
+  .bbx-acc__spine {
+    top: 50%;
+    bottom: auto;
+    left: 70px;
+    transform: translateY(-50%);
+    writing-mode: horizontal-tb;
+  }
+
+  .bbx-acc__no {
+    top: 50%;
+    left: 24px;
+    transform: translateY(-50%);
+  }
+
+  .bbx-acc.is-open .bbx-acc__no {
+    top: 22px;
+    transform: none;
+  }
+
+  .bbx-timeline ol {
+    grid-auto-flow: row;
+    gap: 22px;
+    padding: 0 0 0 34px;
+  }
+
+  .bbx-timeline ol::before,
+  .bbx-timeline ol::after {
+    top: 0;
+    bottom: 0;
+    left: 7px;
+    width: 2px;
+    height: auto;
+  }
+
+  .bbx-timeline ol::before {
+    background: repeating-linear-gradient(180deg, rgb(155 125 72 / 40%) 0 6px, transparent 6px 12px);
+  }
+
+  .bbx-timeline ol::after {
+    right: auto;
+    bottom: auto;
+    height: var(--bbx-progress, 12%);
+    background: linear-gradient(180deg, #9b7d48, #e3cfa6);
+    transition: height 2s var(--ease);
+  }
+
+  .bbx-timeline__step {
+    padding-top: 0;
+  }
+
+  .bbx-timeline__dot {
+    top: 4px;
+    left: -34px;
+  }
+
+  .bbx-timeline__step:last-child .bbx-timeline__dot {
+    top: 1px;
+    left: -37px;
+  }
+
+  .bbx-timeline .bbx-mini {
+    text-align: left;
+  }
+
+  .bbx-seal {
+    right: 10px;
+  }
+
+  .bbx-press__featured {
+    min-height: 480px;
   }
 }
 
 @media (max-width: 600px) {
-  .bbx-facts,
+  .bbx-tabs,
   .bbx-strategy__list,
-  .bbx-sources__grid,
-  .bbx-amenities__grid {
+  .bbx-figures,
+  .bbx-circle .bbx-ticks,
+  .bbx-locked {
     grid-template-columns: 1fr;
   }
 
-  .bbx-amenity:first-child {
-    grid-column: auto;
+  /* Stacked tabs sit under the picture rather than over it, so the caption stays in view. */
+  .bbx-stage__frame {
+    height: 440px;
   }
 
-  .bbx-facts > div + div {
+  .bbx-stage__caption {
+    bottom: 28px;
+  }
+
+  .bbx-tabs {
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  .bbx-ring__area,
+  .bbx-couture__hint {
+    display: none;
+  }
+
+  .bbx-ring__name {
+    font-size: 1rem;
+  }
+
+  .bbx-tab + .bbx-tab {
     border-top: 1px solid var(--line-light);
     border-left: 0;
   }
 
-  .bbx-spec > div {
-    grid-template-columns: 1fr;
-    gap: 6px;
+  .bbx-tab__text {
+    display: none;
   }
 
-  .bbx-carousel__slides {
-    height: 62vh;
-  }
-
-  .bbx-carousel__caption {
-    right: var(--pad);
-    bottom: 140px;
-  }
-
-  .bbx-carousel__controls {
-    right: auto;
-    bottom: 84px;
-    left: var(--pad);
-  }
-
-  .bbx-carousel__arrow {
-    width: 40px;
-    height: 40px;
+  .bbx-figures li:nth-child(even) {
+    padding-left: 0;
+    border-left: 0;
   }
 
   .bbx-brand__media {
-    padding-right: 28px;
+    grid-template-columns: 1fr;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .bbx-carousel__slide,
-  .bbx-carousel__slide img,
-  .bbx-amenity img,
-  .bbx-community__card img,
-  .bbx-strategy__item img {
-    transition: none;
+  .bbx-brand__main {
+    grid-row: auto;
+    min-height: 380px;
+  }
+
+  .bbx-brand__detail {
+    display: none;
+  }
+
+  .bbx-brand__inset {
+    width: 62%;
+  }
+
+  .bbx-levels li {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .bbx-ledger {
+    grid-template-columns: 1fr;
+  }
+
+  .bbx-ledger > div + div {
+    border-top: 1px solid rgb(201 169 110 / 30%);
+    border-left: 0;
+  }
+
+  .bbx-dossier__list > div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .bbx-press__list a {
+    grid-template-columns: 1fr;
+  }
+
+  .bbx-spot__card {
+    width: 200px;
+  }
+
+  .bbx-stage__note {
+    display: none;
   }
 }
 
@@ -1018,9 +2920,7 @@ figure[data-bb-clip] {
   animation: bbx-shimmer 6s linear infinite;
 }
 
-.bbx-brand .bbx-display em,
-.bbx-amenities .bbx-display em,
-.bbx-location .bbx-display em {
+:is(.bbx-brand, .bbx-community, .bbx-towers, .bbx-location, .bbx-sources) .bbx-display em {
   background-image: linear-gradient(100deg, var(--gold-soft) 0%, var(--gold-soft) 38%, #fff6dc 50%, var(--gold-soft) 62%, var(--gold-soft) 100%);
 }
 
@@ -1062,86 +2962,29 @@ figure[data-bb-clip] {
   100% { left: 130%; }
 }
 
-/* Carousel captions rise in with each new slide. */
-.bbx-carousel__caption {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 900ms ease 500ms, transform 1100ms var(--ease) 500ms;
-}
-
-.bbx-carousel__slide.is-active .bbx-carousel__caption {
-  opacity: 1;
-  transform: none;
-}
-
-/* Cards lift and gain a gold edge on hover; the 3D tilt comes from billionaire.js. */
-.bbx-amenity,
-.bbx-strategy__item,
-.bbx-community__card {
-  transition: box-shadow 500ms ease;
-  will-change: transform;
-}
-
-.bbx-amenity:hover {
-  box-shadow: 0 0 0 1px var(--gold), 0 30px 60px rgb(0 0 0 / 45%);
-}
-
-.bbx-strategy__item:hover figure,
-.bbx-community__card:hover figure {
-  box-shadow: 0 0 0 1px var(--gold), 0 24px 50px rgb(27 25 21 / 22%);
-}
-
-.bbx-strategy__item figure,
-.bbx-community__card figure {
-  transition: box-shadow 500ms ease;
-}
-
-/* Fact and spec rows: a gold rule slides under the row being hovered. */
-.bbx-spec > div,
-.bbx-routes li,
-.bbx-checks__list li {
-  position: relative;
-}
-
-.bbx-spec > div::after,
-.bbx-routes li::after,
-.bbx-checks__list li::after {
-  position: absolute;
-  right: 0;
-  bottom: -1px;
-  left: 0;
-  height: 1px;
-  background: var(--gold);
-  content: "";
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 600ms var(--ease);
-}
-
-.bbx-spec > div:hover::after,
-.bbx-routes li:hover::after,
-.bbx-checks__list li:hover::after {
-  transform: scaleX(1);
-}
-
-/* Fact cells brighten on hover. */
-.bbx-facts > div {
-  transition: background-color 400ms ease;
-}
-
-.bbx-facts > div:hover {
-  background: var(--ivory);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .bbx-display em,
-  .bb-button--gold::after {
+  .bb-button--gold::after,
+  .bbx-seal,
+  .bbx-circles__orbit::before,
+  .bbx-circles__orbit::after,
+  .bbx-circles__orbit i,
+  .bbx-towers__scan,
+  .bbx-locked li::after,
+  .bbx-ticker__track,
+  .bbx-press__featured::before,
+  .bbx-spot__dot::after,
+  .bbx-couture__hint span,
+  .bbx-loc__badge span,
+  .bbx-timeline__step:last-child .bbx-timeline__dot {
     animation: none;
   }
 
-  .bbx-carousel__caption {
-    opacity: 1;
-    transform: none;
+  .bbx-stage__slide img,
+  .bbx-loc__slide img,
+  .bbx-acc,
+  .bbx-acc img,
+  .bbx-circle img {
     transition: none;
   }
 }

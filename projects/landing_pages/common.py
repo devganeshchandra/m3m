@@ -1,7 +1,11 @@
-"""Content slots shared by the project ad landing pages: the header and the rotating popup forms."""
+"""Content slots shared by the project ad landing pages: the header, the contact numbers, the RERA
+details on the banner and the rotating popup forms."""
 
 HEADER = "Header"
+CONTACT = "Contact numbers"
+RERA = "RERA details on the banner"
 POPUP = "Popup forms"
+CALL = "+917399473994"
 
 TEXTS = [
     (HEADER, "nav_enquire", "Last menu link (jumps to the final form)", "Enquire"),
@@ -24,6 +28,29 @@ LISTS = {
         "Group: residential or commercial. Link: the project slug the lead is filed under.",
     ),
 }
+
+
+def contact_texts(whatsapp=CALL):
+    """The page's own call and WhatsApp numbers: they replace the site's numbers everywhere on the page
+    (header, buttons, mobile bar and footer)."""
+    return [
+        (CONTACT, "phone_display", "Phone number as shown", "+91 73994 73994"),
+        (CONTACT, "phone_dial", "Phone number for click-to-call (+, country code and digits)", CALL),
+        (CONTACT, "whatsapp_number", "WhatsApp number (country code and digits, no +)", whatsapp.lstrip("+")),
+        (CONTACT, "whatsapp_label", "WhatsApp button in the header: text before the logo", "Get details on"),
+        (CONTACT, "whatsapp_message", "WhatsApp: message filled in for the visitor", "Hi, please share the details of"),
+    ]
+
+
+def rera_texts(extra=""):
+    """The RERA block on the banner, next to its QR code (the page's rera_qr image)."""
+    return [
+        (RERA, "rera_label", "Label", "Project RERA Reg. No."),
+        (RERA, "rera_number", "Registration number ({rera} = the project's RERA number)", "{rera}"),
+        (RERA, "rera_extra", "Extra line, optional (e.g. the agent registration)", extra),
+        (RERA, "rera_site", "Website, as shown", "up-rera.in/projects"),
+        (RERA, "rera_url", "Website link", "https://www.up-rera.in/projects"),
+    ]
 
 
 def nav(*links):

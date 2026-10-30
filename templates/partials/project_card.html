@@ -40,11 +40,11 @@
 
     <div class="pcard__actions">
       <button aria-haspopup="dialog" class="pcard__button pcard__button--primary" data-enquiry-open data-project="{{ project.slug }}" data-project-name="{{ project.name }}" type="button">
-        <span>{% if project.status == "upcoming" %}Register interest{% else %}Enquire now{% endif %}</span>
+        <span>{% if project.status == "upcoming" %}{{ st.card_register }}{% else %}{{ st.card_enquire }}{% endif %}</span>
         {% include "icons/arrow.html" %}
       </button>
       <a class="pcard__button pcard__button--ghost" href="{{ project.get_absolute_url }}">
-        <span>View details</span>
+        <span>{{ st.card_details }}</span>
         {% include "icons/arrow.html" %}
       </a>
     </div>

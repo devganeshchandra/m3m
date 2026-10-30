@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="{% static 'images/logo/apple-touch-icon.png' %}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="{% static 'css/billionaire.css' %}">
   <link rel="stylesheet" href="{% static 'css/billionaire-story.css' %}">
   {% if page.hero_image %}<link rel="preload" as="image" href="{{ page.hero_image.url }}">{% endif %}
@@ -107,7 +107,7 @@
   </div>
 
   <main id="bb-main">
-    {# ---------- 2. Hero ---------- #}
+    {# ---------- 2. Hero: the film in warm light, a gold title and the headline figures ---------- #}
     <section class="bb-hero" id="bb-top" aria-labelledby="bb-title">
       <div class="bb-hero__media" aria-hidden="true">
         {% if page.hero_video %}
@@ -120,27 +120,36 @@
         {% endif %}
       </div>
       <div class="bb-hero__shade" aria-hidden="true"></div>
+      <div class="bb-hero__glow" aria-hidden="true"></div>
+      <div class="bb-hero__dust" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
       <div class="bb-hero__content">
+        {% if t.hero_badge %}<p class="bb-hero__badge" data-bb-hero-item><span aria-hidden="true">◆</span>{{ t.hero_badge }}<span aria-hidden="true">◆</span></p>{% endif %}
         <p class="bb-label bb-hero__label" data-bb-hero-item>{{ page.eyebrow }}</p>
         <h1 class="bb-hero__title" id="bb-title" data-bb-hero-title>{{ page.title }}</h1>
         <p class="bb-hero__tagline" data-bb-hero-item>{{ page.tagline }}</p>
         <div class="bb-hero__actions" data-bb-hero-item>
           <a class="bb-button bb-button--gold" href="#private-viewing" data-magnetic>{{ t.hero_enquire }}</a>
-          <a class="bb-button bb-button--outline" href="#residences" data-magnetic>{{ t.hero_explore }}</a>
+          <a class="bb-button bb-button--glass" href="#residences" data-magnetic>{{ t.hero_explore }}</a>
         </div>
       </div>
+
+      {% if lists.hero_stats %}
+        <ul class="bb-hero__stats" data-bb-hero-item>
+          {% for stat in lists.hero_stats %}
+            <li><strong data-count="{{ stat.value }}">{{ stat.value }}</strong><span>{{ stat.title }}</span></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
       {% if page.hero_image %}<span class="visually-hidden">{{ page.hero_image_alt }}</span>{% endif %}
       {% if t.hero_caption %}<p class="bb-hero__caption">{{ t.hero_caption }}</p>{% endif %}
-      <a class="bb-hero__scroll" href="#overview" aria-label="{{ t.hero_scroll_aria }}">
-        <span>{{ t.hero_scroll }}</span><i aria-hidden="true"></i>
-      </a>
     </section>
 
     {% include "projects/billionaire/story.html" %}
 
-    {# ---------- 15. Private invitation form ---------- #}
+    {# ---------- 15. Private viewing: an invitation the visitor fills in; the day tiles come from billionaire.js (bright) ---------- #}
     <section class="bb-invite" id="private-viewing" aria-labelledby="bb-invite-title">
-      <div class="bb-invite__copy bb-sticky">
+      <div class="bb-invite__copy">
         <p class="bb-label" data-bb-fade>{{ page.form_label }}</p>
         <h2 class="bb-heading" id="bb-invite-title" data-bb-lines>{{ page.form_heading }}</h2>
         <p class="bb-section-head__text" data-bb-fade>{{ page.form_intro }}</p>
@@ -164,13 +173,116 @@
             <strong>{{ t.whatsapp }}</strong>
           </a>
         </div>
+        {% if imgs.form_image.image %}
+          <figure class="bb-invite__image" data-bb-clip>
+            <img src="{{ imgs.form_image.image|src:1200 }}" alt="{{ imgs.form_image.alt }}" loading="lazy" decoding="async">
+          </figure>
+        {% endif %}
       </div>
 
-      <div class="bb-invite__panel">
-        <form class="bb-form" novalidate action="{% url 'submit_enquiry' %}" method="post" data-bb-form="viewing">
+      <div class="bb-invite__panel bb-pass">
+        <div class="bb-pass__head" aria-hidden="true">
+          <span class="bb-pass__crest">BB</span>
+          <p class="bb-pass__title"><small>{{ t.form_admit }}</small>{{ t.form_pass_label }}</p>
+          <p class="bb-pass__no">No. <span data-bb-pass-no>{{ t.form_pass_no }}-0000</span></p>
+        </div>
+
+        <form class="bb-form" novalidate action="{% url 'submit_enquiry' %}" method="post" data-bb-form="viewing" data-pass-prefix="{{ t.form_pass_no }}">
           {% csrf_token %}
           <input type="hidden" name="source" value="billionaire">
           {% include "projects/_billionaire_tracking.html" %}
+
+          <p class="bb-pass__step"><b>01</b>{{ t.form_step_choose }}</p>
+
+          {% if lists.visit_modes %}
+            <fieldset class="bb-choice">
+              <legend>{{ t.field_mode }}</legend>
+              <div class="bb-choice__options bb-choice__options--cards">
+                {% for mode in lists.visit_modes %}
+                  <label class="bb-chip bb-chip--card">
+                    <input type="radio" name="visit_mode" value="{{ mode.title }}"{% if forloop.first %} checked{% endif %}>
+                    <span><strong>{{ mode.title }}</strong>{% if mode.subtitle %}<small>{{ mode.subtitle }}</small>{% endif %}</span>
+                  </label>
+                {% endfor %}
+              </div>
+            </fieldset>
+          {% endif %}
+
+          {% if residences %}
+            <fieldset class="bb-choice">
+              <legend>{{ t.field_residence }}</legend>
+              <div class="bb-choice__options">
+                {% for residence in residences %}
+                  <label class="bb-chip">
+                    <input type="radio" name="residence" value="{{ residence.name }}"{% if forloop.first %} checked{% endif %}>
+                    <span>{{ residence.name }}</span>
+                  </label>
+                {% endfor %}
+                <label class="bb-chip">
+                  <input type="radio" name="residence" value="">
+                  <span>{{ t.field_residence_empty }}</span>
+                </label>
+              </div>
+            </fieldset>
+          {% endif %}
+
+          <fieldset class="bb-choice">
+            <legend>{{ t.field_day }}</legend>
+            <div class="bb-days" data-bb-days data-more="{{ t.field_day_more }}"></div>
+            <label class="bb-field bb-days__later" data-bb-later>
+              <span class="visually-hidden">{{ t.field_date }}</span>
+              <input name="visit_date" type="date" data-check="date" data-min-today data-bb-date aria-describedby="bb-err-date">
+              <span class="bb-field__error" id="bb-err-date" hidden></span>
+            </label>
+          </fieldset>
+
+          {% if lists.visit_slots %}
+            <fieldset class="bb-choice">
+              <legend>{{ t.field_time }}</legend>
+              <div class="bb-choice__options">
+                {% for slot in lists.visit_slots %}
+                  <label class="bb-chip bb-chip--slot">
+                    <input type="radio" name="callTime" value="{{ slot.value }}">
+                    <span><strong>{{ slot.title }}</strong>{% if slot.subtitle %}<small>{{ slot.subtitle }}</small>{% endif %}</span>
+                  </label>
+                {% endfor %}
+              </div>
+            </fieldset>
+          {% endif %}
+
+          <div class="bb-form__row">
+            <div class="bb-choice">
+              <p class="bb-choice__legend" id="bb-guests-label">{{ t.field_guests }}</p>
+              <div class="bb-stepper" role="group" aria-labelledby="bb-guests-label">
+                <button type="button" data-bb-guests="-1" aria-label="Fewer guests">−</button>
+                <input name="guests" type="number" min="1" max="12" value="2" inputmode="numeric" aria-labelledby="bb-guests-label" data-bb-guests-input>
+                <button type="button" data-bb-guests="1" aria-label="More guests">+</button>
+              </div>
+            </div>
+            {% if lists.visit_purposes %}
+              <fieldset class="bb-choice">
+                <legend>{{ t.field_purpose }}</legend>
+                <div class="bb-choice__options">
+                  {% for purpose in lists.visit_purposes %}
+                    <label class="bb-chip">
+                      <input type="radio" name="purpose" value="{{ purpose.title }}">
+                      <span>{{ purpose.title }}</span>
+                    </label>
+                  {% endfor %}
+                </div>
+              </fieldset>
+            {% endif %}
+          </div>
+
+          <label class="bb-switch">
+            <input type="checkbox" name="chauffeur" value="on">
+            <span class="bb-switch__track" aria-hidden="true"><span></span></span>
+            <span class="bb-switch__text"><strong>{{ t.field_chauffeur }}</strong>{% if t.field_chauffeur_note %}<small>{{ t.field_chauffeur_note }}</small>{% endif %}</span>
+          </label>
+
+          <div class="bb-pass__tear" aria-hidden="true"></div>
+          <p class="bb-pass__step"><b>02</b>{{ t.form_step_details }}</p>
+
           <div class="bb-form__row">
             <label class="bb-field">
               <span>{{ t.field_name }}</span>
@@ -203,33 +315,18 @@
             </div>
             <span class="bb-field__error" id="bb-err-phone" hidden></span>
           </div>
-          <div class="bb-form__row">
-            <label class="bb-field">
-              <span>{{ t.field_residence }}</span>
-              <select name="residence" data-residence-select>
-                <option value="">{{ t.field_residence_empty }}</option>
-                {% for residence in residences %}<option value="{{ residence.name }}">{{ residence.name }}</option>{% endfor %}
-              </select>
-            </label>
-            <label class="bb-field">
-              <span>{{ t.field_date }}</span>
-              <input name="visit_date" type="date" data-check="date" data-min-today aria-describedby="bb-err-date">
-              <span class="bb-field__error" id="bb-err-date" hidden></span>
-            </label>
-          </div>
           <label class="bb-field">
             <span>{{ t.field_message }} <em>{{ t.field_optional }}</em></span>
-            <textarea name="message" rows="3" maxlength="2000"></textarea>
-          </label>
-          <label class="bb-check">
-            <input type="checkbox" name="chauffeur" value="on">
-            <span>{{ t.field_chauffeur }}</span>
+            <textarea name="message" rows="2" maxlength="2000"></textarea>
           </label>
           <p class="bb-form__status" role="alert" hidden data-bb-status></p>
           <button class="bb-button bb-button--gold bb-form__submit" type="submit" data-magnetic>
-            <span>{{ t.form_submit }}</span>
+            <span>{{ t.form_submit }}</span><i aria-hidden="true">→</i>
           </button>
-          <p class="bb-form__note">{{ page.form_note }}</p>
+          <p class="bb-form__note">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="13" height="13"><path d="M7 11V8a5 5 0 0 1 10 0v3M6 11h12v9H6z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+            {{ page.form_note }}
+          </p>
         </form>
 
         <div class="bb-success" hidden tabindex="-1" data-bb-success>
@@ -238,6 +335,8 @@
           <p>{{ page.form_success_text }}</p>
           <button class="bb-link-button" type="button" data-bb-reset>{{ t.form_reset }}</button>
         </div>
+        <span class="bb-pass__barcode" aria-hidden="true"></span>
+        <span class="bb-pass__stamp" aria-hidden="true">{{ t.form_confirmed }}</span>
       </div>
     </section>
   </main>
@@ -261,7 +360,7 @@
       </div>
     </div>
     <div class="bb-footer__legal">
-      {% if page.rera_number %}<p><strong>RERA:</strong> {{ page.rera_number }}</p>{% endif %}
+      {% if page.rera_number %}<p><strong>RERA:</strong> {{ page.rera_number }} · <a href="https://haryanarera.gov.in/" target="_blank" rel="noopener">haryanarera.gov.in</a></p>{% endif %}
       <p>{{ page.footer_disclaimer }}</p>
       <p>© {% now "Y" %} {{ site.site_name }}. {{ t.footer_rights }} · <a href="/disclaimer">{{ t.footer_disclaimer_link }}</a></p>
     </div>
@@ -360,5 +459,6 @@
   <script src="{% static 'vendor/lenis.min.js' %}" defer></script>
   <script src="{% static 'js/validation.js' %}" defer></script>
   <script src="{% static 'js/billionaire.js' %}" defer></script>
+{% edit_this_page %}
 </body>
 </html>

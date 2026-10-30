@@ -80,6 +80,50 @@ class SiteTests(TestCase):
         self.assertEqual(self.client.get("/projects/m3m-trump-tower-noida").status_code, 404)
         self.assertNotContains(self.client.get("/"), "M3M Trump Tower Noida")
 
+    def test_website_map_and_editing_from_the_site(self):
+        admin = User.objects.create_superuser("admin", "a@example.com", "pass")
+        self.client.force_login(admin)
+        response = self.client.get("/admin/")
+        self.assertContains(response, "Website map")
+        for slug in ("m3m-jacob-co-residences", "m3m-the-cullinan-residential", "m3m-trump-tower-noida", "billionaire-block"):
+            page = LandingPage.objects.get(slug=slug)
+            self.assertContains(response, f"/admin/projects/landingpage/{page.pk}/change/", html=False)
+        # Staff see “Edit this page”, opening the screens that edit that page; visitors never do.
+        response = self.client.get("/projects/m3m-trump-tower-noida")
+        self.assertContains(response, "Edit this page")
+        trump = LandingPage.objects.get(slug="m3m-trump-tower-noida")
+        self.assertContains(response, f"/admin/projects/landingpage/{trump.pk}/change/", html=False)
+        self.client.logout()
+        self.assertNotContains(self.client.get("/projects/m3m-trump-tower-noida"), "Edit this page")
+
+    def test_shared_texts_and_menu_are_edited_in_the_admin(self):
+        texts = LandingPage.objects.get(slug="website-texts")
+        LandingText.objects.filter(page=texts, key="cta_title").update(value="Your *next home.*")
+        LandingText.objects.filter(page=texts, key="footer_rights").update(value="Every right reserved.")
+        response = self.client.get("/our-journey")
+        self.assertContains(response, "Your <em>next home.</em>", html=False)
+        self.assertContains(response, "Every right reserved.")
+        # The menu: rename a link, add one, and hide a project from the dropdown.
+        texts.items.filter(list_key="menu", link="/our-journey").update(title="Our Story")
+        texts.items.create(list_key="menu", title="Careers", link="/careers", order=99)
+        texts.items.filter(list_key="project_menu", link="/projects/m3m-trump-tower-noida").update(is_published=False)
+        response = self.client.get("/")
+        self.assertContains(response, "Our Story")
+        self.assertContains(response, 'href="/careers"', html=False)
+        self.assertNotContains(response, "Sector 94 · 4 &amp; 5 BHK")
+
+    def test_website_editors_can_run_the_site_but_not_manage_users(self):
+        from django.contrib.auth.models import Group
+
+        editor = User.objects.create_user("editor", "e@example.com", "pass", is_staff=True)
+        editor.groups.add(Group.objects.get(name="Website editors"))
+        self.client.force_login(editor)
+        trump = LandingPage.objects.get(slug="m3m-trump-tower-noida")
+        for url in ["/admin/", f"/admin/projects/landingpage/{trump.pk}/change/", "/admin/projects/project/add/",
+                    "/admin/content/insight/add/", "/admin/core/sitesettings/1/change/", "/admin/leads/enquiry/"]:
+            self.assertEqual(self.client.get(url).status_code, 200, url)
+        self.assertEqual(self.client.get("/admin/auth/user/").status_code, 403)
+
     def test_project_landing_sections(self):
         project = Project.objects.get(slug="m3m-the-line-pentsuites")
         project.highlights.create(title="Golf course views")
@@ -111,7 +155,6 @@ class SiteTests(TestCase):
             f"/admin/projects/project/{Project.objects.first().pk}/change/",
             "/admin/core/homepage/1/change/",
             "/admin/projects/billionaireblockpage/1/change/",
-            "/admin/projects/billionaireitem/",
             "/admin/projects/landingpage/",
             "/admin/projects/landingitem/",
             "/admin/projects/landingitem/add/",
@@ -144,21 +187,39 @@ class SiteTests(TestCase):
         # The research story, in order, from the plan to the sources.
         html = response.content.decode()
         order = [
-            "What exactly is", "Signature Residences <em>by ELIE SAAB", "A clearly defined", "What type of society is",
+            "What exactly is", "Signature Residences <em>by ELIE SAAB", "A residence <em>tailored", "What type of society is",
             "What amenities are they", "What type of towers, blocks and", "broader", "Location &amp;",
             "Launch timeline, investment", "Sources for",
         ]
         positions = [html.index(heading) for heading in order]
         self.assertEqual(positions, sorted(positions))
-        self.assertContains(response, 'aria-roledescription="slide"', count=5, html=False)
-        self.assertContains(response, '<span data-count="250">250</span> acres', html=False)
+        # The four facts are tabs, each with its own picture; the acre facts count up.
+        self.assertContains(response, "data-bbx-tab", count=4, html=False)
+        self.assertContains(response, '<span data-count="170">170</span> acres', html=False)
+        # Only confirmed facts: no unconfirmed township acreage, and the HRERA registration is shown.
+        self.assertNotContains(response, "250 acres")
+        self.assertContains(response, "GGM/992/724/2025/95")
+        self.assertContains(response, 'href="https://haryanarera.gov.in/"', html=False)
+        self.assertNotContains(response, "Approvals &amp; RERA")
         self.assertContains(response, "Wrap-around decks and private jacuzzis")
-        self.assertContains(response, 'class="bbx-amenity"', count=7)
+        self.assertContains(response, "data-bbx-spot", count=5, html=False)  # The room, and its four gold points.
+        self.assertContains(response, 'style="left: 22%; top: 56%"', html=False)
+        self.assertContains(response, "data-bbx-acc", count=8, html=False)  # The accordion, and its seven panels.
+        self.assertContains(response, "data-bbx-dest", count=5, html=False)
+        self.assertContains(
+            response,
+            "https://www.google.com/maps/dir/?api=1&amp;origin=Sector%20111%2C%20Gurugram%2C%20Haryana"
+            "&amp;destination=Indira%20Gandhi%20International%20Airport%2C%20New%20Delhi",
+            html=False,
+        )
+        self.assertContains(response, "bbx-press__featured", html=False)
         self.assertContains(response, "₹3,500 cr")
         self.assertContains(response, "https://haryanarera.gov.in/", html=False)
-        for unverified in ("Sky Villas", "The Penthouse", "Helipad", "Bowling alley", "bb-club__card", "RERA:"):
+        for unverified in ("Sky Villas", "The Penthouse", "Helipad", "Bowling alley", "bb-club__card"):
             self.assertNotContains(response, unverified)
         self.assertContains(response, "Request Invitation")
+        for field in ('name="visit_mode"', 'name="callTime"', 'name="guests"', 'name="purpose"', 'name="residence"'):
+            self.assertContains(response, field, html=False)
         self.assertContains(response, 'name="source" value="billionaire"', html=False)
         self.assertContains(response, 'name="source" value="brochure"', html=False)
         self.assertContains(response, "billionaire-block/hero")
@@ -275,6 +336,35 @@ class SiteTests(TestCase):
         # Every other page keeps the site menu.
         self.assertContains(self.client.get("/projects/m3m-the-line-pentsuites"), 'class="site-header"', html=False)
 
+    def test_landing_pages_have_their_own_numbers_and_rera_block(self):
+        site = SiteSettings.load()
+        for slug, whatsapp in (("m3m-jacob-co-residences", "917399673996"),
+                               ("m3m-the-cullinan-residential", "917399473994"),
+                               ("m3m-trump-tower-noida", "917399473994")):
+            response = self.client.get(f"/projects/{slug}")
+            self.assertContains(response, 'href="tel:+917399473994"', html=False)
+            self.assertContains(response, f"https://wa.me/{whatsapp}", html=False)
+            self.assertContains(response, 'class="lnav__whatsapp"', html=False)
+            self.assertNotContains(response, f"tel:{site.phone_dial}", html=False)
+            self.assertNotContains(response, site.phone_display)
+            self.assertNotContains(response, "Toll-free")
+            # The RERA number, the regulator's website and the QR code, on the banner.
+            self.assertContains(response, 'class="lrera lrera--', html=False)
+            self.assertContains(response, Project.objects.get(slug=slug).rera)
+            self.assertContains(response, 'href="https://www.up-rera.in/projects"', html=False)
+            self.assertContains(response, "rera-qr", html=False)
+        self.assertContains(self.client.get("/projects/m3m-the-cullinan-residential"), "UPRERAAGT10202")
+        # The rest of the site keeps its own numbers.
+        response = self.client.get("/projects/m3m-the-line-pentsuites")
+        self.assertContains(response, f"tel:{site.phone_dial}", html=False)
+        self.assertContains(response, "Toll-free")
+
+    def test_landing_routes_start_at_the_project(self):
+        for slug, origin in (("m3m-jacob-co-residences", "M3M Jacob &amp; Co. Residences, Sector 97, Noida"),
+                             ("m3m-the-cullinan-residential", "M3M The Cullinan, Sector 94, Noida"),
+                             ("m3m-trump-tower-noida", "Trump Towers Noida, Sector 94, Noida")):
+            self.assertContains(self.client.get(f"/projects/{slug}"), f'data-origin="{origin}"', html=False)
+
     def test_landing_popups_rotate_the_three_form_styles(self):
         # Each page's popup starts with the next page's form style: Jacob → b, Cullinan → c, Trump → a.
         for slug, start, theme in (("m3m-jacob-co-residences", "b", "jl"),
@@ -305,7 +395,7 @@ class SiteTests(TestCase):
     def test_landing_pages_are_edited_in_the_admin(self):
         self.assertEqual(
             set(LandingPage.objects.values_list("slug", flat=True)),
-            {"m3m-jacob-co-residences", "m3m-the-cullinan-residential", "m3m-trump-tower-noida", "billionaire-block"},
+            {"m3m-jacob-co-residences", "m3m-the-cullinan-residential", "m3m-trump-tower-noida", "billionaire-block", "website-texts"},
         )
         for page in LandingPage.objects.all():
             self.assertTrue(page.texts.exists(), page)

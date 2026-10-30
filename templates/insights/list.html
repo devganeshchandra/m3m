@@ -12,7 +12,7 @@
 {% if featured %}
 <section class="ip-section" aria-labelledby="featured-title">
   <div class="ip-section__inner">
-    <p class="ip-label"><span aria-hidden="true"></span>Featured</p>
+    <p class="ip-label"><span aria-hidden="true"></span>{{ st.insights_featured }}</p>
     <article class="feature-article">
       <a class="feature-article__image" href="{{ featured.get_absolute_url }}" tabindex="-1" aria-hidden="true">
         {% picture featured.image sizes="(max-width: 900px) 100vw, 58vw" priority=True %}
@@ -23,7 +23,7 @@
         <p>{{ featured.description }}</p>
         <p class="feature-article__meta">{{ featured.author }} · {{ featured.published_on|date:"j F Y" }} · {{ featured.reading_minutes }} min read</p>
         <a class="ip-button ip-button--navy" href="{{ featured.get_absolute_url }}">
-          <span>Read the article</span>
+          <span>{{ st.insights_read }}</span>
           {% include "icons/arrow.html" %}
         </a>
       </div>

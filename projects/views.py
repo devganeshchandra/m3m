@@ -55,6 +55,7 @@ def project_detail(request, slug):
     landing_context = landing.context(project.slug, rera=project.rera)
     if landing_context:
         context.update(landing_context)
+        context["site"] = landing.with_page_contact(SiteSettings.load(), landing_context["t"])
         templates.insert(0, f"projects/landing/{project.slug}.html")
     return render(request, templates, context)
 

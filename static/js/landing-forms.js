@@ -75,13 +75,17 @@
     return form;
   }
 
-  // The control to focus when the popup opens.
+  // The control to focus when the popup opens. Before a residence is chosen that is the popup's
+  // heading: focusing the first residence would outline it, and it would look already chosen.
   function firstControl(form) {
     if (!form) return null;
     if (form.classList.contains("is-picked") || form.dataset.pfVariant === "a") {
       return $("[name=name]", form);
     }
-    return $("[data-pf-pick]", form);
+    var dialog = form.closest("dialog");
+    var heading = dialog && $("h2", dialog);
+    if (heading) heading.tabIndex = -1;
+    return heading;
   }
 
   function init() {

@@ -36,14 +36,14 @@ PROJECTS = [
     },
     {
         "slug": "m3m-jacob-jewel-crest-noida",
-        "name": "M3M Jacob Jewel Crest Noida",
+        "name": "M3M Jewel Crest Avenue",
         "category": "M3M Jacob & Co.",
         "interests": ["commercial"],
-        "offering": "Retail Shops, Food Court & Restaurant",
+        "offering": "High-Street Retail, Fine Dining & Cafés",
         "location": "Sector 97, Noida Expressway",
         "rera": "UPRERAPRJ690055/10/2025",
         "image": "projects_main/m3m_jacob_jewel.jpg",
-        "summary": "A retail, food court and restaurant destination at Sector 97, Noida Expressway.",
+        "summary": "High-street retail, fine dining and cafés, integrated with the Jacob & Co. residences on Noida Expressway.",
     },
     {
         "slug": "m3m-the-line-retail-shops",
@@ -94,22 +94,22 @@ PROJECTS = [
         "name": "Smartworld Noida Residential",
         "category": "Smartworld Noida",
         "interests": ["residential"],
-        "offering": "4 BHK Residence · 4,500 sq ft",
+        "offering": "3 & 4 BHK Residences",
         "location": "Sector 98, Noida Expressway",
         "rera": "UPRERAPRJ300532/12/2025",
         "image": "projects_main/m3m_smart_world_noida_residence.webp",
-        "summary": "4 BHK residences, with a stated area of 4,500 sq ft, at Sector 98, Noida Expressway.",
+        "summary": "3 and 4 BHK branded residences at Sector 98, Noida Expressway.",
     },
     {
         "slug": "smartworld-noida-commercial",
         "name": "Smartworld Noida Commercial",
         "category": "Smartworld Noida",
         "interests": ["residential", "commercial"],
-        "offering": "1 & 2 BHK Serviced Apartments, Lockable Retail, Cafés & Restaurant",
+        "offering": "1 & 2 BHK Serviced Suites, Retail, Cafés & Dining",
         "location": "Sector 98, Noida Expressway",
         "rera": "UPRERAPRJ300532/12/2025",
         "image": "projects_main/m3m_smar_world_noida_commercial.webp",
-        "summary": "Serviced apartments, lockable retail, cafés and a restaurant at Sector 98, Noida Expressway.",
+        "summary": "Serviced suites, retail, cafés and dining at Sector 98, Noida Expressway.",
     },
     {
         "slug": "m3m-trump-tower-noida",
@@ -309,6 +309,8 @@ class Command(BaseCommand):
 
     def _seed_billionaire_block(self):
         page, _ = BillionaireBlockPage.objects.get_or_create(pk=1)
+        if not page.rera_number:
+            page.rera_number = seed_pages.BILLIONAIRE_RERA
         for field, path in seed_pages.BILLIONAIRE_BLOCK_FILES.items():
             if (not getattr(page, field) or self.update) and (SEED_IMAGES / path).exists():
                 self._attach(page, field, path)

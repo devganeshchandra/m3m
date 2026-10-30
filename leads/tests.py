@@ -68,6 +68,28 @@ class SubmitEnquiryTests(TestCase):
             "Preferred residence: Sky Villas\nPreferred date: 15 Jan 2030\nChauffeur pickup requested\n\nEvening, please.",
         )
 
+    def test_billionaire_invitation_details(self):
+        response = self.post(
+            source="billionaire", name="Asha Verma", phone="+971501234567", email="asha@example.com",
+            residence="Signature Residences by ELIE SAAB", visit_mode="Virtual presentation", visit_date="2030-01-15",
+            callTime="evening", guests="3", purpose="An investment",
+        )
+        self.assertTrue(response.json()["ok"])
+        enquiry = Enquiry.objects.get()
+        self.assertEqual(enquiry.call_time, Enquiry.CallTime.EVENING)
+        self.assertEqual(
+            enquiry.message,
+            "Preferred residence: Signature Residences by ELIE SAAB\nMeeting: Virtual presentation\n"
+            "Preferred date: 15 Jan 2030\nConsidering it as: An investment\nGuests attending: 3",
+        )
+
+    def test_billionaire_rejects_an_unknown_time(self):
+        response = self.post(
+            source="billionaire", name="Asha Verma", phone="+971501234567", email="asha@example.com", callTime="midnight"
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("callTime", response.json()["errors"])
+
     def test_brochure_needs_only_name_and_phone(self):
         response = self.post(source="brochure", name="Asha Verma", phone="9876543210")
         self.assertTrue(response.json()["ok"])

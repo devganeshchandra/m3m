@@ -1,13 +1,13 @@
 {# The short enquiry form on the right of a menu-page banner. Title and intro come from the page in the admin. #}
 <aside class="hero-enquiry inner-hero__aside" aria-labelledby="banner-form-title" data-quiver-box>
-  <p class="hero-enquiry__eyebrow">Personal guidance</p>
+  <p class="hero-enquiry__eyebrow">{{ st.banner_form_label }}</p>
   <h2 class="hero-enquiry__title" id="banner-form-title" data-quiver-title>{{ inner.form_title }}</h2>
   {% if inner.form_intro %}<p class="hero-enquiry__intro">{{ inner.form_intro }}</p>{% endif %}
 
   <form class="hero-enquiry__form" novalidate data-lead-form action="{% url 'submit_enquiry' %}" method="post">
     {% include "partials/form_tracking.html" with source=inner.form_source %}
     <fieldset class="interest-pick" data-interest-pick>
-      <legend>Interested in</legend>
+      <legend>{{ st.banner_form_interest }}</legend>
       <input type="hidden" name="interest" value="" data-validate="interest" data-error-id="banner-interest-error" data-no-blur-validate>
       <div class="interest-pick__chips">
         <button type="button" class="interest-pick__chip" aria-pressed="false" data-interest-value="residential">
@@ -41,9 +41,9 @@
 
     <div aria-live="polite" class="hero-enquiry__status" role="status" data-form-status></div>
     <button class="hero-enquiry__submit" type="submit" data-fancy-button>
-      <span class="submit-label">Send me the details</span>
+      <span class="submit-label">{{ st.banner_form_button }}</span>
       <span class="submit-arrow" aria-hidden="true">→</span>
     </button>
   </form>
-  <p class="hero-enquiry__note">Your details are used only to respond to this enquiry.</p>
+  <p class="hero-enquiry__note">{{ st.form_note }}</p>
 </aside>

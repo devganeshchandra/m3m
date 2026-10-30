@@ -85,13 +85,13 @@
           {% endfor %}
         </div>
         <p class="collection__empty" data-filter-empty hidden>
-          No addresses of this type in this collection yet. <button class="text-button" type="button" data-filter-reset>Show all</button>
+          {{ st.list_empty_filter }} <button class="text-button" type="button" data-filter-reset>Show all</button>
         </p>
       {% else %}
         <div class="collection__placeholder">
-          <p>New addresses for this collection will be announced soon.</p>
+          <p>{{ st.list_empty }}</p>
           <button aria-haspopup="dialog" class="ip-button ip-button--outline" data-enquiry-open type="button">
-            <span>Register your interest</span>
+            <span>{{ st.list_register }}</span>
             {% include "icons/arrow.html" %}
           </button>
         </div>

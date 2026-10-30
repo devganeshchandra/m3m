@@ -78,10 +78,11 @@
     <figure class="cl-hero__media" aria-hidden="true">
       {% if imgs.hero_image.image %}<img src="{{ imgs.hero_image.image|src:1920 }}" alt="" fetchpriority="high">{% endif %}
       <figcaption>
-        <span>{{ t.hero_caption_rera }}</span>
         <span>{{ t.hero_caption }}</span>
       </figcaption>
     </figure>
+
+    {% include "projects/landing/_rera_badge.html" with theme="cl" %}
 
     <ul class="cl-hero__stats cl-in">
       {% for stat in lists.hero_stats %}

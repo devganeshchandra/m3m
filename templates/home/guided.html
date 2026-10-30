@@ -22,7 +22,7 @@
       {# 1 and 3 side by side as two-way switches #}
       <div class="finder__row">
         <fieldset class="finder__group" aria-describedby="guided-interest-error">
-          <legend class="finder__legend"><span class="finder__step">1</span>I’m looking for</legend>
+          <legend class="finder__legend"><span class="finder__step">1</span>{{ st.guided_step_1 }}</legend>
           <div class="finder-switch">
             <label class="finder-option">
               <input name="interest" type="radio" value="residential">
@@ -39,7 +39,7 @@
         </fieldset>
 
         <fieldset class="finder__group" aria-describedby="guided-residency-error">
-          <legend class="finder__legend"><span class="finder__step">3</span>I’m based in</legend>
+          <legend class="finder__legend"><span class="finder__step">3</span>{{ st.guided_step_3 }}</legend>
           <div class="finder-switch">
             <label class="finder-option">
               <input name="residency" type="radio" value="india">
@@ -57,7 +57,7 @@
       {# 2. Project chips #}
       <fieldset class="finder__group" aria-describedby="guided-project-error">
         <legend class="finder__legend">
-          <span class="finder__step">2</span>Pick an address
+          <span class="finder__step">2</span>{{ st.guided_step_2 }}
           <span class="finder__count"><span data-guided-match-count>{{ guided_projects|length }}</span> to explore</span>
         </legend>
         <div class="finder__projects">
@@ -82,7 +82,7 @@
 
       {# 4. Contact details and send, on one line #}
       <div class="finder__group finder__contact">
-        <p class="finder__legend"><span class="finder__step">4</span>Where should we send it?</p>
+        <p class="finder__legend"><span class="finder__step">4</span>{{ st.guided_step_4 }}</p>
         <div class="finder__fields">
           <label class="finder-field">
             <span class="visually-hidden">Mobile / WhatsApp</span>
@@ -95,7 +95,7 @@
             <span class="finder__error guided-card__error" id="guided-email-error" role="alert" hidden></span>
           </label>
           <button class="finder__submit" type="submit">
-            <span>Send me my M3M edit</span>
+            <span>{{ st.guided_button }}</span>
             {% include "icons/arrow.html" %}
           </button>
         </div>
@@ -104,7 +104,7 @@
             <input data-error-id="guided-consent-error" id="guided-consent" name="consent" required type="checkbox" value="on" data-validate="consent" data-validate-on-submit data-consent-message="Please confirm that we may contact you about this request.">
             <span>M3M India may contact me about this project.</span>
           </label>
-          <p class="finder__note">No account. No commitment. Used only for this request.</p>
+          <p class="finder__note">{{ st.guided_note }}</p>
         </div>
         <span class="finder__error guided-card__error" id="guided-consent-error" role="alert" hidden></span>
         <p aria-live="polite" class="finder__status" role="status" data-form-status></p>

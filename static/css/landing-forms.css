@@ -252,6 +252,11 @@
   color: var(--pf-pick-note);
 }
 
+/* The popup's heading takes focus when it opens, so no residence looks chosen before a tap. */
+dialog h2[tabindex="-1"]:focus {
+  outline: none;
+}
+
 .pf-chip:focus-visible,
 .pf-tile:focus-visible,
 .pf-submit:focus-visible {

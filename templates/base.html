@@ -1,4 +1,4 @@
-{% load static %}<!doctype html>
+{% load static site_tags %}<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -86,5 +86,6 @@
   <script src="{% static 'js/validation.js' %}" defer></script>
   <script src="{% static 'js/site.js' %}" defer></script>
   {% block scripts %}{% endblock %}
+{% edit_this_page %}
 </body>
 </html>

@@ -75,7 +75,15 @@ class Enquiry(models.Model):
     class Meta:
         ordering = ["-created_at"]
         verbose_name_plural = "Enquiries"
-        indexes = [models.Index(fields=["status", "-created_at"])]
+        # Indexes for the queries that grow with the number of leads: the newest-first list, the sales team's
+        # status and source filters, and the repeat-lead check by phone (leads/views.py).
+        indexes = [
+            models.Index(fields=["status", "-created_at"]),
+            models.Index(fields=["-created_at"], name="leads_enquiry_newest"),
+            models.Index(fields=["source", "-created_at"], name="leads_enquiry_source"),
+            models.Index(fields=["phone", "-created_at"], name="leads_enquiry_phone"),
+            models.Index(fields=["email"], name="leads_enquiry_email"),
+        ]
 
     def __str__(self):
         return f"{self.name or self.email} · {self.get_source_display()}"

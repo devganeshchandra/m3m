@@ -1,0 +1,37 @@
+{% comment %}
+  “Edit this page”: shown only to logged-in staff (core/templatetags/site_tags.py edit_this_page). Lists the admin
+  screens that edit the page on show, from the website map (core/site_map.py). Visitors never see it.
+{% endcomment %}
+{% if show %}
+  <details class="edit-page">
+    <summary>✎ Edit this page</summary>
+    <div class="edit-page__panel">
+      <p class="edit-page__title">{{ name|default:"This page" }}</p>
+      {% if edits %}
+        <ul>
+          {% for edit in edits %}
+            <li><a href="{{ edit.href }}" target="_blank" rel="noopener">{{ edit.label }}{% if edit.hint %}<small>{{ edit.hint }}</small>{% endif %}</a></li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="edit-page__none">This page is built from the content listed in the website map.</p>
+      {% endif %}
+      <a class="edit-page__map" href="{% url 'admin:index' %}" target="_blank" rel="noopener">Open the website map →</a>
+    </div>
+  </details>
+  <style>
+    .edit-page { position: fixed; z-index: 2147483000; bottom: 18px; left: 18px; max-width: min(340px, calc(100vw - 36px)); font: 500 13px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; color: #1f1b14; }
+    .edit-page summary { display: inline-flex; padding: 9px 14px; border-radius: 999px; color: #1f1b14; background: #f1dfb4; box-shadow: 0 8px 24px rgb(0 0 0 / 28%); cursor: pointer; list-style: none; font-weight: 700; }
+    .edit-page summary::-webkit-details-marker { display: none; }
+    .edit-page__panel { margin-bottom: 8px; padding: 14px; border-radius: 12px; background: #fff; box-shadow: 0 18px 50px rgb(0 0 0 / 30%); }
+    .edit-page[open] { display: flex; flex-direction: column-reverse; align-items: flex-start; }
+    .edit-page__title { margin: 0 0 8px; font-weight: 700; font-size: 14px; }
+    .edit-page ul { display: grid; gap: 6px; margin: 0 0 10px; padding: 0; list-style: none; }
+    .edit-page ul a { display: block; padding: 7px 10px; border: 1px solid #e7e2d8; border-radius: 8px; color: #1f1b14; text-decoration: none; font-weight: 600; }
+    .edit-page ul a:hover { border-color: #a3803f; background: #faf6ee; }
+    .edit-page small { display: block; color: #6b6457; font-size: 12px; font-weight: 400; }
+    .edit-page__none { margin: 0 0 10px; color: #6b6457; }
+    .edit-page__map { color: #8a6a2f; font-weight: 700; text-decoration: none; }
+    @media (max-width: 900px) { .edit-page { bottom: 92px; } }
+  </style>
+{% endif %}

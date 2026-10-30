@@ -1,0 +1,19 @@
+{% comment %}
+  The RERA block on a landing page banner: the registration number, the RERA website and the QR code,
+  as the regulator requires. Expects: theme (jl / cl / tt) for the colours; each page places it in its
+  banner. Texts are the page's t.rera_* (“RERA details on the banner” in the admin); the QR is imgs.rera_qr. Hovering
+  the QR enlarges it so it scans easily from a phone.
+{% endcomment %}
+{% if t.rera_number %}
+  <aside class="lrera lrera--{{ theme }}" aria-label="RERA registration">
+    <p class="lrera__text">
+      <small>{{ t.rera_label }}</small>
+      <strong>{{ t.rera_number }}</strong>
+      {% if t.rera_extra %}<span>{{ t.rera_extra }}</span>{% endif %}
+      {% if t.rera_url %}<a href="{{ t.rera_url }}" target="_blank" rel="noopener">{{ t.rera_site }}</a>{% else %}<span>{{ t.rera_site }}</span>{% endif %}
+    </p>
+    {% if imgs.rera_qr.image %}
+      <span class="lrera__qr"><img src="{{ imgs.rera_qr.image.url }}" alt="{{ imgs.rera_qr.alt }}" width="72" height="72" decoding="async"></span>
+    {% endif %}
+  </aside>
+{% endif %}

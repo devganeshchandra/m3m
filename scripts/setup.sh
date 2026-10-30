@@ -125,6 +125,40 @@ else
   echo "Created .env ($MODE). Review it later for email settings."
 fi
 
+# 3b. PostgreSQL ---------------------------------------------------------------
+env_value() { grep -E "^$1=" .env | tail -1 | cut -d= -f2-; }
+
+if [[ "$(env_value DB_ENGINE)" =~ ^postgres && -z "$(env_value DB_PASSWORD)" ]]; then
+  step "Setting up PostgreSQL"
+  if command -v apt-get >/dev/null 2>&1; then
+    if ! command -v psql >/dev/null 2>&1; then
+      echo "Installing PostgreSQL with apt (needs sudo)…"
+      sudo apt-get update
+      sudo apt-get install -y postgresql
+    fi
+    db_name="$(env_value DB_NAME)"; db_name="${db_name:-m3m}"
+    db_user="$(env_value DB_USER)"; db_user="${db_user:-m3m}"
+    db_password="$("$VENV_PY" -c 'import secrets, string; a = string.ascii_letters + string.digits; print("".join(secrets.choice(a) for _ in range(32)))')"
+    if sudo -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='$db_user'" | grep -q 1; then
+      sudo -u postgres psql -qc "ALTER ROLE \"$db_user\" WITH LOGIN PASSWORD '$db_password';"
+    else
+      sudo -u postgres psql -qc "CREATE ROLE \"$db_user\" LOGIN PASSWORD '$db_password';"
+    fi
+    if ! sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='$db_name'" | grep -q 1; then
+      sudo -u postgres psql -qc "CREATE DATABASE \"$db_name\" OWNER \"$db_user\" ENCODING 'UTF8' TEMPLATE template0;"
+    fi
+    set_env DB_PASSWORD "$db_password"
+    echo "PostgreSQL database “$db_name” and login “$db_user” are ready (password saved in .env)."
+  elif [[ "$MODE" == "production" ]]; then
+    echo "Install PostgreSQL, create a database and login (see docs/DATABASE.md), put them in .env, then run this script again." >&2
+    exit 1
+  else
+    set_env DB_ENGINE sqlite
+    echo "PostgreSQL is not set up on this machine: using a local SQLite file for development."
+    echo "To use PostgreSQL here, follow docs/DATABASE.md and set the DB_* lines in .env."
+  fi
+fi
+
 # 4. Database, static files, content -----------------------------------------
 step "Setting up the database"
 "$VENV_PY" manage.py migrate --noinput

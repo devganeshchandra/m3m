@@ -72,6 +72,7 @@ Run the tests with `python manage.py test`.
 | `seed/images/` | Original images, used only by `seed_content` |
 | `scripts/` | `setup.sh`, `install_server.sh`, `update.sh`, `backup.sh`, `restore.sh` |
 | `docs/TECH_STACK.md` | Technologies, database tables, URLs |
+| `docs/DATABASE.md` | PostgreSQL: connection, leads table, backups, direct access |
 | `media/` | Files uploaded through the admin (not committed) |
 
 ## How it fits together

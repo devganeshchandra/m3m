@@ -376,10 +376,211 @@ body:has(.lnav--tt.lnav--logo) {
   content: "×";
 }
 
-/* Laptops: drop the phone number before the links run out of room. */
-@media (max-width: 1240px) {
+/* WhatsApp: “Get details on” and the logo, in a light outline. */
+.lnav__whatsapp {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 16px;
+  border: 1px solid color-mix(in srgb, var(--lnav-accent) 45%, transparent);
+  border-radius: var(--lnav-radius);
+  color: var(--lnav-text);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: border-color 250ms ease, background 250ms ease, transform 250ms ease;
+}
+
+.lnav__whatsapp .whatsapp-icon {
+  width: 22px;
+  height: 22px;
+  color: #25d366;
+}
+
+.lnav__whatsapp:hover {
+  border-color: #25d366;
+  background: rgb(37 211 102 / 10%);
+  transform: translateY(-1px);
+}
+
+/* Laptops: drop the phone number, then the WhatsApp words, then tighten the links and drop the call
+   icon (the footer and mobile bar keep it) before anything runs out of room. */
+@media (max-width: 1400px) {
   .lnav__call span {
     display: none;
+  }
+}
+
+@media (max-width: 1320px) {
+  .lnav__whatsapp {
+    padding: 0 11px;
+  }
+
+  .lnav__whatsapp span {
+    display: none;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1180px) {
+  .lnav {
+    gap: 16px;
+  }
+
+  .lnav__links {
+    gap: 14px;
+  }
+
+  .lnav__links a {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  .lnav__actions {
+    gap: 10px;
+  }
+
+  .lnav__cta {
+    padding: 0 16px;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1100px) {
+  .lnav__call {
+    display: none;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1000px) {
+  .lnav__links {
+    gap: 10px;
+  }
+
+  .lnav__links a {
+    letter-spacing: 0.04em;
+  }
+
+  .lnav--tt .lnav__links a {
+    padding: 10px 8px;
+    letter-spacing: 0.12em;
+  }
+}
+
+/* ---------- RERA block on the banner (templates/projects/landing/_rera_badge.html) ---------- */
+.lrera {
+  --lrera-accent: #e8d3a3;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 10px 10px 16px;
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-left: 2px solid var(--lrera-accent);
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(135deg, rgb(12 14 20 / 74%), rgb(12 14 20 / 54%));
+  box-shadow: 0 18px 40px rgb(0 0 0 / 26%);
+  text-align: right;
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  animation: lrera-in 900ms 400ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.lrera--cl {
+  --lrera-accent: #d9c391;
+  background: linear-gradient(135deg, rgb(11 24 48 / 80%), rgb(19 40 77 / 62%));
+}
+
+.lrera--tt {
+  --lrera-accent: #e3c98a;
+  background: linear-gradient(135deg, rgb(9 15 28 / 80%), rgb(14 23 41 / 60%));
+}
+
+.lrera__text {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.lrera__text small {
+  color: var(--lrera-accent);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.lrera__text strong {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.lrera__text span,
+.lrera__text a {
+  color: rgb(255 255 255 / 80%);
+}
+
+.lrera__text a {
+  text-decoration: underline;
+  text-decoration-color: rgb(255 255 255 / 30%);
+  text-underline-offset: 3px;
+}
+
+.lrera__text a:hover,
+.lrera__text a:focus-visible {
+  color: var(--lrera-accent);
+}
+
+.lrera__qr {
+  flex: none;
+  width: 72px;
+  height: 72px;
+  padding: 4px;
+  border-radius: 8px;
+  background: #fff;
+  transform-origin: top right;
+  transition: transform 350ms ease, box-shadow 350ms ease;
+}
+
+.lrera__qr img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Hovering the code enlarges it, for scanning from a phone. */
+@media (hover: hover) {
+  .lrera__qr:hover {
+    position: relative;
+    z-index: 3;
+    box-shadow: 0 20px 50px rgb(0 0 0 / 45%);
+    transform: scale(2.2);
+  }
+}
+
+@keyframes lrera-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 600px) {
+  .lrera {
+    gap: 10px;
+    padding: 8px 8px 8px 12px;
+  }
+
+  .lrera__text {
+    font-size: 11px;
+  }
+
+  .lrera__text strong {
+    font-size: 12px;
+  }
+
+  .lrera__qr {
+    width: 60px;
+    height: 60px;
   }
 }
 
@@ -502,10 +703,110 @@ body:has(.lnav--tt.lnav--logo) {
   .lnav__call {
     display: none;
   }
+
+  .lnav__actions {
+    gap: 8px;
+  }
+
+  .lnav__whatsapp {
+    min-height: 40px;
+    padding: 0 9px;
+  }
+
+  .lnav__cta {
+    padding: 0 12px;
+    letter-spacing: 0.1em;
+  }
+
+  .lnav__toggle {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* The smallest phones: a smaller logo and button so the header still fits. */
+@media (max-width: 380px) {
+  .lnav {
+    gap: 8px;
+  }
+
+  .lnav--logo .lnav__brand,
+  .lnav--cl.lnav--logo .lnav__brand {
+    height: 34px;
+  }
+
+  .lnav--tt.lnav--logo .lnav__brand,
+  .lnav--tt.lnav--logo.is-scrolled .lnav__brand {
+    height: 46px;
+  }
+
+  .lnav__cta {
+    padding: 0 10px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+}
+
+/* Very narrow phones: the header keeps the logo, WhatsApp and the menu; the bar at the bottom of the
+   screen carries the enquiry button. */
+@media (max-width: 340px) {
+  .lnav__cta {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .lnav__logo-shine {
     display: none;
+  }
+
+  .lrera {
+    animation: none;
+  }
+}
+
+/* Phones and tablets: no text smaller than 11px on the landing pages (labels, form captions, small notes). */
+@media (max-width: 1024px) {
+  html body .jl-plan__meta small,
+  html body .cl-strip__card span,
+  html body .jl-field span,
+  html body .cl-hero__stats span,
+  html body .cl-amen-filter span,
+  html body [class*='__stats'] span,
+  html body dl dt,
+  html body .lrera__text small,
+  html body .jl-field > span,
+  html body .jl-plan__badge,
+  html body .jl-commercial__image figcaption,
+  html body .jl-time__text small,
+  html body .jl-pass__title small,
+  html body .jl-pass__day small,
+  html body .cl-hero__title > small,
+  html body .cl-unit small,
+  html body .cl-tour__hint,
+  html body .cl-time__text small,
+  html body .cl-vault__tag,
+  html body .tt-hero__title > small,
+  html body .tt-card__ribbon,
+  html body .tt-unit span,
+  html body .tt-form__note,
+  html body .tt-hero__legal,
+  html body .tt-env__tag,
+  html body .tt-board__place small,
+  html body .tt-board__time small,
+  html body .pf-chip small,
+  html body .pf-tile small,
+  html body main dl dt,
+  html body main dl dd span {
+    font-size: 11px !important;
+  }
+}
+
+/* Touch screens: the header's phone icon is a comfortable target even when it shows the icon only. */
+@media (pointer: coarse) {
+  html body .lnav__call {
+    min-width: 40px;
+    min-height: 40px;
+    justify-content: center;
   }
 }

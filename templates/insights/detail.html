@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load landing_tags %}
 {% load site_tags %}
 
 {% block title %}{{ insight.title }} | Insights | {{ site.site_name }}{% endblock %}
@@ -60,11 +61,11 @@
 
       <div class="article-cta">
         <div>
-          <strong>Exploring an M3M address?</strong>
-          <span>Our team can answer your questions and arrange a visit.</span>
+          <strong>{{ st.insight_cta_title }}</strong>
+          <span>{{ st.insight_cta_text }}</span>
         </div>
         <button aria-haspopup="dialog" class="ip-button ip-button--navy" data-enquiry-open type="button">
-          <span>Speak with our team</span>
+          <span>{{ st.insight_cta_button }}</span>
           {% include "icons/arrow.html" %}
         </button>
       </div>
@@ -76,11 +77,11 @@
     <div class="ip-section__inner">
       <div class="ip-section__header">
         <div>
-          <p class="ip-label"><span aria-hidden="true"></span>Keep reading</p>
-          <h2 class="ip-heading" id="related-title">More <em>insights.</em></h2>
+          <p class="ip-label"><span aria-hidden="true"></span>{{ st.insight_more_label }}</p>
+          <h2 class="ip-heading" id="related-title">{{ st.insight_more_title|em }}</h2>
         </div>
         <a class="ip-button ip-button--outline" href="{% url 'insights' %}">
-          <span>All insights</span>
+          <span>{{ st.insight_all }}</span>
           {% include "icons/arrow.html" %}
         </a>
       </div>

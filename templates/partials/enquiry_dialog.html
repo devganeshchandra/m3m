@@ -2,9 +2,9 @@
   <div class="enquiry-dialog__layout">
     <aside class="enquiry-dialog__aside">
       <div class="enquiry-dialog__image-copy">
-        <p class="eyebrow">M3M India · Private consultation</p>
-        <p class="enquiry-dialog__aside-title">A considered address.</p>
-        <p class="enquiry-dialog__assurance">Begin with a conversation. Explore at your own pace.</p>
+        <p class="eyebrow">{{ st.popup_label }}</p>
+        <p class="enquiry-dialog__aside-title">{{ st.popup_side_title }}</p>
+        <p class="enquiry-dialog__assurance">{{ st.popup_side_text }}</p>
       </div>
     </aside>
 
@@ -12,14 +12,14 @@
       <button aria-label="Close enquiry form" class="enquiry-dialog__close" data-enquiry-close type="button">
         <span aria-hidden="true">&times;</span>
       </button>
-      <h2 class="enquiry-dialog__title" id="enquiry-title">Enquire now</h2>
+      <h2 class="enquiry-dialog__title" id="enquiry-title">{{ st.popup_title }}</h2>
       <p class="enquiry-dialog__intro">
-        Share your details and preferred call time to begin a conversation about
-        <span data-enquiry-project-name>M3M residences</span>.
+        {{ st.popup_intro }}
+        <span data-enquiry-project-name>{{ st.popup_any_project }}</span>.
       </p>
       <ul class="enquiry-dialog__benefits">
-        <li>Personal project guidance</li>
-        <li>Choose a convenient call window</li>
+        <li>{{ st.popup_point_1 }}</li>
+        <li>{{ st.popup_point_2 }}</li>
       </ul>
 
       <form class="enquiry-form" novalidate data-lead-form action="{% url 'submit_enquiry' %}" method="post">
@@ -64,21 +64,21 @@
 
         <label class="enquiry-consent">
           <input data-error-id="enquiry-consent-error" name="consent" required type="checkbox" value="on" data-validate="consent">
-          <span>I agree to be contacted by M3M India about this enquiry. My details will not be used for unrelated marketing.</span>
+          <span>{{ st.popup_consent }}</span>
         </label>
         <span class="enquiry-field__error" id="enquiry-consent-error" hidden></span>
 
         <div aria-live="polite" class="enquiry-form__status" role="status" data-form-status></div>
         <button class="enquiry-form__submit" type="submit">
-          Request a private call / virtual tour
+          {{ st.popup_button }}
           {% include "icons/arrow.html" %}
         </button>
       </form>
 
       <div class="enquiry-dialog__contact">
-        <span>For immediate assistance</span>
-        <a href="tel:{{ site.phone_dial }}">Call {{ site.phone_display }}</a>
-        <a href="{{ site.whatsapp_url }}" rel="noreferrer" target="_blank">WhatsApp our team</a>
+        <span>{{ st.popup_help }}</span>
+        <a href="tel:{{ site.phone_dial }}">{{ st.popup_call }} {{ site.phone_display }}</a>
+        <a href="{{ site.whatsapp_url }}" rel="noreferrer" target="_blank">{{ st.popup_whatsapp }}</a>
       </div>
     </section>
   </div>

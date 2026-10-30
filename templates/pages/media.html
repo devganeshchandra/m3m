@@ -1,4 +1,5 @@
 {% extends "inner_base.html" %}
+{% load landing_tags %}
 {% load site_tags %}
 
 {% block hero_stats %}
@@ -62,8 +63,8 @@
   <div class="ip-section__inner">
     <div class="ip-section__header">
       <div>
-        <p class="ip-label ip-label--light"><span aria-hidden="true"></span>Films</p>
-        <h2 class="ip-heading ip-heading--light" id="films-title">See it <em>in motion.</em></h2>
+        <p class="ip-label ip-label--light"><span aria-hidden="true"></span>{{ st.media_films_label }}</p>
+        <h2 class="ip-heading ip-heading--light" id="films-title">{{ st.media_films_title|em }}</h2>
       </div>
     </div>
     <div class="video-grid">
@@ -87,10 +88,10 @@
   <div class="ip-section__inner">
     <div class="ip-section__header">
       <div>
-        <p class="ip-label"><span aria-hidden="true"></span>In the headlines</p>
-        <h2 class="ip-heading" id="press-title">M3M, as seen <em>in the news.</em></h2>
+        <p class="ip-label"><span aria-hidden="true"></span>{{ st.media_press_label }}</p>
+        <h2 class="ip-heading" id="press-title">{{ st.media_press_title|em }}</h2>
       </div>
-      <p>Coverage from established business and real estate publications. Stories open on the publisher’s website.</p>
+      <p>{{ st.media_press_text }}</p>
     </div>
     {% include "partials/press_grid.html" %}
   </div>

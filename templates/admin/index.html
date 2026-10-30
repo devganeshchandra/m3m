@@ -1,0 +1,116 @@
+{% extends 'admin/base.html' %}
+{% load i18n %}
+{% comment %}
+  The admin home page: the website, page by page, with a button for each admin screen that edits it
+  (core/site_map.py). Replaces Unfold's default dashboard.
+{% endcomment %}
+
+{% block title %}Website map | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+  {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+<style>
+  .wm { --wm-line: #e7e2d8; --wm-card: #fff; --wm-muted: #6b6457; --wm-ink: #1f1b14; --wm-gold: #a3803f; --wm-soft: #faf6ee; color: var(--wm-ink); }
+  .dark .wm { --wm-line: #3a3530; --wm-card: #1c1a17; --wm-muted: #a69f92; --wm-ink: #f3efe7; --wm-gold: #d8b878; --wm-soft: #26231f; }
+  .wm__intro { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: start; margin-bottom: 28px; }
+  .wm__intro h1 { margin: 0 0 6px; font-size: 24px; font-weight: 700; }
+  .wm__intro p { margin: 0; color: var(--wm-muted); font-size: 14px; line-height: 1.6; }
+  .wm__steps { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 14px 0 0; padding: 0; list-style: none; font-size: 13px; }
+  .wm__steps b { display: inline-grid; width: 22px; height: 22px; margin-right: 6px; place-items: center; border-radius: 50%; color: #fff; background: var(--wm-gold); font-size: 12px; }
+  .wm__leads { display: grid; min-width: 220px; gap: 4px; padding: 16px 18px; border: 1px solid var(--wm-line); border-radius: 12px; background: var(--wm-soft); text-decoration: none; color: inherit; }
+  .wm__leads strong { font-size: 30px; line-height: 1; }
+  .wm__leads span { color: var(--wm-muted); font-size: 13px; }
+  .wm__leads:hover { border-color: var(--wm-gold); }
+  .wm__search { width: 100%; max-width: 460px; margin: 0 0 26px; padding: 11px 14px; border: 1px solid var(--wm-line); border-radius: 10px; color: inherit; background: var(--wm-card); font-size: 14px; }
+  .wm__group { margin: 0 0 34px; }
+  .wm__group h2 { margin: 0; font-size: 17px; font-weight: 700; }
+  .wm__group > p { margin: 2px 0 14px; color: var(--wm-muted); font-size: 13px; }
+  .wm__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+  .wm__card { display: flex; flex-direction: column; gap: 10px; padding: 18px; border: 1px solid var(--wm-line); border-radius: 12px; background: var(--wm-card); }
+  .wm__card[hidden] { display: none; }
+  .wm__head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+  .wm__head h3 { margin: 0; font-size: 15px; font-weight: 700; }
+  .wm__view { flex: none; color: var(--wm-gold); font-size: 12px; font-weight: 600; text-decoration: none; }
+  .wm__view:hover { text-decoration: underline; }
+  .wm__url { margin: -6px 0 0; color: var(--wm-muted); font-family: ui-monospace, monospace; font-size: 12px; }
+  .wm__note { margin: 0; color: var(--wm-muted); font-size: 13px; }
+  .wm__edits { display: grid; gap: 6px; margin: 4px 0 0; padding: 0; list-style: none; }
+  .wm__edits a { display: block; padding: 8px 11px; border: 1px solid var(--wm-line); border-radius: 8px; color: inherit; text-decoration: none; font-size: 13px; font-weight: 600; transition: border-color .2s, background .2s; }
+  .wm__edits a:hover { border-color: var(--wm-gold); background: var(--wm-soft); }
+  .wm__edits small { display: block; margin-top: 2px; color: var(--wm-muted); font-size: 12px; font-weight: 400; }
+  .wm__empty { color: var(--wm-muted); font-size: 14px; }
+  @media (max-width: 760px) { .wm__intro { grid-template-columns: 1fr; } }
+</style>
+
+<div class="wm">
+  <div class="wm__intro">
+    <div>
+      <h1>Website map</h1>
+      <p>Every page of the website and where each part of it is edited. Find the page, then click the part you want to change.</p>
+      <ol class="wm__steps">
+        <li><b>1</b>Find the page below (or search)</li>
+        <li><b>2</b>Click what you want to change</li>
+        <li><b>3</b>Save, then “View page” to check it</li>
+      </ol>
+      <p style="margin-top:12px">Tip: while you are logged in, every page of the website shows an <strong>Edit this page</strong> button at the bottom left.</p>
+    </div>
+    <a class="wm__leads" href="{{ new_enquiries_url }}">
+      <strong>{{ new_enquiries }}</strong>
+      <span>new {{ new_enquiries|pluralize:"enquiry,enquiries" }} waiting for a call</span>
+      <span style="color:var(--wm-gold);font-weight:600">Open enquiries →</span>
+    </a>
+  </div>
+
+  <input class="wm__search" type="search" placeholder="Search pages, e.g. Trump, contact, menu, footer…" aria-label="Search the website map" data-wm-search>
+
+  {% for group in site_map %}
+    <section class="wm__group" data-wm-group>
+      <h2>{{ group.title }}</h2>
+      <p>{{ group.intro }}</p>
+      <div class="wm__grid">
+        {% for page in group.pages %}
+          <article class="wm__card" data-wm-card data-search="{{ page.name|lower }} {{ page.url|lower }} {{ page.note|lower }}{% for edit in page.edits %} {{ edit.label|lower }} {{ edit.hint|lower }}{% endfor %}">
+            <div class="wm__head">
+              <h3>{{ page.name }}</h3>
+              <a class="wm__view" href="{{ page.url }}" target="_blank" rel="noopener">View page ↗</a>
+            </div>
+            <p class="wm__url">{{ page.url }}</p>
+            {% if page.note %}<p class="wm__note">{{ page.note }}</p>{% endif %}
+            <ul class="wm__edits">
+              {% for edit in page.edits %}
+                <li><a href="{{ edit.href }}">Edit: {{ edit.label }}{% if edit.hint %}<small>{{ edit.hint }}</small>{% endif %}</a></li>
+              {% endfor %}
+            </ul>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+  {% endfor %}
+  <p class="wm__empty" hidden data-wm-empty>No page matches your search.</p>
+</div>
+
+<script>
+  (function () {
+    var input = document.querySelector("[data-wm-search]");
+    var empty = document.querySelector("[data-wm-empty]");
+    input.addEventListener("input", function () {
+      var words = input.value.toLowerCase().split(/\s+/).filter(Boolean);
+      var shown = 0;
+      document.querySelectorAll("[data-wm-group]").forEach(function (group) {
+        var any = false;
+        group.querySelectorAll("[data-wm-card]").forEach(function (card) {
+          var match = words.every(function (word) { return card.dataset.search.indexOf(word) !== -1; });
+          card.hidden = !match;
+          any = any || match;
+        });
+        group.hidden = !any;
+        if (any) shown += 1;
+      });
+      empty.hidden = shown > 0;
+    });
+  })();
+</script>
+{% endblock %}

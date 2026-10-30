@@ -210,7 +210,7 @@ class BillionaireBlockPage(SingletonModel):
         blank=True,
         default=(
             "170 acres | The Billionaire’s Block enclave\n"
-            "250 acres | Smart City Delhi Airport township\n"
+            "SCDA | Smart City Delhi Airport, M3M’s mixed-use township\n"
             "Sector 111 | Dwarka Expressway, Gurugram"
         ),
         help_text="One per line, as “figure | label”.",
@@ -304,7 +304,7 @@ class BillionaireBlockPage(SingletonModel):
     security_label = models.CharField(max_length=80, default="The township")
     security_heading = models.CharField(max_length=160, default="A city around the enclave.")
     security_text = models.TextField(
-        default="Smart City Delhi Airport: a mixed-use township of about 250 acres.",
+        default="Smart City Delhi Airport: M3M’s mixed-use township around the enclave.",
     )
     security_image = ResizingImageField(upload_to="billionaire-block/", blank=True)
     location_label = models.CharField(max_length=80, default="Location")
@@ -544,6 +544,8 @@ class LandingPage(models.Model):
     def get_absolute_url(self):
         if self.slug == "billionaire-block":
             return reverse("projects:billionaire_block")
+        if self.slug == "website-texts":  # Shared texts: shown across the site, starting with the homepage.
+            return "/"
         return reverse("projects:detail", args=[self.slug])
 
 

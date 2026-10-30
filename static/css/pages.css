@@ -5688,3 +5688,107 @@ section.finder-section {
     transform: none;
   }
 }
+
+/* Small tablets in portrait (e.g. iPad Air, 820px): slimmer menu pills so the button still fits. */
+@media (min-width: 801px) and (max-width: 900px) {
+  .site-header .desktop-nav__link:not(.desktop-nav__link--featured) {
+    padding: 0 6px;
+  }
+}
+
+/* Phones and tablets: no text smaller than 11px. Small gold labels, form labels and footer notes were 8–10px, which is
+   hard to read on a phone; the legal note in the footer is read in full, so it gets 12px. */
+@media (max-width: 1024px) {
+  html body .story__badge span,
+  html body .ip-tabs__link span,
+  html body .masonry__category,
+  html body .masonry span,
+  html body .inner-hero__stats span,
+  html body .journey-stats span,
+  html body .stat span,
+  html body .section-intro__facts span,
+  html body .hero-enquiry__field span,
+  html body .hero-enquiry .submit-label,
+  html body .ip-stats dt,
+  html body dl dt,
+  html body .home-stats span,
+  html body .projects-section__facts span,
+  html body .hero-enquiry__eyebrow,
+  html body .hero-enquiry__field > span,
+  html body .hero-enquiry__submit .submit-label,
+  html body .hero-enquiry__note,
+  html body .interest-pick legend,
+  html body .interest-pick__chip small,
+  html body .phase-one-hero__caption span,
+  html body .section-label,
+  html body .ip-label,
+  html body .eyebrow,
+  html body .bbt__caption,
+  html body .press-logos__label,
+  html body .press-card__meta span,
+  html body .media-gallery__index,
+  html body .media-gallery__item figcaption,
+  html body .insight-card__content p,
+  html body .contact-section__eyebrow,
+  html body .contact-section__footer span,
+  html body .contact-methods__label,
+  html body .collection-teaser__copy em,
+  html body .status-chip,
+  html body .project-detail__back,
+  html body .project-detail__category,
+  html body .project-detail__caption,
+  html body .project-detail__enquire span,
+  html body .project-detail__facts dt,
+  html body .article-share span,
+  html body .footer-disclaimer summary,
+  html body .site-footer__bottom,
+  html body .site-footer__bottom span,
+  html body .site-footer__bottom a,
+  html body .floating-actions a,
+  html body .floating-actions__enquire,
+  html body main dl dt {
+    font-size: 11px !important;
+  }
+
+  html body .footer-disclaimer p {
+    font-size: 12px !important;
+  }
+}
+
+/* Touch screens: small text links get a taller invisible tap area (about 40px) without moving the layout. */
+@media (pointer: coarse) {
+  html body .site-footer a,
+  html body .footer-disclaimer summary,
+  html body nav[aria-label="Breadcrumb"] a,
+  html body .text-link,
+  html body .bbt__link,
+  html body .insight-card a,
+  html body .cta-band__phone,
+  html body .contact-section a,
+  html body .project-detail__back,
+  html body .home-journey a,
+  html body .journey-section a,
+  html body .journey-glance a,
+  html body .journey-value-panel a,
+  html body .ip-footnote a,
+  html body .lrera__text a,
+  html body .jl-disclaimer a,
+  html body .cl-disclaimer a,
+  html body .tt-disclaimer a,
+  html body .cl-link {
+    display: inline-block;
+    padding-block: 10px;
+    margin-block: -10px;
+  }
+
+  /* Trump Tower's slideshow dots are thin bars: their tap area reaches above and below them. */
+  html body [data-tt-slide] {
+    position: relative;
+  }
+
+  html body [data-tt-slide]::after {
+    position: absolute;
+    inset: -18px -2px;
+    content: "";
+  }
+}

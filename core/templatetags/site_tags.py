@@ -39,3 +39,16 @@ def pad2(value):
 @register.filter
 def lt(value, other):
     return int(value) < int(other)
+
+
+@register.inclusion_tag("partials/edit_this_page.html", takes_context=True)
+def edit_this_page(context):
+    """For logged-in staff only: a button that opens the admin screens editing the page on show
+    (core/site_map.py), so the content team can go straight from a page to where it is edited."""
+    request = context.get("request")
+    if not request or not getattr(request.user, "is_staff", False):
+        return {"show": False}
+    from core.site_map import edits_for_path
+
+    name, edits = edits_for_path(request.path)
+    return {"show": True, "name": name, "edits": edits}
